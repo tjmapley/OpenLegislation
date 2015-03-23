@@ -12,6 +12,16 @@ import gov.nysenate.openleg.model.Person;
 import gov.nysenate.openleg.util.Storage;
 
 import java.io.File;
+import gov.nysenate.openleg.converter.pdf.BillTextPDFConverter;
+import gov.nysenate.openleg.lucene.Lucene;
+import gov.nysenate.openleg.model.Action;
+import gov.nysenate.openleg.model.Bill;
+import gov.nysenate.openleg.model.Person;
+import gov.nysenate.openleg.util.Application;
+import gov.nysenate.openleg.util.Storage;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -19,6 +29,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.time.DateUtils;
+import gov.nysenate.openleg.util.TextFormatter;
+import org.apache.commons.lang3.time.DateUtils;
+import org.junit.Test;
 
 /*
  * Tests if bill data is equal to the data in the associated SOBI file.
@@ -237,4 +250,17 @@ public class BillTests
         assertThat(bill.getMemo(), is(expectedMemo));
     }
 
+<<<<<<< Updated upstream
+=======
+    @Test
+    public void billPDFTest() throws Exception {
+        String printNo = "S3713-2015";
+        Application.bootstrap();
+        Bill bill = Application.getLucene().getNewestAmendment(printNo);
+        List<List<String>> pages = TextFormatter.pdfPrintablePages(bill);
+        File pdf = new File("/tmp/" + printNo + "-text.pdf");
+        BillTextPDFConverter.write(bill, new FileOutputStream(pdf));
+    }
+
+>>>>>>> Stashed changes
 }
