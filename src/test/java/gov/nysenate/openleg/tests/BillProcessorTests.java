@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import gov.nysenate.openleg.processors.DataProcessor;
+import gov.nysenate.openleg.scripts.ProcessData;
+import gov.nysenate.openleg.util.Application;
 import org.junit.Test;
 
 public class BillProcessorTests
@@ -39,27 +42,32 @@ public class BillProcessorTests
     }
 
     @Test
-    void testGetOrCreateBill() throws Exception
+    public void testGetOrCreateBill() throws Exception
     {
 
     }
 
     @Test
-    void testDeleteBill() throws Exception
+    public void testDeleteBill() throws Exception
     {
 
     }
 
     @Test
-    void testSaveBill() throws Exception
+    public void testSaveBill() throws Exception
     {
 
     }
 
     @Test
-    public void testProcess() throws IOException
+    public void testProcess() throws Exception
     {
-
+        String[] args = {
+                "-e", "/home/michael/workspace/OpenLegislationOld/src/main/resources/app.properties",
+                "-t", "stage,collate,ingest,push,archive",
+                "-f", "change.log",
+                "-p", "lucene" };
+        new ProcessData().run(args);
     }
 
 

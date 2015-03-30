@@ -49,7 +49,7 @@ public class UnpublishListManager {
         }
         catch (IOException ex){
             logger.error("Could not retrieve unpublished bills");
-            return null;
+            return new HashSet<>();
         }
     }
 
