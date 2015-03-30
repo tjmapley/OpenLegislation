@@ -250,8 +250,6 @@ public class BillTests
         assertThat(bill.getMemo(), is(expectedMemo));
     }
 
-<<<<<<< Updated upstream
-=======
     @Test
     public void billPDFTest() throws Exception {
         String printNo = "S3713-2015";
@@ -261,6 +259,4 @@ public class BillTests
         File pdf = new File("/tmp/" + printNo + "-text.pdf");
         BillTextPDFConverter.write(bill, new FileOutputStream(pdf));
     }
-
->>>>>>> Stashed changes
 }

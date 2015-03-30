@@ -444,7 +444,7 @@ public class BillProcessor
                     String uniBillText = uniBill.getFulltext();
 
                     // If senate bill/reso, copy to assembly
-                    if (bill.getBillId().matches("^[SJBR]")) {
+                    if (bill.getBillId().matches("^[SJBR].*")) {
                         uniBill.setFulltext(bill.getFulltext());
                         storage.set(uniBill);
                         ChangeLogger.record(storage.key(uniBill), storage);
