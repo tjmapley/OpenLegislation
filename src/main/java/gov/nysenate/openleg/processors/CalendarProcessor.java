@@ -148,7 +148,7 @@ public class CalendarProcessor implements OpenLegConstants {
         calendarId.append("cal-");
         calendarId.append(type);
         calendarId.append('-');
-        calendarId.append(no);
+        calendarId.append(Integer.parseInt(no));
         calendarId.append('-');
         calendarId.append(year);
 

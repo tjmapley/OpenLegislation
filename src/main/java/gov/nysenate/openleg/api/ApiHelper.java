@@ -111,7 +111,7 @@ public class ApiHelper implements OpenLegConstants {
                 } else if (type.equals("calendar")) {
                     Calendar calendar = (Calendar) resultObj;
 
-                    title = calendar.getNo() + "-" + calendar.getYear();
+                    title = Integer.toString(calendar.getNo());
 
                     if (calendar.getType() == null)
                         fields.put("type", "");
