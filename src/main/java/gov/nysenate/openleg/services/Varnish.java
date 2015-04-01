@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -39,7 +40,8 @@ public class Varnish extends ServiceBase {
             if (!otype.equals("agenda")) {
                 if (otype.equals("calendar")) {
                     Calendar calendar = (Calendar)storage.get(key, Calendar.class);
-                    oid = calendar.getOid();
+                    SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+                    oid = calendar.getType() + "-" + sdf.format(calendar.getDate());
                 }
                 else if (otype.equals("meeting")) {
                     Meeting meeting = (Meeting)storage.get(key, Meeting.class);
