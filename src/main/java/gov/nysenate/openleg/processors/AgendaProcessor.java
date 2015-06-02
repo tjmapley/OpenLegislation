@@ -324,6 +324,7 @@ public class AgendaProcessor implements OpenLegConstants {
 
             Meeting meeting = new Meeting(commName, meetDateTime);
             meeting.setPublishDate(modifiedDate);
+            meeting.setAddendum(addendumId);
             String key = storage.key(meeting);
             Meeting oldMeeting = (Meeting)storage.get(key, Meeting.class);
 
@@ -342,6 +343,10 @@ public class AgendaProcessor implements OpenLegConstants {
                 else {
                     // Use the old meeting of since it is not null or replaced.
                     meeting = oldMeeting;
+                    if (addendumId.compareTo(meeting.getAddendum()) >= 0) {
+                        meeting.setMeetingDateTime(meetDateTime);
+                        meeting.setAddendum(addendumId);
+                    }
                 }
             }
 

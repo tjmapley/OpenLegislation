@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class ApiHelper implements OpenLegConstants {
@@ -38,8 +39,10 @@ public class ApiHelper implements OpenLegConstants {
     private static ObjectMapper mapper = new ObjectMapper();
 
     public static ObjectMapper getMapper() {
-        if(mapper == null)
+        if(mapper == null) {
             mapper = new ObjectMapper();
+            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        }
 
         return mapper;
     }

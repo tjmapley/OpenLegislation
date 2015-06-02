@@ -52,6 +52,11 @@ public class Meeting extends BaseObject
     protected String notes = "";
 
     /**
+     *
+     */
+    protected String addendum = "";
+
+    /**
      * JavaBean Constructor
      */
     public Meeting() {
@@ -160,6 +165,14 @@ public class Meeting extends BaseObject
 
     public void setCommitteeName(String committeeName) {
         this.committeeName = committeeName;
+    }
+
+    public String getAddendum() {
+        return addendum;
+    }
+
+    public void setAddendum(String addendum) {
+        this.addendum = addendum;
     }
 
     @Override
