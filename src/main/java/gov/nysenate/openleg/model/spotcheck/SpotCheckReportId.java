@@ -1,5 +1,6 @@
 package gov.nysenate.openleg.model.spotcheck;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ComparisonChain;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,8 @@ public class SpotCheckReportId implements Comparable<SpotCheckReportId>
 
     /** --- Constructor --- */
 
+    protected SpotCheckReportId(){}
+
     public SpotCheckReportId(SpotCheckRefType referenceType, LocalDateTime reportDateTime) {
         this.referenceType = referenceType;
         this.reportDateTime = reportDateTime;
@@ -29,7 +32,7 @@ public class SpotCheckReportId implements Comparable<SpotCheckReportId>
     }
 
     /** --- Functional Getters --- */
-
+    @JsonIgnore
     public SpotCheckReferenceId getReferenceId() {
         return new SpotCheckReferenceId(referenceType, referenceDateTime);
     }

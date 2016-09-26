@@ -16,6 +16,8 @@ public class SpotCheckReferenceId
 
     /** --- Constructors --- */
 
+    protected SpotCheckReferenceId(){}
+
     public SpotCheckReferenceId(SpotCheckRefType referenceType, LocalDateTime refActiveDateTime) {
         this.referenceType = referenceType;
         this.refActiveDateTime = refActiveDateTime;

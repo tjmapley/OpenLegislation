@@ -14,6 +14,7 @@ public enum SearchIndex
     LAW("laws"),
     MEMBER("members"),
     NOTIFICATION("notifications"),
+    SPOTCHECK("spotchecks"),
     API_LOG("apilog")
     ;
 

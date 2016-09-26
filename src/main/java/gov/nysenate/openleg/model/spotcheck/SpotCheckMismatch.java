@@ -1,5 +1,6 @@
 package gov.nysenate.openleg.model.spotcheck;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gov.nysenate.openleg.util.StringDiffer;
 
 import java.util.*;
@@ -36,6 +37,8 @@ public class SpotCheckMismatch
 
     /** --- Constructor --- */
 
+    protected SpotCheckMismatch(){}
+
     public SpotCheckMismatch(SpotCheckMismatchType mismatchType, Object observedData, Object referenceData) {
         this(mismatchType, String.valueOf(observedData), String.valueOf(referenceData));
     }
@@ -69,7 +72,6 @@ public class SpotCheckMismatch
     }
 
     /** --- Functional Getters / Setters --- */
-
     public boolean isIgnored() {
         return ignoreStatus != null;
     }

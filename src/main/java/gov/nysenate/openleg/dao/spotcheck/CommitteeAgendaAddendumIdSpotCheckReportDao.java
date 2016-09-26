@@ -1,10 +1,12 @@
 package gov.nysenate.openleg.dao.spotcheck;
 
+import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportElasticDao;
 import gov.nysenate.openleg.model.agenda.AgendaId;
 import gov.nysenate.openleg.model.agenda.CommitteeAgendaAddendumId;
 import gov.nysenate.openleg.model.base.Version;
 import gov.nysenate.openleg.model.entity.Chamber;
 import gov.nysenate.openleg.model.entity.CommitteeId;
+import gov.nysenate.openleg.model.spotcheck.SpotCheckRefType;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -14,7 +16,8 @@ import java.util.Map;
  * Created by PKS on 4/28/16.
  */
 @Repository
-public class CommitteeAgendaAddendumIdSpotCheckReportDao extends AbstractSpotCheckReportDao<CommitteeAgendaAddendumId> {
+public class CommitteeAgendaAddendumIdSpotCheckReportDao extends AbstractSpotCheckReportElasticDao<CommitteeAgendaAddendumId> {
+
     @Override
     public CommitteeAgendaAddendumId getKeyFromMap(Map<String, String> keyMap) {
         if (keyMap != null) {
@@ -37,5 +40,9 @@ public class CommitteeAgendaAddendumIdSpotCheckReportDao extends AbstractSpotChe
             return keyMap;
         }
         return null;
+    }
+
+    public CommitteeAgendaAddendumIdSpotCheckReportDao() {
+        super(SpotCheckRefType.SENATE_SITE_AGENDA);
     }
 }

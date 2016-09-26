@@ -84,11 +84,16 @@ public class SpotCheckCtrl extends BaseCtrl
         LocalDateTime toDateTime = parseISODateTime(to, "to");
         SortOrder order = getSortOrder(webRequest, SortOrder.DESC);
         SpotCheckRefType refType = reportType != null ? getSpotcheckRefType(reportType, "reportType") : null;
-
-        SpotCheckReportService<?> reportService = reportServiceMap.values().asList().get(0);
-
-        List<SpotCheckReportSummary> summaries =
-                reportService.getReportSummaries(refType, fromDateTime, toDateTime, order);
+        List<SpotCheckReportSummary> summaries = new ArrayList<>();
+        if (refType == null){
+            reportServiceMap.forEach((k, v) ->{
+                summaries.addAll(v.getReportSummaries(k,fromDateTime,toDateTime,order));
+            });
+        }
+        else {
+            SpotCheckReportService<?> reportService = reportServiceMap.get(refType);
+            summaries.addAll(reportService.getReportSummaries(refType, fromDateTime, toDateTime, order));
+        }
 
         // Construct the client response
         return new ReportSummaryResponse<>(
@@ -168,7 +173,7 @@ public class SpotCheckCtrl extends BaseCtrl
         OpenMismatchQuery query = new OpenMismatchQuery(refTypes, mismatchTypes, earliestDateTime,
                 mismatchOrderBy, order, limOff, resolvedShown, ignoredShown, ignoredOnly, trackedShown, untrackedShown);
         SpotCheckOpenMismatches<?> observations = reportServiceMap.get(refType).getOpenObservations(query);
-        OpenMismatchSummary summary = getAnyReportService().getOpenMismatchSummary(refTypes, earliestDateTime);
+        OpenMismatchSummary summary = reportServiceMap.get(refType).getOpenMismatchSummary(refType, earliestDateTime);
         return new OpenMismatchesResponse<>(observations, summary, query);
     }
 
@@ -189,8 +194,12 @@ public class SpotCheckCtrl extends BaseCtrl
                                           @RequestParam(required = false) String observedAfter) {
         Set<SpotCheckRefType> refTypes = getSpotcheckRefTypes(reportType, "reportType");
         LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
-        OpenMismatchSummary summary = getAnyReportService().getOpenMismatchSummary(refTypes, earliestDateTime);
-        return new ViewObjectResponse<>(new OpenMismatchSummaryView(summary));
+        List<OpenMismatchSummary> summaries = new ArrayList<>();
+        reportServiceMap.forEach((k, v) -> {
+            summaries.add(v.getOpenMismatchSummary(k, earliestDateTime));
+        });
+        //OpenMismatchSummary summary = getAnyReportService().getOpenMismatchSummary(refTypes, earliestDateTime);
+        return new ViewObjectResponse<>(new OpenMismatchSummaryView(summaries));
     }
 
     /**

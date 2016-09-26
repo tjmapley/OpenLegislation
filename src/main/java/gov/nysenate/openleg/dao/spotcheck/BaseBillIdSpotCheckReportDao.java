@@ -1,13 +1,15 @@
 package gov.nysenate.openleg.dao.spotcheck;
 
+import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportElasticDao;
 import gov.nysenate.openleg.model.bill.BaseBillId;
+import gov.nysenate.openleg.model.spotcheck.SpotCheckRefType;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Repository
-public class BaseBillIdSpotCheckReportDao extends AbstractSpotCheckReportDao<BaseBillId>
+public class BaseBillIdSpotCheckReportDao extends AbstractSpotCheckReportElasticDao<BaseBillId>
 {
     /** --- Override Methods --- */
 
@@ -41,5 +43,9 @@ public class BaseBillIdSpotCheckReportDao extends AbstractSpotCheckReportDao<Bas
             return keyMap;
         }
         return null;
+    }
+
+    BaseBillIdSpotCheckReportDao() {
+        super(SpotCheckRefType.LBDC_SCRAPED_BILL);
     }
 }

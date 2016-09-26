@@ -1,5 +1,7 @@
 package gov.nysenate.openleg.model.spotcheck;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.*;
 import gov.nysenate.openleg.service.spotcheck.base.SpotCheckReportService;
 
@@ -29,7 +31,7 @@ public class SpotCheckReport<ContentKey>
 
     /** --- Constructors --- */
 
-    public SpotCheckReport() {}
+    public SpotCheckReport(){}
 
     public SpotCheckReport(SpotCheckReportId reportId) {
         this.reportId = reportId;
@@ -168,7 +170,6 @@ public class SpotCheckReport<ContentKey>
     }
 
     /** --- Delegates --- */
-
     public LocalDateTime getReportDateTime() {
         return reportId.getReportDateTime();
     }

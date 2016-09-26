@@ -77,11 +77,11 @@ public interface SpotCheckReportService<ContentKey>
     /**
      * Get a summary of type/status/ignore counts pertaining to the given query
      *
-     * @param refTypes
+     * @param refType
      * @param observedAfter
      * @return OpenMismatchesSummary
      */
-    OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter);
+    OpenMismatchSummary getOpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter);
 
     /**
      * Wipe a report as well as all of its associated observations and mismatches from the backing store.

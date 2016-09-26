@@ -1,6 +1,7 @@
 package gov.nysenate.openleg.model.spotcheck;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -16,11 +17,12 @@ public class OpenMismatchSummary {
 
     protected LocalDateTime observedAfter;
 
-    public OpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter) {
+    public OpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter) {
         this.observedAfter = observedAfter;
-        this.summaryMap = refTypes.stream()
-                .map(refType -> new RefTypeMismatchSummary(refType, observedAfter))
-                .collect(Collectors.toMap(RefTypeMismatchSummary::getRefType, Function.identity()));
+        this.summaryMap = new HashMap<>();
+        this.summaryMap.put(refType, new RefTypeMismatchSummary(refType, observedAfter)); //refTypes.stream()
+                //.map(refType -> new RefTypeMismatchSummary(refType, observedAfter))
+                //.collect(Collectors.toMap(RefTypeMismatchSummary::getRefType, Function.identity()));
     }
 
     /** --- Functional Getters / Setters --- */

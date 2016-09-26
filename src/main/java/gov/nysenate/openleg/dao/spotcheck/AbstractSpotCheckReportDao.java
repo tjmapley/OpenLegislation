@@ -105,7 +105,7 @@ public abstract class AbstractSpotCheckReportDao<ContentKey> extends SqlBaseDao
     }
 
     /** {@inheritDoc} */
-    @Override
+    //@Override
     public OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter) {
         OpenMismatchQuery query = new OpenMismatchQuery(refTypes, null, observedAfter, null, null, null, false, true, false, true, true);
         ImmutableParams params = ImmutableParams.from(getOpenObsParams(query));
@@ -261,7 +261,7 @@ public abstract class AbstractSpotCheckReportDao<ContentKey> extends SqlBaseDao
         protected OpenMismatchSummary summary;
 
         public OpenMismatchSummaryHandler(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter) {
-            this.summary = new OpenMismatchSummary(refTypes, observedAfter);
+            //this.summary = new OpenMismatchSummary(refTypes, observedAfter);
         }
 
         @Override

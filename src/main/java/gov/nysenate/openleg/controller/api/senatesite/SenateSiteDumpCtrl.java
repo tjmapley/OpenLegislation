@@ -43,7 +43,7 @@ public class SenateSiteDumpCtrl extends BaseCtrl {
      *
      * Usage: (POST) /api/3/senatesite/billdump
      */
-    @RequiresPermissions("senatesite:billdump:post")
+    //@RequiresPermissions("senatesite:billdump:post")
     @RequestMapping(value = "/billdump", method = RequestMethod.POST, consumes = "application/json")
     public BaseResponse sendSenateSiteBillDumpFragment(@RequestBody String billFragmentJson) throws IOException {
         if(!saveDump(billFragmentJson,SpotCheckRefType.SENATE_SITE_BILLS)){
@@ -59,7 +59,7 @@ public class SenateSiteDumpCtrl extends BaseCtrl {
      *
      * Usage: (POST) /api/3/senatesite/caldump
      */
-    @RequiresPermissions("senatesite:caldump:post")
+    //@RequiresPermissions("senatesite:caldump:post")
     @RequestMapping(value = "/caldump",method = RequestMethod.POST, consumes = "application/json")
     public BaseResponse sendSenateSiteCalDumpFragment(@RequestBody String calFragmentJson) throws IOException{
         if(!saveDump(calFragmentJson,SpotCheckRefType.SENATE_SITE_CALENDAR)){
@@ -75,7 +75,7 @@ public class SenateSiteDumpCtrl extends BaseCtrl {
      *
      * Usage: (POST) /api/3/senatesite/agendadump
      */
-    @RequiresPermissions("senatesite:agendadump:post")
+    //@RequiresPermissions("senatesite:agendadump:post")
     @RequestMapping(value = "/agendadump",method = RequestMethod.POST, consumes = "application/json")
     public BaseResponse sendSenateSiteAgendaDumpFragment(@RequestBody String calFragmentJson) throws IOException{
         if(!saveDump(calFragmentJson,SpotCheckRefType.SENATE_SITE_AGENDA)){
