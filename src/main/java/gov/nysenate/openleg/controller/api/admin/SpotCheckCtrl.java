@@ -207,17 +207,19 @@ public class SpotCheckCtrl extends BaseCtrl
      *
      * Set the ignore status of a particular mismatch
      *
-     * Usage: (POST) /api/3/admin/spotcheck/mismatch/{mismatchId}/ignore
+     * Usage: (POST) /api/3/admin/spotcheck/{refType}/mismatch/{mismatchId}/ignore
      *
      * Request Parameters: ignoreLevel - string - specifies desired ignore level or unsets ignore if null or not present
      *                                  @see SpotCheckMismatchIgnore
      */
-    @RequestMapping(value = "/mismatch/{mismatchId:\\d+}/ignore", method = RequestMethod.POST)
-    public BaseResponse setIgnoreStatus(@PathVariable int mismatchId, @RequestParam(required = false) String ignoreLevel) {
+    @RequestMapping(value = "{type}/mismatch/{mismatchId}/ignore", method = RequestMethod.POST)
+    public BaseResponse setIgnoreStatus(@PathVariable String type, @PathVariable int mismatchId, @RequestParam(required = false) String ignoreLevel) {
         SpotCheckMismatchIgnore ignoreStatus = ignoreLevel != null
                 ? getEnumParameter("ignoreLevel", ignoreLevel, SpotCheckMismatchIgnore.class)
                 : null;
-        getAnyReportService().setMismatchIgnoreStatus(mismatchId, ignoreStatus);
+        SpotCheckRefType refType = getSpotcheckRefType(type,"type");//SpotCheckRefType.SENATE_SITE_CALENDAR;
+        //getAnyReportService().setMismatchIgnoreStatus(mismatchId, ignoreStatus);
+        reportServiceMap.get(refType).setMismatchIgnoreStatus(mismatchId, ignoreStatus);
         return new SimpleResponse(true, "ignore level set", "ignore-level-set");
     }
 
@@ -226,11 +228,12 @@ public class SpotCheckCtrl extends BaseCtrl
      *
      * Adds an issue id to a spotcheck mismatch
      *
-     * Usage: (POST) /api/3/admin/spotcheck/mismatch/{mismatchId}/issue/{issueId}
+     * Usage: (POST) /api/3/admin/spotcheck/{refType}/mismatch/{mismatchId}/issue/{issueId}
      */
-    @RequestMapping(value = "/mismatch/{mismatchId:\\d+}/issue/{issueId}", method = RequestMethod.POST)
-    public BaseResponse addMismatchIssueId(@PathVariable int mismatchId, @PathVariable String issueId) {
-        getAnyReportService().addIssueId(mismatchId, issueId);
+    @RequestMapping(value = "{type}/mismatch/{mismatchId}/issue/{issueId}", method = RequestMethod.POST)
+    public BaseResponse addMismatchIssueId(@PathVariable String type, @PathVariable int mismatchId, @PathVariable String issueId) {
+        SpotCheckRefType refType = getSpotcheckRefType(type,"type");
+        reportServiceMap.get(refType).addIssueId(mismatchId, issueId);
         return new SimpleResponse(true, "issue id added", "issue-id-added");
     }
 
@@ -239,11 +242,12 @@ public class SpotCheckCtrl extends BaseCtrl
      *
      * Removes an issue id to a spotcheck mismatch
      *
-     * Usage: (DELETE) /api/3/admin/spotcheck/mismatch/{mismatchId}/issue/{issueId}
+     * Usage: (DELETE) /api/3/admin/spotcheck/{refType}/mismatch/{mismatchId}/issue/{issueId}
      */
-    @RequestMapping(value = "/mismatch/{mismatchId:\\d+}/issue/{issueId}", method = RequestMethod.DELETE)
-    public BaseResponse deleteMismatchIssueId(@PathVariable int mismatchId, @PathVariable String issueId) {
-        getAnyReportService().deleteIssueId(mismatchId, issueId);
+    @RequestMapping(value = "{type}/mismatch/{mismatchId}/issue/{issueId}", method = RequestMethod.DELETE)
+    public BaseResponse deleteMismatchIssueId(@PathVariable String type, @PathVariable int mismatchId, @PathVariable String issueId) {
+        SpotCheckRefType refType = getSpotcheckRefType(type,"type");
+        reportServiceMap.get(refType).deleteIssueId(mismatchId, issueId);
         return new SimpleResponse(true, "issue id deleted", "issue-id-deleted");
     }
 

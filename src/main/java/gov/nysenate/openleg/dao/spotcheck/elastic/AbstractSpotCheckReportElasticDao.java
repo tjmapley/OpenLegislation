@@ -13,26 +13,32 @@ import gov.nysenate.openleg.util.OutputUtils;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.deletebyquery.DeleteByQueryAction;
 import org.elasticsearch.action.deletebyquery.DeleteByQueryRequestBuilder;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.script.Script;
+import org.elasticsearch.script.ScriptService;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
@@ -142,14 +148,13 @@ public abstract class AbstractSpotCheckReportElasticDao<ContentKey>
                     searchClient.prepareIndex()
                             .setIndex(spotcheckIndex)
                             .setType(observationType)
-                            .setId(String.valueOf(elasticObservation.hashCode()))
+                            .setId(elasticObservation.getMismatchId().toString())
                             .setSource(OutputUtils.toJson(elasticObservation))
             )
         );
 
         bulkRequest.execute().actionGet();
     }
-
 
     @Override
     public List<SpotCheckReportSummary> getReportSummaries(SpotCheckRefType refType, LocalDateTime start,
@@ -203,8 +208,7 @@ public abstract class AbstractSpotCheckReportElasticDao<ContentKey>
                             .setPostFilter(queryFilters)
                             .addSort(query.getOrderBy().getColName(), SortOrder.valueOf(query.getOrder().toString()))
                             .setScroll(new TimeValue(60000))
-                            .setFrom(query.getLimitOffset().getOffsetStart())
-                            .setSize(query.getLimitOffset().getOffsetEnd())
+                            .setSize(query.getLimitOffset().getLimit())
             );
         });
         MultiSearchResponse multiSearchResponse = multiSearch.execute().actionGet();
@@ -213,21 +217,26 @@ public abstract class AbstractSpotCheckReportElasticDao<ContentKey>
         multiSearchResponse.forEach(r -> {
             if(!r.isFailure()){
                 SearchResponse response =  r.getResponse();
+                Integer offset = query.getLimitOffset().getOffsetStart();
+                Integer scroll = 1;
                 while (true){
-                    response.getHits().forEach(observation -> {
-                        Map<String, Object> observationObjectMap = observation.getSource();
-                        TypeReference<ElasticObservation<ContentKey>> elasticObservationTypeReference = new TypeReference<ElasticObservation<ContentKey>>(){};
-                        ElasticObservation<ContentKey> elasticObservation = OutputUtils.getJsonMapper().convertValue(observationObjectMap, elasticObservationTypeReference);
-                        SpotCheckObservation<ContentKey> spotcheckObservation = elasticObservation
-                                .toSpotCheckObservation(getKeyFromMap(elasticObservation.getObservationKey()));
-                        countList.add(spotcheckObservation.getMismatches().values().size());
-                        observations.put(spotcheckObservation.getKey(),spotcheckObservation);
-                    });
+                    if(offset.equals(scroll)){
+                        response.getHits().forEach(observation -> {
+                            Map<String, Object> observationObjectMap = observation.getSource();
+                            TypeReference<ElasticObservation<ContentKey>> elasticObservationTypeReference = new TypeReference<ElasticObservation<ContentKey>>(){};
+                            ElasticObservation<ContentKey> elasticObservation = OutputUtils.getJsonMapper().convertValue(observationObjectMap, elasticObservationTypeReference);
+                            SpotCheckObservation<ContentKey> spotcheckObservation = elasticObservation
+                                    .toSpotCheckObservation(getKeyFromMap(elasticObservation.getObservationKey()), observation.getId());
+                            countList.add(spotcheckObservation.getMismatches().values().size());
+                            observations.put(spotcheckObservation.getKey(),spotcheckObservation);
+                        });
+                    }
+                    scroll += 10;
                     response = searchClient.prepareSearchScroll(response.getScrollId())
                             .setScroll(new TimeValue(60000))
                             .execute()
                             .actionGet();
-                    if(response.getHits().getHits().length == 0){
+                    if(response.getHits().getHits().length == 0 || observations.size() == query.getLimitOffset().getLimit()){
                         break;
                     }
                 }
@@ -300,26 +309,52 @@ public abstract class AbstractSpotCheckReportElasticDao<ContentKey>
 
     @Override
     public void setMismatchIgnoreStatus(int mismatchId, SpotCheckMismatchIgnore ignoreStatus) {
-        searchClient.prepareUpdate(spotcheckIndex, observationType, String.valueOf(mismatchId))
-                .setScript(new Script("ctx._source.mismatchIgnore = " + ignoreStatus))
-                .execute()
-                .actionGet();
+        try {
+            UpdateRequest updateRequest = new UpdateRequest(spotcheckIndex, observationType, String.valueOf(mismatchId))
+                    .doc(jsonBuilder()
+                            .startObject()
+                            .field("mismatchIgnore", ignoreStatus)
+                            .endObject());
+            searchClient.update(updateRequest).actionGet();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void addIssueId(int mismatchId, String issueId) {
-        searchClient.prepareUpdate(spotcheckIndex, observationType, String.valueOf(mismatchId))
-                .setScript(new Script("ctx._source.issueIds += " + issueId))
-                .execute()
-                .actionGet();
+        GetResponse response = searchClient.prepareGet(spotcheckIndex,observationType, String.valueOf(mismatchId))
+                .execute().actionGet();
+        List<String> issueIds = (List<String>) response.getSource().get("issueIds");
+        issueIds.add(issueId);
+        try {
+            UpdateRequest updateRequest = new UpdateRequest(spotcheckIndex, observationType, String.valueOf(mismatchId))
+                    .doc(jsonBuilder()
+                            .startObject()
+                            .array("issueIds",issueIds.toArray())
+                            .endObject());
+            searchClient.update(updateRequest).actionGet();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void deleteIssueId(int mismatchId, String issueId) {
-        searchClient.prepareUpdate(spotcheckIndex, observationType, String.valueOf(mismatchId))
-                .setScript(new Script("ctx._source.issueIds -= " + issueId))
-                .execute()
-                .actionGet();
+        GetResponse response = searchClient.prepareGet(spotcheckIndex,observationType, String.valueOf(mismatchId))
+                .execute().actionGet();
+        List<String> issueIds = (List<String>) response.getSource().get("issueIds");
+        issueIds.remove(issueId);
+        try {
+            UpdateRequest updateRequest = new UpdateRequest(spotcheckIndex, observationType, String.valueOf(mismatchId))
+                    .doc(jsonBuilder()
+                            .startObject()
+                            .array("issueIds",issueIds.toArray())
+                            .endObject());
+            searchClient.update(updateRequest).actionGet();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /** --- Internal Methods --- */
@@ -383,6 +418,10 @@ public abstract class AbstractSpotCheckReportElasticDao<ContentKey>
 
             observationSearchResponse.getHits().forEach(observation -> {
                 SpotCheckObservation<ContentKey> spotcheckObservation = getSpotcheckObservationFrom(observation);
+                if(observationMap.containsKey(spotcheckObservation.getKey())){
+                    SpotCheckObservation spotCheckObservation = observationMap.get(spotcheckObservation.getKey());
+                    spotcheckObservation.getMismatches().putAll(spotCheckObservation.getMismatches());
+                }
                 observationMap.put(spotcheckObservation.getKey(),spotcheckObservation);
             });
 
@@ -399,9 +438,8 @@ public abstract class AbstractSpotCheckReportElasticDao<ContentKey>
 
     private SpotCheckObservation<ContentKey> getSpotcheckObservationFrom(SearchHit observation){
         ElasticObservation<ContentKey> elasticObservation = getElasticObservationFrom(observation);
-        SpotCheckObservation<ContentKey> spotcheckObservation = elasticObservation
-                .toSpotCheckObservation(getKeyFromMap(elasticObservation.getObservationKey()));
-        return spotcheckObservation;
+        return elasticObservation
+                .toSpotCheckObservation(getKeyFromMap(elasticObservation.getObservationKey()), observation.getId());
     }
 
     private ElasticObservation<ContentKey> getElasticObservationFrom(SearchHit observation){

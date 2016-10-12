@@ -1,12 +1,16 @@
 package gov.nysenate.openleg.dao.spotcheck.elastic;
 
+import com.google.common.base.Objects;
 import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportElasticDao;
 import gov.nysenate.openleg.model.spotcheck.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by PKS on 9/15/16.
@@ -20,6 +24,7 @@ class ElasticObservation<ContentKey> {
     protected Map<String, String> observationKey;
     protected SpotCheckMismatchStatus mismatchStatus;
     protected SpotCheckMismatchType mismatchType;
+    protected Integer mismatchId;
     protected String observedData;
     protected String referenceData;
     protected String notes;
@@ -42,6 +47,7 @@ class ElasticObservation<ContentKey> {
         notes = spotCheckMismatch.getNotes();
         mismatchIgnore = spotCheckMismatch.getIgnoreStatus() != null ? spotCheckMismatch.getIgnoreStatus() : SpotCheckMismatchIgnore.NOT_IGNORED;
         issueIds = spotCheckMismatch.getIssueIds();
+        mismatchId = this.hashCode() + observation.hashCode() + spotCheckMismatch.hashCode();
     }
 
     public String getSpotcheckReportId(){
@@ -92,6 +98,8 @@ class ElasticObservation<ContentKey> {
         return referenceData;
     }
 
+    public Integer getMismatchId(){ return mismatchId; }
+
     public void setSpotcheckReportId(String reportId){
         spotcheckReportId = reportId;
     }
@@ -104,7 +112,7 @@ class ElasticObservation<ContentKey> {
         observedDateTime = dateTime;
     }
 
-    public void setObervationkey(Map<String, String> key){
+    public void setObservationKey(Map<String, String> key){
         observationKey = key;
     }
 
@@ -136,18 +144,20 @@ class ElasticObservation<ContentKey> {
         mismatchIgnore = status;
     }
 
+    public void setMismatchId(Integer mismatchid){ mismatchId = mismatchid; }
+
     public void setIssueIds(List<String> Ids){
         issueIds = Ids;
     }
 
-    public SpotCheckObservation<ContentKey> toSpotCheckObservation(ContentKey key){
+    public SpotCheckObservation<ContentKey> toSpotCheckObservation(ContentKey key, String mismatchid){
         SpotCheckObservation<ContentKey> observation = new SpotCheckObservation<ContentKey>(referenceId, key);
         SpotCheckMismatch spotCheckMismatch = new SpotCheckMismatch(mismatchType, observedData, referenceData, notes);
         observation.setObservedDateTime(observedDateTime);
         spotCheckMismatch.setStatus(mismatchStatus);
         spotCheckMismatch.setIgnoreStatus((mismatchIgnore==null)? SpotCheckMismatchIgnore.NOT_IGNORED: mismatchIgnore);
         spotCheckMismatch.setIssueIds(issueIds);
-        spotCheckMismatch.setMismatchId(this.hashCode());
+        spotCheckMismatch.setMismatchId(Integer.parseInt(mismatchid));
         Map<SpotCheckMismatchType, SpotCheckMismatch> mismatchMap = new HashMap<>();
         mismatchMap.put(spotCheckMismatch.getMismatchType(), spotCheckMismatch);
         observation.setMismatches(mismatchMap);
@@ -157,42 +167,43 @@ class ElasticObservation<ContentKey> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (!(o instanceof ElasticObservation)) return false;
 
         ElasticObservation<?> that = (ElasticObservation<?>) o;
 
-        if (!spotcheckReportId.equals(that.spotcheckReportId)) return false;
-        if (!referenceId.equals(that.referenceId)) return false;
-        if (!observedDateTime.equals(that.observedDateTime)) return false;
-        if (!createdDateTime.equals(that.createdDateTime)) return false;
-        if (!observationKey.equals(that.observationKey)) return false;
-        if (mismatchStatus != that.mismatchStatus) return false;
-        if (mismatchType != that.mismatchType) return false;
-        if (observedData != null ? !observedData.equals(that.observedData) : that.observedData != null) return false;
-        if (referenceData != null ? !referenceData.equals(that.referenceData) : that.referenceData != null)
-            return false;
-        if (notes != null ? !notes.equals(that.notes) : that.notes != null) return false;
-        if (mismatchIgnore != that.mismatchIgnore) return false;
-        return issueIds != null ? issueIds.equals(that.issueIds) : that.issueIds == null;
-
+        return new EqualsBuilder()
+                .append(spotcheckReportId, that.spotcheckReportId)
+                .append(referenceId, that.referenceId)
+                .append(observedDateTime, that.observedDateTime)
+                .append(createdDateTime, that.createdDateTime)
+                .append(observationKey, that.observationKey)
+                .append(mismatchStatus, that.mismatchStatus)
+                .append(mismatchType, that.mismatchType)
+                .append(observedData, that.observedData)
+                .append(referenceData, that.referenceData)
+                .append(notes, that.notes)
+                .append(mismatchIgnore, that.mismatchIgnore)
+                .append(issueIds, that.issueIds)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = spotcheckReportId.hashCode();
-        result = 31 * result + referenceId.hashCode();
-        result = 31 * result + observedDateTime.hashCode();
-        result = 31 * result + createdDateTime.hashCode();
-        result = 31 * result + observationKey.hashCode();
-        result = 31 * result + (mismatchStatus != null ? mismatchStatus.hashCode() : 0);
-        result = 31 * result + (mismatchType != null ? mismatchType.hashCode() : 0);
-        result = 31 * result + (observedData != null ? observedData.hashCode() : 0);
-        result = 31 * result + (referenceData != null ? referenceData.hashCode() : 0);
-        result = 31 * result + (notes != null ? notes.hashCode() : 0);
-        result = 31 * result + (mismatchIgnore != null ? mismatchIgnore.hashCode() : 0);
-        result = 31 * result + (issueIds != null ? issueIds.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(spotcheckReportId)
+                .append(referenceId)
+                .append(observedDateTime)
+                .append(createdDateTime)
+                .append(observationKey)
+                .append(mismatchStatus)
+                .append(mismatchType)
+                .append(observedData)
+                .append(referenceData)
+                .append(notes)
+                .append(mismatchIgnore)
+                .append(issueIds)
+                .toHashCode();
     }
-
 }
 

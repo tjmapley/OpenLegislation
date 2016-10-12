@@ -60,7 +60,7 @@ function mismatchViewDirective($rootScope, $mdDialog, defaultFilter, IgnoreApi, 
                 var mismatch = mismatchRow.mismatch;
                 $scope.state.settingIgnoreStatus = true;
                 console.log("setting ignore status", mismatchRow, ignoreStatus);
-                IgnoreApi.save({mismatchId: mismatch.mismatchId, ignoreLevel: ignoreStatus}, function(response) {
+                IgnoreApi.save({refType: mismatchRow.refType, mismatchId: mismatch.mismatchId, ignoreLevel: ignoreStatus}, function(response) {
                     if (mismatch.ignoreStatus !== "NOT_IGNORED") {
                         var ignoreStatusIndex = mismatchRow.chips.indexOf(mismatch.ignoreStatus);
                         if (ignoreStatusIndex >= 0) {
@@ -90,7 +90,8 @@ function mismatchViewDirective($rootScope, $mdDialog, defaultFilter, IgnoreApi, 
                     }
                 }
                 $scope.state.settingIssueId = true;
-                TrackingApi.save({mismatchId: mismatch.mismatchId, issueId: newIssueId}, function (response) {
+                //console.log($scope.summary);
+                TrackingApi.save({refType: mismatchRow.refType, mismatchId: mismatch.mismatchId, issueId: newIssueId}, function (response) {
                     $scope.state.settingIssueId = false;
                     mismatchRow.chips.push(newIssueId);
                     mismatch.issueIds.items.push(newIssueId);
@@ -122,7 +123,7 @@ function mismatchViewDirective($rootScope, $mdDialog, defaultFilter, IgnoreApi, 
                 var mismatch = mismatchRow.mismatch;
                 console.log('removing issue id', mismatchRow, remIssueId);
                 $scope.state.settingIssueId = true;
-                TrackingApi.delete({mismatchId: mismatch.mismatchId, issueId: remIssueId}, function (response) {
+                TrackingApi.delete({refType: mismatchRow.refType, mismatchId: mismatch.mismatchId, issueId: remIssueId}, function (response) {
                     $scope.state.settingIssueId = false;
                     var chipIndex = mismatchRow.chips.indexOf(remIssueId);
                     if (chipIndex >= 0) {
