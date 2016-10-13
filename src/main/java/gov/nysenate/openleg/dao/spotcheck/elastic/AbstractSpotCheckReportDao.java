@@ -17,15 +17,11 @@ import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.script.Script;
-import org.elasticsearch.script.ScriptService;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
@@ -35,7 +31,6 @@ import org.springframework.dao.DataAccessException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
@@ -44,11 +39,11 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 /**
  * Created by PKS on 7/25/16.
  */
-public abstract class AbstractSpotCheckReportElasticDao<ContentKey>
+public abstract class AbstractSpotCheckReportDao<ContentKey>
         extends ElasticBaseDao
         implements SpotCheckReportDao<ContentKey>, IndexedSearchService<SpotCheckReport<ContentKey>>{
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractSpotCheckReportElasticDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractSpotCheckReportDao.class);
 
     /** Subclasses should initialize with proper index name. */
     protected final String spotcheckIndex;
@@ -61,7 +56,7 @@ public abstract class AbstractSpotCheckReportElasticDao<ContentKey>
      *
      * @param refType
      */
-    public AbstractSpotCheckReportElasticDao(SpotCheckRefType refType){
+    public AbstractSpotCheckReportDao(SpotCheckRefType refType){
         spotcheckIndex = refType.getRefName();
     }
 
@@ -204,7 +199,7 @@ public abstract class AbstractSpotCheckReportElasticDao<ContentKey>
                     searchClient.prepareSearch()
                             .setIndices(spotCheckRefType.getRefName())
                             .setTypes(observationType)
-                            .setQuery(rangeQuery("observedDateTime").from(query.getObservedAfter()))
+                            .setQuery(rangeQuery("observedDateTime").from(query.getObservedAfter()).to(query.getObservedBefore()))
                             .setPostFilter(queryFilters)
                             .addSort(query.getOrderBy().getColName(), SortOrder.valueOf(query.getOrder().toString()))
                             .setScroll(new TimeValue(60000))

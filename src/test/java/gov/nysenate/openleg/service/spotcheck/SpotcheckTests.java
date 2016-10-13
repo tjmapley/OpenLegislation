@@ -42,7 +42,7 @@ public class SpotcheckTests extends WebAppBaseTests {
         LocalTime start = LocalTime.now();
         logger.info("start {}", start);
         BaseResponse response =
-                spotCheckCtrl.getOpenMismatches("scraped-bill", null, "CONTENT_KEY", null, false, false, false, false, true,
+                spotCheckCtrl.getOpenMismatches("scraped-bill", null, "CONTENT_KEY", null, null, false, false, false, false, true,
                         new ServletWebRequest(new MockHttpServletRequest()));
         LocalTime end = LocalTime.now();
         logger.info("done {}", end);

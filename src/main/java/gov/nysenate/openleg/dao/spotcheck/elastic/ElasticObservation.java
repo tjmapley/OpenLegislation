@@ -1,7 +1,5 @@
 package gov.nysenate.openleg.dao.spotcheck.elastic;
 
-import com.google.common.base.Objects;
-import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportElasticDao;
 import gov.nysenate.openleg.model.spotcheck.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -10,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by PKS on 9/15/16.

@@ -1,6 +1,6 @@
 package gov.nysenate.openleg.dao.spotcheck;
 
-import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportElasticDao;
+import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportDao;
 import gov.nysenate.openleg.model.agenda.AgendaId;
 import gov.nysenate.openleg.model.agenda.CommitteeAgendaAddendumId;
 import gov.nysenate.openleg.model.base.Version;
@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by PKS on 4/28/16.
  */
 @Repository
-public class CommitteeAgendaAddendumIdSpotCheckReportDao extends AbstractSpotCheckReportElasticDao<CommitteeAgendaAddendumId> {
+public class CommitteeAgendaAddendumIdSpotCheckReportDao extends AbstractSpotCheckReportDao<CommitteeAgendaAddendumId> {
 
     @Override
     public CommitteeAgendaAddendumId getKeyFromMap(Map<String, String> keyMap) {

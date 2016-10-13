@@ -1,7 +1,7 @@
 package gov.nysenate.openleg.dao.spotcheck;
 
 import com.google.common.collect.ImmutableMap;
-import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportElasticDao;
+import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportDao;
 import gov.nysenate.openleg.model.agenda.AgendaId;
 import gov.nysenate.openleg.model.agenda.CommitteeAgendaAddendumId;
 import gov.nysenate.openleg.model.base.Version;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Map;
 
 @Repository
-public class CommitteeAgendaReportDao extends AbstractSpotCheckReportElasticDao<CommitteeAgendaAddendumId> {
+public class CommitteeAgendaReportDao extends AbstractSpotCheckReportDao<CommitteeAgendaAddendumId> {
 
     public CommitteeAgendaReportDao() {
         super(SpotCheckRefType.LBDC_AGENDA_ALERT);

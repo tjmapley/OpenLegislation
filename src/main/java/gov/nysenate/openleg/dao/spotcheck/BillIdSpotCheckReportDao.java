@@ -1,6 +1,6 @@
 package gov.nysenate.openleg.dao.spotcheck;
 
-import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportElasticDao;
+import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportDao;
 import gov.nysenate.openleg.model.bill.BillId;
 import gov.nysenate.openleg.model.spotcheck.SpotCheckRefType;
 import org.springframework.stereotype.Repository;
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
-public class BillIdSpotCheckReportDao extends AbstractSpotCheckReportElasticDao<BillId> {
+public class BillIdSpotCheckReportDao extends AbstractSpotCheckReportDao<BillId> {
 
     /** --- Override Methods --- */
 

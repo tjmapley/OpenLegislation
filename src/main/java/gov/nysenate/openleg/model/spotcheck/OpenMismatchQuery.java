@@ -19,6 +19,8 @@ public class OpenMismatchQuery {
     Collection<SpotCheckMismatchType> mismatchTypes;
     /** Get mismatches observed on or after this date */
     LocalDateTime observedAfter;
+    /** Get mismatches observed on or before this date */
+    LocalDateTime observedBefore;
     /** Order mismatches by this mismatch parameter */
     MismatchOrderBy orderBy;
     /** in ascending or descending sort order */
@@ -38,12 +40,13 @@ public class OpenMismatchQuery {
     /** --- Constructors --- */
 
     public OpenMismatchQuery(Set<SpotCheckRefType> refTypes, Collection<SpotCheckMismatchType> mismatchTypes,
-                             LocalDateTime observedAfter, MismatchOrderBy orderBy, SortOrder order,
+                             LocalDateTime observedAfter, LocalDateTime observedBefore, MismatchOrderBy orderBy, SortOrder order,
                              LimitOffset limitOffset, boolean resolvedShown, boolean ignoredShown, boolean ignoredOnly,
                              boolean trackedShown, boolean untrackedShown) {
         this.refTypes = refTypes;
         this.mismatchTypes = mismatchTypes;
         this.observedAfter = observedAfter;
+        this.observedBefore = observedBefore;
         this.orderBy = orderBy;
         this.order = order;
         this.limitOffset = limitOffset;
@@ -74,6 +77,8 @@ public class OpenMismatchQuery {
     public LocalDateTime getObservedAfter() {
         return observedAfter;
     }
+
+    public LocalDateTime getObservedBefore(){ return observedBefore; }
 
     public MismatchOrderBy getOrderBy() {
         return orderBy;

@@ -157,6 +157,7 @@ public class SpotCheckCtrl extends BaseCtrl
                                           @RequestParam(required = false) String[] mismatchType,
                                           @RequestParam(required = false) String orderBy,
                                           @RequestParam(required = false) String observedAfter,
+                                          @RequestParam(required = false) String observedBefore,
                                           @RequestParam(defaultValue = "false") boolean resolvedShown,
                                           @RequestParam(defaultValue = "false") boolean ignoredShown,
                                           @RequestParam(defaultValue = "false") boolean ignoredOnly,
@@ -169,11 +170,14 @@ public class SpotCheckCtrl extends BaseCtrl
         MismatchOrderBy mismatchOrderBy = getEnumParameter(orderBy, MismatchOrderBy.class, MismatchOrderBy.OBSERVED_DATE);
         SortOrder order = getSortOrder(request, SortOrder.DESC);
         Set<SpotCheckMismatchType> mismatchTypes = getSpotcheckMismatchTypes(mismatchType, "mismatchType", refTypes);
-        LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
-        OpenMismatchQuery query = new OpenMismatchQuery(refTypes, mismatchTypes, earliestDateTime,
+        LocalDateTime afterDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
+        LocalDateTime beforeDateTime = (observedBefore != null) ? 
+                parseISODateTime(observedBefore, DateUtils.THE_FUTURE.atStartOfDay()) :
+                LocalDateTime.now();
+        OpenMismatchQuery query = new OpenMismatchQuery(refTypes, mismatchTypes, afterDateTime, beforeDateTime,
                 mismatchOrderBy, order, limOff, resolvedShown, ignoredShown, ignoredOnly, trackedShown, untrackedShown);
         SpotCheckOpenMismatches<?> observations = reportServiceMap.get(refType).getOpenObservations(query);
-        OpenMismatchSummary summary = reportServiceMap.get(refType).getOpenMismatchSummary(refType, earliestDateTime);
+        OpenMismatchSummary summary = reportServiceMap.get(refType).getOpenMismatchSummary(refType, afterDateTime);
         return new OpenMismatchesResponse<>(observations, summary, query);
     }
 
