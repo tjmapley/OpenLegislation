@@ -9,36 +9,46 @@ import java.util.EnumSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static gov.nysenate.openleg.model.notification.NotificationType.*;
+import static gov.nysenate.openleg.model.spotcheck.SpotCheckDataSource.*;
+import static gov.nysenate.openleg.model.spotcheck.SpotCheckContentType.*;
+
 /**
  * Enumeration of the types of sources that can provide data for QA purposes.
  */
 public enum SpotCheckRefType
 {
-    LBDC_DAYBREAK("daybreak", "Daybreak", NotificationType.DAYBREAK_SPOTCHECK),
+    LBDC_DAYBREAK("daybreak", "Daybreak", OPENLEG, BILL, DAYBREAK_SPOTCHECK),
 
-    LBDC_SCRAPED_BILL("scraped-bill", "Scraped Bill", NotificationType.BILL_TEXT_SPOTCHECK),
+    LBDC_SCRAPED_BILL("scraped-bill", "Scraped Bill", OPENLEG, BILL, BILL_TEXT_SPOTCHECK),
 
-    LBDC_CALENDAR_ALERT("floor-alert", "Floor Calendar Alert", NotificationType.CALENDAR_SPOTCHECK),
+    LBDC_CALENDAR_ALERT("floor-alert", "Floor Calendar Alert", OPENLEG, CALENDAR, CALENDAR_SPOTCHECK),
 
-    LBDC_AGENDA_ALERT("agenda-alert", "Agenda Alert", NotificationType.AGENDA_SPOTCHECK),
+    LBDC_AGENDA_ALERT("agenda-alert", "Agenda Alert", OPENLEG, AGENDA, AGENDA_SPOTCHECK),
 
-    SENATE_SITE_BILLS("senate-site-bills", "Nysenate.gov Bill", NotificationType.SENSITE_BILL_SPOTCHECK),
+    SENATE_SITE_BILLS("senate-site-bills", "Nysenate.gov Bill", NYSENATE_DOT_GOV, BILL, SENSITE_BILL_SPOTCHECK),
 
-    SENATE_SITE_CALENDAR("senate-site-calendar", "Nysenate.gov Calendar", NotificationType.SENSITE_CALENDAR_SPOTCHECK),
+    SENATE_SITE_CALENDAR("senate-site-calendar", "Nysenate.gov Calendar", NYSENATE_DOT_GOV, CALENDAR, SENSITE_CALENDAR_SPOTCHECK),
 
-    SENATE_SITE_AGENDA("senate-site-agenda", "Nysenate.gov Agenda", NotificationType.SENSITE_AGENDA_SPOTCHECK)
+    SENATE_SITE_AGENDA("senate-site-agenda", "Nysenate.gov Agenda", NYSENATE_DOT_GOV, AGENDA, SENSITE_AGENDA_SPOTCHECK)
 
     ;
 
     private String refName;
     private String displayName;
 
+    private SpotCheckDataSource dataSource;
+    private SpotCheckContentType contentType;
+
     /** A notification type that is used to send notifications for this type of report */
     private NotificationType notificationType;
 
-    private SpotCheckRefType(String refName, String displayName, NotificationType type) {
+    private SpotCheckRefType(String refName, String displayName,
+                             SpotCheckDataSource dataSource, SpotCheckContentType contentType, NotificationType type) {
         this.refName = refName;
         this.displayName = displayName;
+        this.dataSource = dataSource;
+        this.contentType = contentType;
         this.notificationType = type;
     }
 
@@ -52,6 +62,15 @@ public enum SpotCheckRefType
 
     public NotificationType getNotificationType() {
         return notificationType;
+    }
+
+    public SpotCheckDataSource getDataSource() {
+        return dataSource;
+    }
+
+    public SpotCheckContentType getContentType() {
+
+        return contentType;
     }
 
     private static final ImmutableMap<String, SpotCheckRefType> refNameMap = ImmutableMap.copyOf(
