@@ -17,12 +17,20 @@ public class OpenMismatchSummary {
 
     protected LocalDateTime observedAfter;
 
+    /** --- Constructors --- */
+
     public OpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter) {
         this.observedAfter = observedAfter;
         this.summaryMap = new HashMap<>();
-        this.summaryMap.put(refType, new RefTypeMismatchSummary(refType, observedAfter)); //refTypes.stream()
-                //.map(refType -> new RefTypeMismatchSummary(refType, observedAfter))
-                //.collect(Collectors.toMap(RefTypeMismatchSummary::getRefType, Function.identity()));
+        this.summaryMap.put(refType, new RefTypeMismatchSummary(refType, observedAfter));
+    }
+
+    public OpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter) {
+        this.observedAfter = observedAfter;
+        this.summaryMap = new HashMap<>();
+        this.summaryMap = refTypes.stream()
+                .map(refType -> new RefTypeMismatchSummary(refType, observedAfter))
+                .collect(Collectors.toMap(RefTypeMismatchSummary::getRefType, Function.identity()));
     }
 
     /** --- Functional Getters / Setters --- */

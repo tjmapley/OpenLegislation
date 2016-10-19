@@ -45,12 +45,27 @@ public abstract class BaseSpotCheckReportService<ContentKey> implements SpotChec
         return getReportDao().getOpenMismatches(query);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public SpotCheckOpenMismatches<ContentKey> getOpenObservations(
+            SpotCheckDataSource dataSource, SpotCheckContentType contentType, OpenMismatchQuery query) {
+        return getReportDao().getOpenMismatches(dataSource, contentType, query);
+    }
+
     /** {@inheritDoc}
      * @param refType
      * @param observedAfter*/
     @Override
     public OpenMismatchSummary getOpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter) {
         return getReportDao().getOpenMismatchSummary(refType, observedAfter);
+    }
+
+    /** {@inheritDoc}
+     * @param refTypes
+     * @param observedAfter*/
+    @Override
+    public OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter) {
+        return getReportDao().getOpenMismatchSummary(refTypes, observedAfter);
     }
 
     /** {@inheritDoc} */

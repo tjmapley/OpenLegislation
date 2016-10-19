@@ -3,7 +3,7 @@ package gov.nysenate.openleg.service.spotcheck;
 import com.google.common.collect.Range;
 import gov.nysenate.openleg.BaseTests;
 import gov.nysenate.openleg.dao.bill.reference.daybreak.DaybreakDao;
-import gov.nysenate.openleg.dao.spotcheck.BaseBillIdSpotCheckReportDao;
+import gov.nysenate.openleg.dao.spotcheck.bills.DaybreakBillIdSpotCheckReportDao;
 import gov.nysenate.openleg.model.bill.BaseBillId;
 import gov.nysenate.openleg.model.bill.Bill;
 import gov.nysenate.openleg.model.spotcheck.daybreak.DaybreakBill;
@@ -38,7 +38,7 @@ public class DaybreakCheckServiceTests extends BaseTests
     DaybreakDao daybreakDao;
 
     @Autowired
-    private BaseBillIdSpotCheckReportDao reportDao;
+    private DaybreakBillIdSpotCheckReportDao reportDao;
 
     @Test
     public void testAutowired() throws Exception {

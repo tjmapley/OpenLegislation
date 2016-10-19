@@ -75,6 +75,16 @@ public interface SpotCheckReportService<ContentKey>
     SpotCheckOpenMismatches<ContentKey> getOpenObservations(OpenMismatchQuery query);
 
     /**
+     * Get a map of all unresolved or recently resolved observations spanning all reports of the given refType
+     * @param dataSource SpotCheckDataSource
+     * @param contentType SpotCheckContentType
+     * @param query OpenMismatchQuery
+     * @return Map<ContentKey, SpotCheckObservation<ContentKey>>
+     */
+    SpotCheckOpenMismatches<ContentKey> getOpenObservations(
+            SpotCheckDataSource dataSource, SpotCheckContentType contentType, OpenMismatchQuery query);
+
+    /**
      * Get a summary of type/status/ignore counts pertaining to the given query
      *
      * @param refType
@@ -83,6 +93,14 @@ public interface SpotCheckReportService<ContentKey>
      */
     OpenMismatchSummary getOpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter);
 
+    /**
+     * Get a summary of type/status/ignore counts pertaining to the given query
+     *
+     * @param refTypes
+     * @param observedAfter
+     * @return OpenMismatchesSummary
+     */
+    OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter);
     /**
      * Wipe a report as well as all of its associated observations and mismatches from the backing store.
      *

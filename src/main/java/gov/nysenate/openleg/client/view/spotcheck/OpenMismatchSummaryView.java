@@ -24,17 +24,6 @@ public class OpenMismatchSummaryView implements ViewObject {
         this.observedAfter = summary.getObservedAfter();
     }
 
-    public OpenMismatchSummaryView(List<OpenMismatchSummary> summaries){
-        summaries.forEach(summary -> {
-            this.summaryMap.putAll(
-                    summary.getSummaryMap().values().stream()
-                            .map(RefTypeMismatchSummaryView::new)
-                            .collect(Collectors.toMap(RefTypeMismatchSummaryView::getRefType, Function.identity()))
-            );
-            this.observedAfter = summary.getObservedAfter();
-        });
-    }
-
     public Map<SpotCheckRefType, RefTypeMismatchSummaryView> getSummaryMap() {
         return summaryMap;
     }

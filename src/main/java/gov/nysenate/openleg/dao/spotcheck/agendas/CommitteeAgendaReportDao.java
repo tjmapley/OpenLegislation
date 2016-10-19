@@ -1,4 +1,4 @@
-package gov.nysenate.openleg.dao.spotcheck;
+package gov.nysenate.openleg.dao.spotcheck.agendas;
 
 import com.google.common.collect.ImmutableMap;
 import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportDao;

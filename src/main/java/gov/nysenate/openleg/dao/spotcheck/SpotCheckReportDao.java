@@ -42,15 +42,26 @@ public interface SpotCheckReportDao<ContentKey>
      * @param query OpenMismatchQuery
      * */
     SpotCheckOpenMismatches<ContentKey> getOpenMismatches(OpenMismatchQuery query);
+    SpotCheckOpenMismatches<ContentKey> getOpenMismatches(SpotCheckDataSource dataSource,SpotCheckContentType contentType, OpenMismatchQuery query);
+
+
+    /**
+    * Get a summary of type/status/ignore counts pertaining to the given query
+    *
+    * @param refType
+    * @param observedAfter
+    * @return OpenMismatchesSummary
+    */
+    OpenMismatchSummary getOpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter);
 
     /**
      * Get a summary of type/status/ignore counts pertaining to the given query
      *
-     * @param refType
+     * @param refTypes
      * @param observedAfter
      * @return OpenMismatchesSummary
      */
-    OpenMismatchSummary getOpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter);
+    OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter);
 
     /**
      * Save the report to the backing store. This process may add additional observations to the

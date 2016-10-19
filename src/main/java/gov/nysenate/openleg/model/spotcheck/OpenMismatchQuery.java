@@ -57,6 +57,23 @@ public class OpenMismatchQuery {
         this.untrackedShown = untrackedShown;
     }
 
+    public OpenMismatchQuery(Collection<SpotCheckMismatchType> mismatchTypes,
+                             LocalDateTime observedAfter, LocalDateTime observedBefore, MismatchOrderBy orderBy, SortOrder order,
+                             LimitOffset limitOffset, boolean resolvedShown, boolean ignoredShown, boolean ignoredOnly,
+                             boolean trackedShown, boolean untrackedShown) {
+        this.mismatchTypes = mismatchTypes;
+        this.observedAfter = observedAfter;
+        this.observedBefore = observedBefore;
+        this.orderBy = orderBy;
+        this.order = order;
+        this.limitOffset = limitOffset;
+        this.resolvedShown = resolvedShown;
+        this.ignoredShown = ignoredShown;
+        this.ignoredOnly = ignoredOnly;
+        this.trackedShown = trackedShown;
+        this.untrackedShown = untrackedShown;
+    }
+
     /** --- Functional Getters --- */
 
     @JsonIgnore
@@ -110,5 +127,11 @@ public class OpenMismatchQuery {
 
     public boolean isUntrackedShown() {
         return untrackedShown;
+    }
+
+    /** --- Setters --- */
+
+    public void setRefTypes(Set<SpotCheckRefType> refTypes){
+        this.refTypes = refTypes;
     }
 }

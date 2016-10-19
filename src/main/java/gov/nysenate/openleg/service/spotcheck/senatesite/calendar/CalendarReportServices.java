@@ -7,7 +7,7 @@ import gov.nysenate.openleg.dao.base.SortOrder;
 import gov.nysenate.openleg.dao.bill.reference.senatesite.SenateSiteDao;
 import gov.nysenate.openleg.dao.calendar.data.CalendarUpdatesDao;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
-import gov.nysenate.openleg.dao.spotcheck.CalendarEntryListIdSpotCheckReportDao;
+import gov.nysenate.openleg.dao.spotcheck.calendars.CalendarEntryListIdSpotCheckReportDao;
 import gov.nysenate.openleg.model.base.Version;
 import gov.nysenate.openleg.model.calendar.Calendar;
 import gov.nysenate.openleg.model.calendar.CalendarId;

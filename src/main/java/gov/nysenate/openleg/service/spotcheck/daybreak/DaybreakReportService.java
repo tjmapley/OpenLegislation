@@ -4,6 +4,7 @@ import com.google.common.collect.Range;
 import com.google.common.collect.Sets;
 import gov.nysenate.openleg.dao.base.LimitOffset;
 import gov.nysenate.openleg.dao.bill.reference.daybreak.DaybreakDao;
+import gov.nysenate.openleg.dao.spotcheck.bills.DaybreakBillIdSpotCheckReportDao;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
 import gov.nysenate.openleg.model.base.PublishStatus;
 import gov.nysenate.openleg.model.base.SessionYear;
@@ -44,7 +45,7 @@ public class DaybreakReportService extends BaseSpotCheckReportService<BaseBillId
     private DaybreakDao daybreakDao;
 
     @Autowired
-    private SpotCheckReportDao<BaseBillId> reportDao;
+    private DaybreakBillIdSpotCheckReportDao reportDao;
 
     @Autowired
     private BillDataService billDataService;

@@ -1,7 +1,7 @@
 package gov.nysenate.openleg.service.spotcheck.billtext;
 
 import gov.nysenate.openleg.dao.bill.text.SqlFsBillTextReferenceDao;
-import gov.nysenate.openleg.dao.spotcheck.BaseBillIdSpotCheckReportDao;
+import gov.nysenate.openleg.dao.spotcheck.bills.ScrapedBillIdSpotCheckReportDao;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
 import gov.nysenate.openleg.model.bill.BaseBillId;
 import gov.nysenate.openleg.model.bill.Bill;
@@ -39,7 +39,7 @@ public class BillTextReportService extends BaseSpotCheckReportService {
     @Autowired
     BillDataService billDataService;
     @Autowired
-    BaseBillIdSpotCheckReportDao reportDao;
+    ScrapedBillIdSpotCheckReportDao reportDao;
     @Autowired
     BillTextCheckService billTextCheckService;
 

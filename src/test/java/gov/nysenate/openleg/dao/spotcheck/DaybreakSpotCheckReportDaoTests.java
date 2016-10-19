@@ -2,6 +2,7 @@ package gov.nysenate.openleg.dao.spotcheck;
 
 import gov.nysenate.openleg.BaseTests;
 import gov.nysenate.openleg.dao.base.SortOrder;
+import gov.nysenate.openleg.dao.spotcheck.bills.BaseBillIdSpotCheckReportDao;
 import gov.nysenate.openleg.model.bill.BaseBillId;
 import gov.nysenate.openleg.model.spotcheck.*;
 import gov.nysenate.openleg.service.spotcheck.daybreak.DaybreakCheckService;

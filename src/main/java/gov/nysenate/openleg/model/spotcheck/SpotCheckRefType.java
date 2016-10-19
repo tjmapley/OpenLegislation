@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableMap;
 import gov.nysenate.openleg.model.notification.NotificationType;
 import gov.nysenate.openleg.util.OutputUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -80,6 +82,16 @@ public enum SpotCheckRefType
 
     public static SpotCheckRefType getByRefName(String refName) {
         return refNameMap.get(refName);
+    }
+
+    // TODO: implement it
+    public static List<SpotCheckRefType> get(SpotCheckDataSource dataSource, SpotCheckContentType contentType){
+        List<SpotCheckRefType> spotCheckRefTypes = new ArrayList<>();
+        Arrays.asList(SpotCheckRefType.values()).forEach(refType -> {
+            if(refType.getDataSource().equals(dataSource) && refType.getContentType().equals(contentType))
+                spotCheckRefTypes.add(refType);
+        });
+        return spotCheckRefTypes;
     }
 
     /**

@@ -1,4 +1,4 @@
-package gov.nysenate.openleg.dao.spotcheck;
+package gov.nysenate.openleg.dao.spotcheck.agendas;
 
 import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportDao;
 import gov.nysenate.openleg.model.agenda.AgendaId;

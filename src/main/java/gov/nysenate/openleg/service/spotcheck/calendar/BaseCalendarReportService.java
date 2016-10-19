@@ -1,7 +1,7 @@
 package gov.nysenate.openleg.service.spotcheck.calendar;
 
 import gov.nysenate.openleg.config.Environment;
-import gov.nysenate.openleg.dao.spotcheck.CalendarAlertReportDao;
+import gov.nysenate.openleg.dao.spotcheck.calendars.CalendarAlertReportDao;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
 import gov.nysenate.openleg.model.calendar.Calendar;
 import gov.nysenate.openleg.model.calendar.CalendarId;

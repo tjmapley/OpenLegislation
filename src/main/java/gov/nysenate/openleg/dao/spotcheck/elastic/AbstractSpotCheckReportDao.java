@@ -1,6 +1,7 @@
 package gov.nysenate.openleg.dao.spotcheck.elastic;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 import gov.nysenate.openleg.dao.base.ElasticBaseDao;
 import gov.nysenate.openleg.dao.base.SearchIndex;
@@ -23,6 +24,8 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,11 +163,15 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
                 .setSize(100)
                 .setScroll(new TimeValue(60000))
                 .setQuery(rangeQuery("reportId.reportDateTime").from(start).to(end))
-                .addSort("reportId.reportDateTime", SortOrder.valueOf(dateOrder.toString()))
+                .addSort(SortBuilders
+                                .fieldSort("reportId.reportDateTime")
+                                .order(SortOrder.valueOf(dateOrder.toString()))
+                                .unmappedType("date")
+                )
                 .execute()
                 .actionGet();
         List<SpotCheckReportSummary> spotCheckReportSummaries = new ArrayList<>();
-        while(true){
+        do {
             reportSearchResponse.getHits().forEach(report -> {
                 String reportId = report.getId();
                 SpotCheckReport<ContentKey> spotcheckReport = getSpotcheckReportFrom(report.getSource());
@@ -180,104 +187,127 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
                     .setScroll(new TimeValue(60000))
                     .execute()
                     .actionGet();
-            if(reportSearchResponse.getHits().getHits().length == 0){
-                break;
-            }
         }
+        while (reportSearchResponse.getHits().getHits().length != 0);
+
         return spotCheckReportSummaries;
     }
 
     @Override
     public SpotCheckOpenMismatches<ContentKey> getOpenMismatches(OpenMismatchQuery query) {
-        MultiSearchRequestBuilder multiSearch = searchClient.prepareMultiSearch();
+
+        String[] spotCheckIndexes = query.getRefTypes().stream().map(SpotCheckRefType::getRefName).toArray(String[]::new);
+
         BoolQueryBuilder queryFilters = QueryBuilders.boolQuery();
         query.getMismatchTypes().forEach(spotCheckMismatchType -> {
             queryFilters.should(QueryBuilders.matchQuery("mismatchType", spotCheckMismatchType));
         });
-        query.getRefTypes().forEach(spotCheckRefType -> {
-            multiSearch.add(
-                    searchClient.prepareSearch()
-                            .setIndices(spotCheckRefType.getRefName())
-                            .setTypes(observationType)
-                            .setQuery(rangeQuery("observedDateTime").from(query.getObservedAfter()).to(query.getObservedBefore()))
-                            .setPostFilter(queryFilters)
-                            .addSort(query.getOrderBy().getColName(), SortOrder.valueOf(query.getOrder().toString()))
-                            .setScroll(new TimeValue(60000))
-                            .setSize(query.getLimitOffset().getLimit())
-            );
-        });
-        MultiSearchResponse multiSearchResponse = multiSearch.execute().actionGet();
+        SearchResponse searchResponse = searchClient.prepareSearch()
+                .setIndices(spotCheckIndexes)
+                .setTypes(observationType)
+                .setQuery(rangeQuery("observedDateTime").from(query.getObservedAfter()).to(query.getObservedBefore()))
+                .setPostFilter(queryFilters)
+                .addSort(query.getOrderBy().getColName(), SortOrder.valueOf(query.getOrder().toString()))
+                .setScroll(new TimeValue(60000))
+                .setSize(query.getLimitOffset().getLimit())
+                .execute().actionGet();
         Map<ContentKey, SpotCheckObservation<ContentKey>> observations = new HashMap<>();
         List<Integer> countList = new ArrayList<>();
-        multiSearchResponse.forEach(r -> {
-            if(!r.isFailure()){
-                SearchResponse response =  r.getResponse();
-                Integer offset = query.getLimitOffset().getOffsetStart();
-                Integer scroll = 1;
-                while (true){
-                    if(offset.equals(scroll)){
-                        response.getHits().forEach(observation -> {
-                            Map<String, Object> observationObjectMap = observation.getSource();
-                            TypeReference<ElasticObservation<ContentKey>> elasticObservationTypeReference = new TypeReference<ElasticObservation<ContentKey>>(){};
-                            ElasticObservation<ContentKey> elasticObservation = OutputUtils.getJsonMapper().convertValue(observationObjectMap, elasticObservationTypeReference);
-                            SpotCheckObservation<ContentKey> spotcheckObservation = elasticObservation
-                                    .toSpotCheckObservation(getKeyFromMap(elasticObservation.getObservationKey()), observation.getId());
-                            countList.add(spotcheckObservation.getMismatches().values().size());
-                            observations.put(spotcheckObservation.getKey(),spotcheckObservation);
-                        });
-                    }
-                    scroll += 10;
-                    response = searchClient.prepareSearchScroll(response.getScrollId())
-                            .setScroll(new TimeValue(60000))
-                            .execute()
-                            .actionGet();
-                    if(response.getHits().getHits().length == 0 || observations.size() == query.getLimitOffset().getLimit()){
-                        break;
-                    }
-                }
-
+        Integer offset = query.getLimitOffset().getOffsetStart();
+        Integer scroll = 1;
+        do {
+            if (offset.equals(scroll)) {
+                searchResponse.getHits().forEach(observation -> {
+                    SpotCheckObservation<ContentKey> spotcheckObservation = getSpotcheckObservationFrom(observation);
+                    countList.add(spotcheckObservation.getMismatches().values().size());
+                    observations.put(spotcheckObservation.getKey(), spotcheckObservation);
+                });
             }
-        });
+            scroll += 10;
+            searchResponse = searchClient.prepareSearchScroll(searchResponse.getScrollId())
+                    .setScroll(new TimeValue(60000))
+                    .execute()
+                    .actionGet();
+        }
+        while(searchResponse.getHits().getHits().length != 0 || observations.size() != query.getLimitOffset().getLimit());
         Integer totalMismatches = countList.stream().mapToInt(Integer::intValue).sum();
         return new SpotCheckOpenMismatches<>(query.getRefTypes(),observations,totalMismatches);
     }
 
     @Override
+    public SpotCheckOpenMismatches<ContentKey> getOpenMismatches(SpotCheckDataSource dataSource, SpotCheckContentType contentType, OpenMismatchQuery query) {
+        List<SpotCheckRefType> spotCheckRefTypes = SpotCheckRefType.get(dataSource, contentType);
+        query.setRefTypes(Sets.newHashSet(spotCheckRefTypes));
+        return getOpenMismatches(query);
+    }
+
+    @Override
     public OpenMismatchSummary getOpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter) {
-        SearchResponse searchObservationsResponse = searchClient.prepareSearch()
-                .setIndices(spotcheckIndex)
+        String index = refType.getRefName();
+        SearchResponse searchResponse = searchClient.prepareSearch()
+                .setIndices(index)
                 .setTypes(observationType)
                 .setQuery(QueryBuilders.boolQuery()
-                                .must(matchQuery("referenceId.referenceType",refType))
                                 .must(rangeQuery("observedDateTime").from(observedAfter))
                 )
                 .setScroll(new TimeValue(60000))
                 .setSize(100)
                 .execute().actionGet();
+        List<SpotCheckObservation<ContentKey>> observations = new ArrayList<>();
+        do {
+            searchResponse.getHits().forEach(observation -> {
+                SpotCheckObservation<ContentKey> spotcheckObservation = getSpotcheckObservationFrom(observation);
+                observations.add(spotcheckObservation);
+            });
+            searchResponse = searchClient.prepareSearchScroll(searchResponse.getScrollId())
+                    .setScroll(new TimeValue(60000))
+                    .execute()
+                    .actionGet();
+        }
+        while(searchResponse.getHits().getHits().length != 0);
+
+        OpenMismatchSummary openMismatchSummary = new OpenMismatchSummary(refType,observedAfter);
+        openMismatchSummary.getRefTypeSummary(refType).addCountsFromObservations(observations);
+        return openMismatchSummary;
+    }
+
+
+    @Override
+    public OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter) {
+        String[] spotCheckIndexes = refTypes.stream().map(SpotCheckRefType::getRefName).toArray(String[]::new);
+        SearchResponse searchObservationsResponse = searchClient.prepareSearch()
+                .setIndices(spotCheckIndexes)
+                .setTypes(observationType)
+                .setQuery(QueryBuilders.boolQuery()
+                        .must(rangeQuery("observedDateTime").from(observedAfter))
+                )
+                .setScroll(new TimeValue(60000))
+                .setSize(100)
+                .execute().actionGet();
         Map<SpotCheckRefType, Collection<SpotCheckObservation<ContentKey>>>observationsMap = new HashMap<>();
-        while (true){
+        do {
             searchObservationsResponse.getHits().forEach(observation -> {
                 SpotCheckObservation<ContentKey> spotcheckObservation = getSpotcheckObservationFrom(observation);
                 Collection<SpotCheckObservation<ContentKey>> observations =
                         observationsMap.get(spotcheckObservation.getReferenceId().getReferenceType());
-                if(observations == null)
+                if (observations == null)
                     observations = new ArrayList<SpotCheckObservation<ContentKey>>();
                 observations.add(spotcheckObservation);
-                observationsMap.put(spotcheckObservation.getReferenceId().getReferenceType(),observations);
+                observationsMap.put(spotcheckObservation.getReferenceId().getReferenceType(), observations);
             });
             searchObservationsResponse = searchClient.prepareSearchScroll(searchObservationsResponse.getScrollId())
                     .setScroll(new TimeValue(60000))
                     .execute()
                     .actionGet();
-            if(searchObservationsResponse.getHits().getHits().length == 0){
-                break;
-            }
         }
-        OpenMismatchSummary openMismatchSummary = new OpenMismatchSummary(refType,observedAfter);
-        if(observationsMap.get(refType) != null)
-            openMismatchSummary.getRefTypeSummary(refType).addCountsFromObservations(observationsMap.get(refType));
+        while (searchObservationsResponse.getHits().getHits().length != 0);
+        OpenMismatchSummary openMismatchSummary = new OpenMismatchSummary(refTypes, observedAfter);
+        observationsMap.forEach((refType, observations) ->{
+            openMismatchSummary.getRefTypeSummary(refType).addCountsFromObservations(observations);
+        });
         return openMismatchSummary;
     }
+
 
     @Override
     public void deleteReport(SpotCheckReportId reportId) {
@@ -409,25 +439,23 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
                 .execute()
                 .actionGet();
         Map<ContentKey, SpotCheckObservation<ContentKey>> observationMap = new HashMap<>();
-        while(true){
+        do {
 
             observationSearchResponse.getHits().forEach(observation -> {
                 SpotCheckObservation<ContentKey> spotcheckObservation = getSpotcheckObservationFrom(observation);
-                if(observationMap.containsKey(spotcheckObservation.getKey())){
+                if (observationMap.containsKey(spotcheckObservation.getKey())) {
                     SpotCheckObservation spotCheckObservation = observationMap.get(spotcheckObservation.getKey());
                     spotcheckObservation.getMismatches().putAll(spotCheckObservation.getMismatches());
                 }
-                observationMap.put(spotcheckObservation.getKey(),spotcheckObservation);
+                observationMap.put(spotcheckObservation.getKey(), spotcheckObservation);
             });
 
             observationSearchResponse = searchClient.prepareSearchScroll(observationSearchResponse.getScrollId())
                     .setScroll(new TimeValue(60000))
                     .execute()
                     .actionGet();
-            if(observationSearchResponse.getHits().getHits().length == 0){
-                break;
-            }
         }
+        while (observationSearchResponse.getHits().getHits().length != 0);
         return observationMap;
     }
 
@@ -453,7 +481,6 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
 
         return elasticReport.toSpotCheckReport();
     }
-
 
     /** {@inheritDoc} */
     @Override

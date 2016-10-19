@@ -2,7 +2,7 @@ package gov.nysenate.openleg.service.spotcheck.agenda;
 
 import gov.nysenate.openleg.config.Environment;
 import gov.nysenate.openleg.dao.agenda.reference.AgendaAlertDao;
-import gov.nysenate.openleg.dao.spotcheck.CommitteeAgendaReportDao;
+import gov.nysenate.openleg.dao.spotcheck.agendas.CommitteeAgendaReportDao;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
 import gov.nysenate.openleg.model.agenda.*;
 import gov.nysenate.openleg.model.spotcheck.agenda.AgendaAlertInfoCommittee;

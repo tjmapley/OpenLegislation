@@ -1,4 +1,4 @@
-package gov.nysenate.openleg.dao.spotcheck;
+package gov.nysenate.openleg.dao.spotcheck.bills;
 
 import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportDao;
 import gov.nysenate.openleg.model.bill.BaseBillId;
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
-public class BaseBillIdSpotCheckReportDao extends AbstractSpotCheckReportDao<BaseBillId>
+public abstract class BaseBillIdSpotCheckReportDao extends AbstractSpotCheckReportDao<BaseBillId>
 {
     /** --- Override Methods --- */
 
@@ -45,7 +45,7 @@ public class BaseBillIdSpotCheckReportDao extends AbstractSpotCheckReportDao<Bas
         return null;
     }
 
-    BaseBillIdSpotCheckReportDao() {
-        super(SpotCheckRefType.LBDC_SCRAPED_BILL);
+    BaseBillIdSpotCheckReportDao(SpotCheckRefType refType) {
+        super(refType);
     }
 }
