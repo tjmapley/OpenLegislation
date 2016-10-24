@@ -247,7 +247,7 @@ public class SpotCheckCtrl extends BaseCtrl
      *                          the given date if present
      */
     @RequiresPermissions("admin:view")
-    @RequestMapping(value = "/open-mismatches/summary", method = RequestMethod.GET)
+    @RequestMapping(value = "/open-mismatches/summary", method = RequestMethod.GET, params = {"reportType"})
     public BaseResponse getOpenMismatchSummary(@RequestParam(required = false) String reportType,
                                           @RequestParam(required = false) String observedAfter) {
         SpotCheckRefType refType = getSpotcheckRefType(reportType, "reportType");
@@ -268,13 +268,18 @@ public class SpotCheckCtrl extends BaseCtrl
      *                          the given date if present
      */
     @RequiresPermissions("admin:view")
-    @RequestMapping(value = "/open-mismatches/summary", method = RequestMethod.GET, params = {"reportTypes"})
+    @RequestMapping(value = "/open-mismatches/summary", method = RequestMethod.GET)
     public BaseResponse getOpenMismatchSummary(@RequestParam(required = false) String[] reportTypes,
                                                @RequestParam(required = false) String observedAfter) {
         Set<SpotCheckRefType> refTypes = getSpotcheckRefTypes(reportTypes, "reportTypes");
         LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
-        OpenMismatchSummary summary = getAnyReportService().getOpenMismatchSummary(refTypes, earliestDateTime);
-        return new ViewObjectResponse<>(new OpenMismatchSummaryView(summary));
+        //OpenMismatchSummary summary = getAnyReportService().getOpenMismatchSummary(refTypes, earliestDateTime);
+        // TODO: Remove loop after DAO refactor.
+        List<OpenMismatchSummary> summaries = new ArrayList<>();
+        reportServiceMap.forEach((k, v) -> {
+            summaries.add(v.getOpenMismatchSummary(k, earliestDateTime));
+        });
+        return new ViewObjectResponse<>(new OpenMismatchSummaryView(summaries));
     }
 
     /**

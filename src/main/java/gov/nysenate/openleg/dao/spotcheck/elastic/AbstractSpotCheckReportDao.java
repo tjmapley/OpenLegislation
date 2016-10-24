@@ -400,11 +400,11 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
             });
             BoolQueryBuilder filterQuery = QueryBuilders.boolQuery();
             filterQuery.must(matchQuery("mismatchType", elasticObservation.getMismatchType()));
-            if(!elasticObservation.getObservedData().isEmpty())
+            /*if(!elasticObservation.getObservedData().isEmpty())
                 filterQuery.must(matchQuery("observedData", elasticObservation.getObservedData()));
             if(!elasticObservation.getReferenceData().isEmpty())
                 filterQuery.must(matchQuery("referenceData", elasticObservation.getReferenceData()));
-            boolQuery.filter(filterQuery);
+            boolQuery.filter(filterQuery);*/
             SearchResponse searchResponse = searchClient.prepareSearch()
                     .setIndices(spotcheckIndex).setTypes(observationType)
                     .setQuery(boolQuery)
