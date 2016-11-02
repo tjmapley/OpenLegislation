@@ -11,8 +11,8 @@ import gov.nysenate.openleg.model.spotcheck.SpotCheckObservation;
 import gov.nysenate.openleg.service.spotcheck.base.SpotCheckService;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ import static gov.nysenate.openleg.model.spotcheck.SpotCheckMismatchType.*;
 public class AgendaSpotCheckService
         implements SpotCheckService<CommitteeAgendaAddendumId, AgendaInfoCommittee, AgendaAlertInfoCommittee> {
 
-    private static final Logger logger = LoggerFactory.getLogger(AgendaSpotCheckService.class);
+    private static final Logger logger = LogManager.getLogger(AgendaSpotCheckService.class);
 
     @Autowired
     AgendaAlertDao agendaAlertDao;

@@ -10,11 +10,11 @@ import gov.nysenate.openleg.model.search.SearchException;
 import gov.nysenate.openleg.model.search.SearchResults;
 import gov.nysenate.openleg.service.notification.data.NotificationDigestService;
 import gov.nysenate.openleg.util.DateUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ import java.util.Set;
  */
 @Service
 public class NotificationDigestDispatcher {
-    private static final Logger logger = LoggerFactory.getLogger(NotificationDigestDispatcher.class);
+    private static final Logger logger = LogManager.getLogger(NotificationDigestDispatcher.class);
 
     @Autowired
     private NotificationSubscriptionDao subDao;

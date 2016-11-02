@@ -18,8 +18,8 @@ import gov.nysenate.openleg.util.BillTextUtils;
 import gov.nysenate.openleg.util.DateUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ import static java.util.stream.Collectors.toSet;
 @Service("daybreak")
 public class DaybreakCheckService implements SpotCheckService<BaseBillId, Bill, DaybreakBill>
 {
-    private static final Logger logger = LoggerFactory.getLogger(DaybreakCheckService.class);
+    private static final Logger logger = LogManager.getLogger(DaybreakCheckService.class);
 
     @Autowired
     protected DaybreakDao daybreakDao;

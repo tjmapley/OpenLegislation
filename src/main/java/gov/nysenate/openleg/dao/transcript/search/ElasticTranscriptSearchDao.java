@@ -9,6 +9,8 @@ import gov.nysenate.openleg.model.search.SearchResults;
 import gov.nysenate.openleg.model.transcript.Transcript;
 import gov.nysenate.openleg.model.transcript.TranscriptId;
 import gov.nysenate.openleg.util.OutputUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -16,8 +18,6 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Repository
 public class ElasticTranscriptSearchDao extends ElasticBaseDao implements TranscriptSearchDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(ElasticTranscriptSearchDao.class);
+    private static final Logger logger = LogManager.getLogger(ElasticTranscriptSearchDao.class);
 
     protected static final String transcriptIndexName = SearchIndex.TRANSCRIPT.getIndexName();
 

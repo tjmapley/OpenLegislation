@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.nysenate.openleg.BaseTests;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 public class MemberProcessorTests extends BaseTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(MemberProcessorTests.class);
+    private static final Logger logger = LogManager.getLogger(MemberProcessorTests.class);
 
     @Autowired
     JdbcTemplate jdbc;

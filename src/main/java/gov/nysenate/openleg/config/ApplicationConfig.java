@@ -20,6 +20,8 @@ import gov.nysenate.openleg.util.OpenlegThreadFactory;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.SizeOfPolicyConfiguration;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
@@ -27,7 +29,6 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.xpack.XPackClient;
 import org.elasticsearch.xpack.client.PreBuiltXPackTransportClient;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurer;
@@ -47,7 +48,7 @@ import java.util.concurrent.Executors;
 @EnableCaching
 public class ApplicationConfig implements CachingConfigurer
 {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ApplicationConfig.class);
+    private static final Logger logger = LogManager.getLogger(ApplicationConfig.class);
 
     /** --- Eh Cache Spring Configuration --- */
 

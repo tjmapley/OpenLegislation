@@ -2,7 +2,8 @@ package gov.nysenate.openleg.processor.hearing;
 
 import gov.nysenate.openleg.model.transcript.OldPublicHearing;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class PublicHearingProcessor {
     Matcher matcher;
 
     public PublicHearingProcessor() {
-        logger = Logger.getLogger(this.getClass());
+        logger = LogManager.getLogger(this.getClass());
     }
 
     public void process(File file) throws NumberFormatException, IOException {

@@ -3,6 +3,8 @@ package gov.nysenate.openleg.dao.base;
 import com.google.common.primitives.Ints;
 import gov.nysenate.openleg.model.search.SearchResult;
 import gov.nysenate.openleg.model.search.SearchResults;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
@@ -18,8 +20,6 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.rescore.RescoreBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -34,7 +34,7 @@ import java.util.function.Function;
  */
 public abstract class ElasticBaseDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(ElasticBaseDao.class);
+    private static final Logger logger = LogManager.getLogger(ElasticBaseDao.class);
 
     @Autowired
     protected Client searchClient;
@@ -115,6 +115,7 @@ public abstract class ElasticBaseDao
             searchBuilder.setPostFilter(postFilter);
         }
         // Add the sort by fields
+        searchBuilder.addSort(sort.get(1));
         //sort.forEach(searchBuilder::addSort);
         logger.debug("{}", searchBuilder);
         return searchBuilder;
