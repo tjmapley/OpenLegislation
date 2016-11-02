@@ -101,6 +101,11 @@ elastic.search.port = 9300
 
 elastic.search.cluster.name = openleg
 
+# If the elastic search cluster has a credentials, it must be specified here.
+# (Default: elastic:changeme)
+
+elastic.search.credentials = elastic:changeme
+
 # --- Eh Cache Configuration --------------------------------------------------
 
 # The amount of memory to allocate to Eh Cache for all heap based caches (in MB).

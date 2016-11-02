@@ -12,11 +12,7 @@ import gov.nysenate.openleg.model.spotcheck.*;
 import gov.nysenate.openleg.service.base.search.IndexedSearchService;
 import gov.nysenate.openleg.util.OutputUtils;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
-import org.elasticsearch.action.deletebyquery.DeleteByQueryAction;
-import org.elasticsearch.action.deletebyquery.DeleteByQueryRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.search.MultiSearchRequestBuilder;
-import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.common.unit.TimeValue;
@@ -24,7 +20,6 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
@@ -92,7 +87,7 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
         SearchResponse reportSearchResponse = searchClient.prepareSearch()
                     .setIndices(spotcheckIndex)
                     .setTypes(reportType)
-                    .setQuery(matchQuery("reportId.reportDateTime", Id.getReportDateTime()))
+                    .setQuery(matchQuery("reportId.reportDateTime", Id.getReportDateTime().toString()))
                     .execute()
                     .actionGet();
         if(reportSearchResponse.getHits().getTotalHits() > 0) {
@@ -162,7 +157,7 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
                 .setTypes(reportType)
                 .setSize(100)
                 .setScroll(new TimeValue(60000))
-                .setQuery(rangeQuery("reportId.reportDateTime").from(start).to(end))
+                .setQuery(rangeQuery("reportId.reportDateTime").from(start.toString()).to(end.toString()))
                 .addSort(SortBuilders
                                 .fieldSort("reportId.reportDateTime")
                                 .order(SortOrder.valueOf(dateOrder.toString()))
@@ -200,12 +195,16 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
 
         BoolQueryBuilder queryFilters = QueryBuilders.boolQuery();
         query.getMismatchTypes().forEach(spotCheckMismatchType -> {
-            queryFilters.should(QueryBuilders.matchQuery("mismatchType", spotCheckMismatchType));
+            queryFilters.should(QueryBuilders.matchQuery("mismatchType", spotCheckMismatchType.toString()));
         });
         SearchResponse searchResponse = searchClient.prepareSearch()
                 .setIndices(spotCheckIndexes)
                 .setTypes(observationType)
-                .setQuery(rangeQuery("observedDateTime").from(query.getObservedAfter()).to(query.getObservedBefore()))
+                .setQuery(
+                        rangeQuery("observedDateTime")
+                                .from(query.getObservedAfter().toString())
+                                .to(query.getObservedBefore().toString())
+                )
                 .setPostFilter(queryFilters)
                 .addSort(query.getOrderBy().getColName(), SortOrder.valueOf(query.getOrder().toString()))
                 .setScroll(new TimeValue(60000))
@@ -248,7 +247,7 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
                 .setIndices(index)
                 .setTypes(observationType)
                 .setQuery(QueryBuilders.boolQuery()
-                                .must(rangeQuery("observedDateTime").from(observedAfter))
+                                .must(rangeQuery("observedDateTime").from(observedAfter.toString()))
                 )
                 .setScroll(new TimeValue(60000))
                 .setSize(100)
@@ -279,7 +278,7 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
                 .setIndices(spotCheckIndexes)
                 .setTypes(observationType)
                 .setQuery(QueryBuilders.boolQuery()
-                        .must(rangeQuery("observedDateTime").from(observedAfter))
+                        .must(rangeQuery("observedDateTime").from(observedAfter.toString()))
                 )
                 .setScroll(new TimeValue(60000))
                 .setSize(100)
@@ -325,10 +324,6 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
                     .setId(id)
                     .execute()
                     .actionGet();
-            DeleteByQueryRequestBuilder builder = new DeleteByQueryRequestBuilder(searchClient, DeleteByQueryAction.INSTANCE);
-            builder.setIndices(spotcheckIndex)
-                    .setTypes(observationType)
-                    .setQuery(matchQuery("spotcheckReportId",id));
         }
     }
 
@@ -399,12 +394,12 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
                 boolQuery.must(matchQuery);}
             });
             BoolQueryBuilder filterQuery = QueryBuilders.boolQuery();
-            filterQuery.must(matchQuery("mismatchType", elasticObservation.getMismatchType()));
+            filterQuery.must(matchQuery("mismatchType", elasticObservation.getMismatchType().toString()));
             /*if(!elasticObservation.getObservedData().isEmpty())
                 filterQuery.must(matchQuery("observedData", elasticObservation.getObservedData()));
             if(!elasticObservation.getReferenceData().isEmpty())
-                filterQuery.must(matchQuery("referenceData", elasticObservation.getReferenceData()));
-            boolQuery.filter(filterQuery);*/
+                filterQuery.must(matchQuery("referenceData", elasticObservation.getReferenceData()));*/
+            boolQuery.filter(filterQuery);
             SearchResponse searchResponse = searchClient.prepareSearch()
                     .setIndices(spotcheckIndex).setTypes(observationType)
                     .setQuery(boolQuery)

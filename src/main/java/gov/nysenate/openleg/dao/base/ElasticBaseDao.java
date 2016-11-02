@@ -1,18 +1,12 @@
 package gov.nysenate.openleg.dao.base;
 
-import com.google.common.base.Splitter;
 import com.google.common.primitives.Ints;
-import gov.nysenate.openleg.model.search.SearchException;
 import gov.nysenate.openleg.model.search.SearchResult;
 import gov.nysenate.openleg.model.search.SearchResults;
-import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
-import org.elasticsearch.action.delete.DeleteAction;
-import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
-import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -21,10 +15,9 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.index.IndexNotFoundException;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.rescore.RescoreBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +26,6 @@ import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -100,28 +92,30 @@ public abstract class ElasticBaseDao
      * @return SearchRequestBuilder
      */
     protected SearchRequestBuilder getSearchRequest(String indexName, QueryBuilder query, QueryBuilder postFilter,
-                                                    List<HighlightBuilder.Field> highlightedFields, RescoreBuilder.Rescorer rescorer,
+                                                    List<HighlightBuilder.Field> highlightedFields, RescoreBuilder rescorer,
                                                     List<SortBuilder> sort, LimitOffset limitOffset, boolean fetchSource) {
-        SearchRequestBuilder searchBuilder = searchClient.prepareSearch(indexName)
+        SearchRequestBuilder searchBuilder = searchClient.prepareSearch()
+                .setIndices(indexName)
                 .setSearchType(SearchType.QUERY_THEN_FETCH)
                 .setQuery(query)
-                .setRescorer(rescorer)
                 .setFrom(limitOffset.getOffsetStart() - 1)
                 .setSize((limitOffset.hasLimit()) ? limitOffset.getLimit() : Integer.MAX_VALUE)
                 .setMinScore(0.05f)
                 .setFetchSource(fetchSource);
         if (highlightedFields != null) {
-            highlightedFields.stream().forEach(searchBuilder::addHighlightedField);
+            HighlightBuilder highlightBuilder = new HighlightBuilder();
+            highlightedFields.stream().forEach(highlightBuilder::field);
+            searchBuilder.highlighter(highlightBuilder);
         }
-//        if (rescorer != null) {
-//            searchBuilder.addRescorer(rescorer);
-//        }
+        if (rescorer != null) {
+            searchBuilder.setRescorer(rescorer);
+        }
         // Post filters take effect after the search is completed
         if (postFilter != null) {
             searchBuilder.setPostFilter(postFilter);
         }
         // Add the sort by fields
-        sort.forEach(searchBuilder::addSort);
+        //sort.forEach(searchBuilder::addSort);
         logger.debug("{}", searchBuilder);
         return searchBuilder;
     }

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.SubscriberExceptionContext;
 import com.google.common.eventbus.SubscriberExceptionHandler;
 import gov.nysenate.openleg.model.agenda.Agenda;
 import gov.nysenate.openleg.model.agenda.AgendaId;
@@ -21,14 +20,13 @@ import gov.nysenate.openleg.util.OpenlegThreadFactory;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.SizeOfPolicyConfiguration;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.lang3.text.StrSubstitutor;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.index.query.SimpleQueryParser;
-import org.slf4j.Logger;
+import org.elasticsearch.xpack.XPackClient;
+import org.elasticsearch.xpack.client.PreBuiltXPackTransportClient;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -40,11 +38,7 @@ import org.springframework.cache.interceptor.SimpleKeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,7 +47,7 @@ import java.util.concurrent.Executors;
 @EnableCaching
 public class ApplicationConfig implements CachingConfigurer
 {
-    private static final Logger logger = LoggerFactory.getLogger(ApplicationConfig.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ApplicationConfig.class);
 
     /** --- Eh Cache Spring Configuration --- */
 
@@ -88,25 +82,30 @@ public class ApplicationConfig implements CachingConfigurer
         return new EhCacheCacheManager(pooledCacheManger());
     }
 
+
     @Override
     @Bean
     public KeyGenerator keyGenerator() {
         return new SimpleKeyGenerator();
     }
 
+
     /** --- Elastic Search Configuration --- */
 
     @Value("${elastic.search.cluster.name:elasticsearch}") private String elasticSearchCluster;
     @Value("${elastic.search.host:localhost}") private String elasticSearchHost;
     @Value("${elastic.search.port:9300}") private int elasticSearchPort;
+    @Value("${elastic.search.credentials:elastic:changeme}") private String elasticCredentials;
 
     @Bean(destroyMethod = "close")
     public Client elasticSearchNode() {
-        logger.info("Connecting to elastic search cluster {}", elasticSearchCluster);
-        Settings settings = Settings.settingsBuilder()
-            .put("cluster.name", elasticSearchCluster).build();
+        //logger.info("Connecting to elastic search cluster {}", elasticSearchCluster);
+        Settings settings = Settings.builder()
+                .put("cluster.name", elasticSearchCluster)
+                .put("xpack.security.user",elasticCredentials)
+                .build();
         try {
-            TransportClient tc = TransportClient.builder().settings(settings).build().addTransportAddress(
+            TransportClient tc = new PreBuiltXPackTransportClient(settings).addTransportAddress(
                     new InetSocketTransportAddress(new InetSocketAddress(elasticSearchHost, elasticSearchPort)));
             if (tc.connectedNodes().size() == 0) {
                 tc.close();
