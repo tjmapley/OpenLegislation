@@ -8,7 +8,8 @@ import gov.nysenate.openleg.model.bill.BaseBillId;
 import gov.nysenate.openleg.util.DateUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
@@ -25,7 +26,7 @@ import java.time.LocalDateTime;
 @Repository
 public class BillTextScraper extends LRSScraper {
 
-    private static final Logger logger = Logger.getLogger(BillTextScraper.class);
+    private static final Logger logger = LogManager.getLogger(BillTextScraper.class);
 
     private static final String billUrlTemplate = "http://public.leginfo.state.ny.us/navigate.cgi?NVDTO:=&" +
             "QUERYDATA=${printNo}&QUERYTYPE=BILLNO&SESSYR=${sessionYear}&CBTEXT=Y&CBSPONMEMO=Y";

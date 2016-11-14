@@ -9,15 +9,15 @@ import gov.nysenate.openleg.model.hearing.PublicHearing;
 import gov.nysenate.openleg.model.hearing.PublicHearingId;
 import gov.nysenate.openleg.model.search.SearchResults;
 import gov.nysenate.openleg.util.OutputUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Repository
 public class ElasticPublicHearingSearchDao extends ElasticBaseDao implements PublicHearingSearchDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(ElasticPublicHearingSearchDao.class);
+    private static final Logger logger = LogManager.getLogger(ElasticPublicHearingSearchDao.class);
 
     protected static final String publicHearingIndexName = SearchIndex.HEARING.getIndexName();
 

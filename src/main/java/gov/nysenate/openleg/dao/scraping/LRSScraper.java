@@ -7,7 +7,8 @@ import gov.nysenate.openleg.model.notification.NotificationType;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import java.util.regex.Pattern;
  * Created by kyle on 11/3/14.
  */
 public abstract class LRSScraper {
-    private static final Logger logger = Logger.getLogger(LRSScraper.class);
+    private static final Logger logger = LogManager.getLogger(LRSScraper.class);
     @Autowired protected Environment environment;
     @Autowired private EventBus eventBus;
 

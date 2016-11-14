@@ -1,6 +1,6 @@
 
-angular.module('open.spotcheck')
-    .controller('detailDialogCtrl', ['$scope', '$mdDialog', 'mismatchRow',
+var app = angular.module('open.spotcheck');
+    app.controller('detailDialogCtrl', ['$scope', '$mdDialog', 'mismatchRow',
 function($scope, $mdDialog, mismatchRow) {
 
     $scope.iDiffTab = 0;
@@ -95,3 +95,17 @@ function($scope, $mdDialog, mismatchRow) {
     init();
 }]);
 
+app.directive("scrollGroup", function () {
+    return function (scope, element, attrs) {
+        var oldScrollTop = 0;
+
+        element.on("scroll", function () {
+            console.log("scroll");
+
+            $("[scroll-group='" + attrs.scrollGroup + "']").each(function () {
+                console.log($(this).scrollTop() - oldScrollTop, oldScrollTop, $(this).scrollTop());
+                oldScrollTop = $(this).scrollTop();
+            });
+        });
+    };
+});

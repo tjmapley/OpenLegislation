@@ -2,7 +2,8 @@ package gov.nysenate.openleg.dao.scraping;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  */
 @Repository
 public class SenateAgnScraper extends LRSScraper{
-    private static final Logger logger = Logger.getLogger(LRSScraper.class);
+    private static final Logger logger = LogManager.getLogger(LRSScraper.class);
     private static final String senateAgendaLandingPage =
             "http://public.leginfo.state.ny.us/menugetf.cgi?COMMONQUERY=SENAGEN";
 

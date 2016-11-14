@@ -11,7 +11,8 @@ import gov.nysenate.openleg.service.spotcheck.base.SpotCheckService;
 import gov.nysenate.openleg.util.OutputUtils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ import static gov.nysenate.openleg.model.spotcheck.SpotCheckMismatchType.*;
  */
 @Service
 public class BillTextCheckService implements SpotCheckService<BaseBillId, Bill, BillTextReference>{
-    private static final Logger logger = Logger.getLogger(BillTextCheckService.class);
+    private static final Logger logger = LogManager.getLogger(BillTextCheckService.class);
 
     @Autowired
     BillDataService billDataService;
