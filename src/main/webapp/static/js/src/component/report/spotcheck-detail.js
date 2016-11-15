@@ -10,6 +10,11 @@ function($scope, $mdDialog, mismatchRow) {
     $scope.newDetails = function (newMismatchRow) {
         $scope.mismatchRow = newMismatchRow;
 
+        var d = new Date();
+        var datestring = (d.getMonth()+1) + "-" + d.getFullYear() + " " +
+            d.getHours() + ":" + d.getMinutes();
+        $scope.date = datestring;
+
         console.log('loading detail dialog for', newMismatchRow);
         $scope.observation = newMismatchRow.observation;
         $scope.currentMismatch = newMismatchRow.mismatch;
@@ -91,6 +96,7 @@ function($scope, $mdDialog, mismatchRow) {
     function init() {
         $scope.newDetails(mismatchRow);
     }
+
 
     init();
 }]);

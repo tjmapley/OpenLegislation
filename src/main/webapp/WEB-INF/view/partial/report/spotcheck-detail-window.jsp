@@ -9,7 +9,7 @@
       <md-content class="mismatch-diff-view-top-half">
         <div layout="row" layout-align="space-between start">
           <md-card class="mismatch-diff-info-card mismatch-diff-info-border-radius mismatch-diff-info-background-color white-text-color">
-            <p>Date Reported: {{}}</p>
+            <p>Date Reported: {{date}}</p>
 
             <p> {{reportType | contentType}} Number:
               <a class="white-2-blue inactive-link" ng-href="{{mismatchRow.key | contentUrl:reportType}}"
