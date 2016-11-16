@@ -10,16 +10,9 @@ function detailDialogCtrl($scope, $mdDialog, mismatchRow) {
     $scope.newDetails = function (newMismatchRow) {
         $scope.mismatchRow = newMismatchRow;
 
-<<<<<<< HEAD
         var d = new Date(); //making the date variable
         $scope.date = ((d.getMonth() + 1) + "/" + d.getDate() + "/" +
         d.getFullYear()); //formatting the date variable
-=======
-        var d = new Date();
-        var datestring = (d.getMonth()+1) + "-" + d.getFullYear() + " " +
-            d.getHours() + ":" + d.getMinutes();
-        $scope.date = datestring;
->>>>>>> 020e40e3741083397ec93e48fcadbccf7177909b
 
         console.log('loading detail dialog for', newMismatchRow);
         $scope.observation = newMismatchRow.observation;
