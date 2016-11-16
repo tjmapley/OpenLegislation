@@ -10,16 +10,8 @@ function detailDialogCtrl($scope, $mdDialog, mismatchRow) {
     $scope.newDetails = function (newMismatchRow) {
         $scope.mismatchRow = newMismatchRow;
 
-<<<<<<< HEAD
         var d = new Date(); //making the date variable
-        $scope.date = ((d.getMonth() + 1) + "/" + d.getDate() + "/" +
-        d.getFullYear()); //formatting the date variable
-=======
-        var d = new Date();
-        var datestring = (d.getMonth()+1) + "-" + d.getFullYear() + " " +
-            d.getHours() + ":" + d.getMinutes();
-        $scope.date = datestring;
->>>>>>> 020e40e3741083397ec93e48fcadbccf7177909b
+        $scope.date = ((d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear()); //formatting the date variable
 
         console.log('loading detail dialog for', newMismatchRow);
         $scope.observation = newMismatchRow.observation;
@@ -28,8 +20,6 @@ function detailDialogCtrl($scope, $mdDialog, mismatchRow) {
 
         setDefaultTextOptions(newMismatchRow.type);
         $scope.formatDisplayData();
-
-        console.log($scope);
     };
 
     $scope.$watchGroup(['referenceData', 'displayData'], function () {
@@ -114,10 +104,29 @@ function scrollGroupDirective($rootScope) {
     var scrollEventName = "scrollGroup scroll";
 
     return function (scope, element) {
+        console.log(element);
+
+        $(element).on('mousewheel', function(){
+            console.log("on mousewheel");
+            $(element).not(this).scrollLeft($(this).scrollLeft());
+            $(element).not(this).scrollTop($(this).scrollTop());
+        });
+
+        $(element).bind('mousewheel', function(){
+            console.log("bind mousewheel");
+            $(element).not(this).scrollLeft($(this).scrollLeft());
+            $(element).not(this).scrollTop($(this).scrollTop());
+        });
+
+
         var oldScrollTop = $(element).scrollTop();
         var scrollElementId = scrollElementIdCounter++;
 
-        element.on("scroll", function () {
+        // element.on('scroll', function(){
+        //     $('.scrollable').not(this);
+        // });
+
+        /*element.on("scroll", function () {
             var scrollTopDelta = $(this).scrollTop() - oldScrollTop;
             oldScrollTop = $(this).scrollTop();
             console.log("element on scroll");
@@ -131,6 +140,6 @@ function scrollGroupDirective($rootScope) {
             if(scrollElementId !== callerElementId){
                 $(element).scrollTop($(element).scrollTop() + scrollTopDelta);
             }
-        });
+        });*/
     };
 }
