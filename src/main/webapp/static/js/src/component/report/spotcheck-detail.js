@@ -1,9 +1,7 @@
 angular.module('open.spotcheck')
-    .controller('detailDialogCtrl', ['$scope', '$mdDialog', 'mismatchRow', detailDialogCtrl])
-    .directive('scrollGroup', ['$rootScope', scrollGroupDirective]);
+    .controller('detailDialogCtrl', ['$scope', '$mdDialog', 'mismatchRow', detailDialogCtrl]);
 
 function detailDialogCtrl($scope, $mdDialog, mismatchRow) {
-
     $scope.iDiffTab = 0;
     $scope.reportType = mismatchRow.refType;
 
@@ -11,12 +9,8 @@ function detailDialogCtrl($scope, $mdDialog, mismatchRow) {
         $scope.mismatchRow = newMismatchRow;
 
         var d = new Date(); //making the date variable
-<<<<<<< HEAD
+        // $scope.date = ((d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear()); //formatting the date variable
         $scope.date = ((d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear()); //formatting the date variable
-=======
-        $scope.date = ((d.getMonth() + 1) + "/" + d.getDate() + "/" +
-        d.getFullYear()); //formatting the date variable
->>>>>>> 7d8a8567d3cfadf068f65ffbf4dcd9665a9506bc
 
         console.log('loading detail dialog for', newMismatchRow);
         $scope.observation = newMismatchRow.observation;
@@ -100,51 +94,5 @@ function detailDialogCtrl($scope, $mdDialog, mismatchRow) {
         $scope.newDetails(mismatchRow);
     }
 
-
     init();
-}
-
-function scrollGroupDirective($rootScope) {
-    var scrollElementIdCounter = 0;
-    var scrollEventName = "scrollGroup scroll";
-
-    return function (scope, element) {
-        console.log(element);
-
-        $(element).on('mousewheel', function(){
-            console.log("on mousewheel");
-            $(element).not(this).scrollLeft($(this).scrollLeft());
-            $(element).not(this).scrollTop($(this).scrollTop());
-        });
-
-        $(element).bind('mousewheel', function(){
-            console.log("bind mousewheel");
-            $(element).not(this).scrollLeft($(this).scrollLeft());
-            $(element).not(this).scrollTop($(this).scrollTop());
-        });
-
-
-        var oldScrollTop = $(element).scrollTop();
-        var scrollElementId = scrollElementIdCounter++;
-
-        // element.on('scroll', function(){
-        //     $('.scrollable').not(this);
-        // });
-
-        /*element.on("scroll", function () {
-            var scrollTopDelta = $(this).scrollTop() - oldScrollTop;
-            oldScrollTop = $(this).scrollTop();
-            console.log("element on scroll");
-            console.log(oldScrollTop);
-
-            $rootScope.$emit(scrollEventName, scrollElementId, scrollTopDelta);
-        });
-
-        $rootScope.$on(scrollEventName, function (callerElementId, scrollTopDelta) {
-            console.log("$on has been called");
-            if(scrollElementId !== callerElementId){
-                $(element).scrollTop($(element).scrollTop() + scrollTopDelta);
-            }
-        });*/
-    };
 }
