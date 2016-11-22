@@ -19,8 +19,8 @@ import gov.nysenate.openleg.model.spotcheck.SpotCheckRefType;
 import gov.nysenate.openleg.model.spotcheck.SpotCheckReferenceId;
 import gov.nysenate.openleg.util.DateUtils;
 import gov.nysenate.openleg.util.FileIOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -47,7 +47,7 @@ import static gov.nysenate.openleg.dao.agenda.reference.SqlAgendaAlertQuery.*;
 @Repository
 public class SqlFsAgendaAlertDao extends SqlBaseDao implements AgendaAlertDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(SqlFsDaybreakDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private static final Pattern agendaFilePattern =
             Pattern.compile("^agenda_alert-\\d{8}-[A-z\\._]+-[A-z]+-?\\d{8}T\\d{6}.html$");

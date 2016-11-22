@@ -14,8 +14,8 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.MemoryUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.ehcache.EhCacheCache;
@@ -36,7 +36,7 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class CachedLawDataService implements LawDataService, CachingService<LawVersionId>
 {
-    private static final Logger logger = LoggerFactory.getLogger(CachedLawDataService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private LawDataDao lawDataDao;
     @Autowired private CacheManager cacheManager;

@@ -11,8 +11,8 @@ import gov.nysenate.openleg.dao.base.SortOrder;
 import gov.nysenate.openleg.dao.transcript.TranscriptDao;
 import gov.nysenate.openleg.model.transcript.TranscriptUpdateToken;
 import gov.nysenate.openleg.util.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -30,7 +30,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = BASE_API_PATH + "/transcripts", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
 public class TranscriptUpdatesCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(TranscriptUpdatesCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private TranscriptDao transcriptDao;
 

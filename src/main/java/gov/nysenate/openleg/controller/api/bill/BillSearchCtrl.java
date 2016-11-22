@@ -14,8 +14,8 @@ import gov.nysenate.openleg.model.search.SearchException;
 import gov.nysenate.openleg.model.search.SearchResults;
 import gov.nysenate.openleg.service.bill.data.BillDataService;
 import gov.nysenate.openleg.service.bill.search.BillSearchService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -31,7 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = BASE_API_PATH + "/bills", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
 public class BillSearchCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(BillSearchCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired protected BillDataService billData;
     @Autowired protected BillSearchService billSearch;

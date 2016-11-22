@@ -13,8 +13,8 @@ import gov.nysenate.openleg.processor.base.AbstractDataProcessor;
 import gov.nysenate.openleg.processor.base.ParseError;
 import gov.nysenate.openleg.processor.sobi.SobiProcessor;
 import gov.nysenate.openleg.service.bill.event.BillFieldUpdateEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractBillProcessor extends AbstractDataProcessor implements SobiProcessor
 {
-    private static final Logger logger = LoggerFactory.getLogger(BillSobiProcessor.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** --- Patterns --- */
 

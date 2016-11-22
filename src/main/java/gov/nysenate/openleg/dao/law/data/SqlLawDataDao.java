@@ -4,8 +4,8 @@ import com.google.common.collect.Maps;
 import gov.nysenate.openleg.dao.base.*;
 import gov.nysenate.openleg.model.law.*;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DataRetrievalFailureException;
@@ -29,7 +29,7 @@ import static gov.nysenate.openleg.util.DateUtils.toDate;
 @Repository
 public class SqlLawDataDao extends SqlBaseDao implements LawDataDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlLawDataDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** {@inheritDoc} */
     @Override

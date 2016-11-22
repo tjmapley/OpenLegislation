@@ -13,8 +13,8 @@ import gov.nysenate.openleg.processor.base.AbstractDataProcessor;
 import gov.nysenate.openleg.processor.sobi.SobiProcessor;
 import gov.nysenate.openleg.util.DateUtils;
 import gov.nysenate.openleg.util.XmlHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -31,7 +31,7 @@ import java.time.LocalDateTime;
 @Service
 public class ActiveListProcessor extends AbstractDataProcessor implements SobiProcessor
 {
-    private static final Logger logger = LoggerFactory.getLogger(ActiveListProcessor.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired protected XmlHelper xml;
 

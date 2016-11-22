@@ -2,8 +2,8 @@ package gov.nysenate.openleg.config;
 
 import gov.nysenate.openleg.util.AsciiArt;
 import gov.nysenate.openleg.util.OpenlegThreadFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -46,7 +46,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public class WebApplicationConfig extends WebMvcConfigurerAdapter implements SchedulingConfigurer,
                                                                              AsyncConfigurer
 {
-    private static final Logger logger = LoggerFactory.getLogger(WebApplicationConfig.class);
+    private static final Logger logger = LogManager.getLogger(WebApplicationConfig.class);
 
     private static final String resourcePath = "/static/**";
     private static final String resourceLocation = "/static/";

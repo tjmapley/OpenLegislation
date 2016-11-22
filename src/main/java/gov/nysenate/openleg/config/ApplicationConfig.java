@@ -27,8 +27,8 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.xpack.XPackClient;
 import org.elasticsearch.xpack.client.PreBuiltXPackTransportClient;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurer;
@@ -48,7 +48,7 @@ import java.util.concurrent.Executors;
 @EnableCaching
 public class ApplicationConfig implements CachingConfigurer
 {
-    private static final Logger logger = LogManager.getLogger(ApplicationConfig.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** --- Eh Cache Spring Configuration --- */
 

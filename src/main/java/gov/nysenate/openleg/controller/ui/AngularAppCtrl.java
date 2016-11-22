@@ -8,8 +8,8 @@ import gov.nysenate.openleg.model.auth.ApiKeyLoginToken;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ import java.util.Map;
 @Controller
 public class AngularAppCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(AngularAppCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Value("${ga.tracking.id}") private String gaTrackingId;
     @Value("${api.auth.ip.whitelist}") private String ipWhitelist;

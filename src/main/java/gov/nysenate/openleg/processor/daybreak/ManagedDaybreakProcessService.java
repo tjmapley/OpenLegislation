@@ -3,8 +3,8 @@ package gov.nysenate.openleg.processor.daybreak;
 import gov.nysenate.openleg.dao.bill.reference.daybreak.DaybreakDao;
 import gov.nysenate.openleg.model.spotcheck.daybreak.*;
 import gov.nysenate.openleg.util.OpenlegThreadFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class ManagedDaybreakProcessService implements DaybreakProcessService{
 
-    private static Logger logger = LoggerFactory.getLogger(ManagedDaybreakProcessService.class);
+    private static Logger logger = LogManager.getLogger();
 
     @Autowired
     private DaybreakDao daybreakDao;

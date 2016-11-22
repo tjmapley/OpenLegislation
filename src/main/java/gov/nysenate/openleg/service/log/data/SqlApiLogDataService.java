@@ -8,8 +8,8 @@ import gov.nysenate.openleg.dao.base.SortOrder;
 import gov.nysenate.openleg.dao.log.data.ApiLogDao;
 import gov.nysenate.openleg.model.auth.ApiResponse;
 import gov.nysenate.openleg.service.log.event.ApiLogIndexEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Async;
@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 public class SqlApiLogDataService implements ApiLogDataService
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlApiLogDataService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired protected EventBus eventBus;
     @Autowired protected ApiLogDao apiLogDao;

@@ -1,8 +1,8 @@
 package gov.nysenate.openleg.config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ import java.beans.PropertyVetoException;
 @Configuration
 public class DatabaseConfig
 {
-    private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** PostgreSQL Database Configuration */
     @Value("${postgresdb.driver}") private String dbDriver;

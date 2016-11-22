@@ -2,8 +2,8 @@ package gov.nysenate.openleg.service.spotcheck.base;
 
 import gov.nysenate.openleg.util.DateUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 public abstract class SimpleCheckMailService extends BaseCheckMailService {
 
-    private static final Logger logger = LoggerFactory.getLogger(SimpleCheckMailService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /**
      * Saves the text of all emails in the email receiving folder that have subjects that match the given pattern

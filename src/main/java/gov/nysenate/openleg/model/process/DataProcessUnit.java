@@ -1,7 +1,7 @@
 package gov.nysenate.openleg.model.process;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

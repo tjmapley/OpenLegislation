@@ -5,8 +5,8 @@ import com.google.common.collect.Range;
 import gov.nysenate.openleg.dao.base.*;
 import gov.nysenate.openleg.model.entity.Chamber;
 import gov.nysenate.openleg.model.hearing.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -23,7 +23,7 @@ import static gov.nysenate.openleg.util.DateUtils.toTime;
 @Repository
 public class SqlPublicHearingDao extends SqlBaseDao implements PublicHearingDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlPublicHearingDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** {@inheritDoc} */
     @Override

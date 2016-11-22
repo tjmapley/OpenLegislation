@@ -4,8 +4,8 @@ import gov.nysenate.openleg.dao.calendar.alert.CalendarAlertDao;
 import gov.nysenate.openleg.model.calendar.Calendar;
 import gov.nysenate.openleg.model.calendar.CalendarId;
 import gov.nysenate.openleg.processor.base.ParseError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Service
 public class CalendarAlertProcessor extends BaseCalendarAlertParser {
 
-    private static final Logger logger = LoggerFactory.getLogger(CalendarAlertProcessor.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private CalendarAlertSupplementalParser supplementalParser;

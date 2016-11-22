@@ -4,14 +4,14 @@ import gov.nysenate.openleg.model.calendar.Calendar;
 import gov.nysenate.openleg.model.calendar.CalendarActiveList;
 import gov.nysenate.openleg.model.calendar.CalendarSupplemental;
 import gov.nysenate.openleg.service.bill.data.BillDataService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CalendarViewFactory {
-    private static final Logger logger = LoggerFactory.getLogger(CalendarViewFactory.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     BillDataService billDataService;

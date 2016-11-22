@@ -7,8 +7,8 @@ import gov.nysenate.openleg.model.entity.Chamber;
 import gov.nysenate.openleg.model.entity.CommitteeId;
 import gov.nysenate.openleg.util.OutputUtils;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
@@ -16,7 +16,7 @@ import java.time.Month;
 
 public class OldApiTests extends BaseTests {
 
-    private static final Logger logger = LoggerFactory.getLogger(OldApiTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     OldApiMeetingDao meetingDao;

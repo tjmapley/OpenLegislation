@@ -21,8 +21,8 @@ import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchParseException;
 import org.elasticsearch.search.rescore.RescoreBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class ElasticBillSearchService implements BillSearchService, IndexedSearchService<Bill>
 {
-    private static final Logger logger = LoggerFactory.getLogger(ElasticBillSearchService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired protected Environment env;
     @Autowired protected EventBus eventBus;

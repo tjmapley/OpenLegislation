@@ -11,8 +11,8 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.dao.DataAccessException;
@@ -26,7 +26,7 @@ import java.util.*;
 @Component
 public class ImportCommittees extends BaseScript {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImportCommittees.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private static FilenameFilter intFileNameFilter = (File dir, String name) -> StringUtils.isNumeric(name);
 

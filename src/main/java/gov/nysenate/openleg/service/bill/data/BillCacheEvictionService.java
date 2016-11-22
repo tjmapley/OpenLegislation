@@ -9,8 +9,8 @@ import gov.nysenate.openleg.service.agenda.event.AgendaUpdateEvent;
 import gov.nysenate.openleg.service.agenda.event.BulkAgendaUpdateEvent;
 import gov.nysenate.openleg.service.calendar.event.BulkCalendarUpdateEvent;
 import gov.nysenate.openleg.service.calendar.event.CalendarUpdateEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ import javax.annotation.PostConstruct;
  */
 @Service
 public class BillCacheEvictionService {
-    Logger logger = LoggerFactory.getLogger(BillCacheEvictionService.class);
+    Logger logger = LogManager.getLogger();
 
     @Autowired private EventBus eventBus;
     @Autowired private CachedBillDataService billDataService;

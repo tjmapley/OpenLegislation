@@ -1,11 +1,11 @@
 package gov.nysenate.openleg;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class SillyTests extends BaseTests {
-    private static final Logger logger = LoggerFactory.getLogger(SillyTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** --- Your silly tests go here --- */
 

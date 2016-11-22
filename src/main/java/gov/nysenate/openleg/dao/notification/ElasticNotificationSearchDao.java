@@ -19,8 +19,8 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -29,7 +29,7 @@ import java.util.*;
 @Repository
 public class ElasticNotificationSearchDao extends ElasticBaseDao implements NotificationSearchDao, IndexedSearchService<RegisteredNotification> {
 
-    Logger logger = LoggerFactory.getLogger(ElasticNotificationSearchDao.class);
+    Logger logger = LogManager.getLogger();
 
     protected static final String notificationIndex = SearchIndex.NOTIFICATION.getIndexName();
     protected static final String notificationType = "notifications";

@@ -18,8 +18,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 
 public class AgendaAlertParser {
 
-    private static final Logger logger = LoggerFactory.getLogger(AgendaAlertParser.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private static final Pattern agendaAlertFilenamePattern =
             Pattern.compile("^agenda_alert-(\\d{8})-[A-z\\._]+-([A-z]+)-(\\d{8}T\\d{6}).html$");

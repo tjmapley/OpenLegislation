@@ -8,14 +8,14 @@ import gov.nysenate.openleg.dao.calendar.search.ElasticCalendarSearchDao;
 import gov.nysenate.openleg.model.calendar.CalendarId;
 import gov.nysenate.openleg.service.calendar.data.CalendarDataService;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class CalendarSearchDaoTests extends BaseTests
 {
 
-    private static final Logger logger = LoggerFactory.getLogger(CalendarSearchDaoTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     ElasticCalendarSearchDao calendarSearchDao;

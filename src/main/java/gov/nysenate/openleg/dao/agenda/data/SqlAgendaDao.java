@@ -17,8 +17,8 @@ import gov.nysenate.openleg.model.entity.MemberNotFoundEx;
 import gov.nysenate.openleg.model.sobi.SobiFragment;
 import gov.nysenate.openleg.service.entity.member.data.MemberService;
 import gov.nysenate.openleg.util.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowCallbackHandler;
@@ -39,7 +39,7 @@ import static gov.nysenate.openleg.util.DateUtils.toDate;
 @Repository
 public class SqlAgendaDao extends SqlBaseDao implements AgendaDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlAgendaDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private MemberService memberService;

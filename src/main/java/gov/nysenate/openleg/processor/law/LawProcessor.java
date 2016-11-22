@@ -10,8 +10,8 @@ import gov.nysenate.openleg.processor.base.AbstractDataProcessor;
 import gov.nysenate.openleg.service.law.data.LawDataService;
 import gov.nysenate.openleg.service.law.data.LawTreeNotFoundEx;
 import gov.nysenate.openleg.service.law.event.BulkLawUpdateEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ import static gov.nysenate.openleg.model.law.LawDocumentType.*;
 @Service
 public class LawProcessor extends AbstractDataProcessor
 {
-    private static final Logger logger = LoggerFactory.getLogger(LawProcessor.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** The law files are most likely sent in CP850 encoding. */
     protected static Charset LAWFILE_CHARSET = Charset.forName("CP850");

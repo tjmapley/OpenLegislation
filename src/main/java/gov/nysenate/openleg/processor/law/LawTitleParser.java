@@ -4,8 +4,8 @@ import gov.nysenate.openleg.model.law.LawChapterCode;
 import gov.nysenate.openleg.model.law.LawDocInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 public class LawTitleParser
 {
-    private static final Logger logger = LoggerFactory.getLogger(LawTitleParser.class);
+    private static final Logger logger = LogManager.getLogger();
 
     protected static String sectionTitlePattern = "(?i)((?:Section|§)\\s*%s).?\\s(.+?)\\.(.*)";
     protected static Pattern tocStartPattern = Pattern.compile("(Section|Article)\\s+\\n?[0-9a-zA-Z-.]+");

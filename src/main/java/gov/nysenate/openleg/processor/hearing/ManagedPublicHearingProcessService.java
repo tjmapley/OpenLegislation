@@ -4,8 +4,8 @@ import gov.nysenate.openleg.dao.base.LimitOffset;
 import gov.nysenate.openleg.dao.hearing.PublicHearingFileDao;
 import gov.nysenate.openleg.model.hearing.PublicHearingFile;
 import gov.nysenate.openleg.model.hearing.PublicHearingId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.TreeMap;
 @Service
 public class ManagedPublicHearingProcessService implements PublicHearingProcessService
 {
-    private static Logger logger = LoggerFactory.getLogger(ManagedPublicHearingProcessService.class);
+    private static Logger logger = LogManager.getLogger();
 
     @Autowired
     private PublicHearingFileDao publicHearingFileDao;

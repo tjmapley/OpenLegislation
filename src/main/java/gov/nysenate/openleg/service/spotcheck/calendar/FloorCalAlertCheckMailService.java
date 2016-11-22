@@ -2,8 +2,8 @@ package gov.nysenate.openleg.service.spotcheck.calendar;
 
 import gov.nysenate.openleg.service.spotcheck.base.CheckMailService;
 import gov.nysenate.openleg.service.spotcheck.base.SimpleCheckMailService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 @Service
 public class FloorCalAlertCheckMailService extends SimpleCheckMailService implements CheckMailService {
 
-    private static final Logger logger = LoggerFactory.getLogger(FloorCalAlertCheckMailService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     protected static final Pattern floorCalAlertSubjectPattern =
             Pattern.compile("^Senate Cal No\\.\\s+(\\d+[A-z]?)\\s+for\\s+[A-z]+day\\s+(\\d{2}/\\d{2}/\\d{4})$");

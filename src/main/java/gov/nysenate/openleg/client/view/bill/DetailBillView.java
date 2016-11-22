@@ -7,8 +7,8 @@ import gov.nysenate.openleg.model.bill.Bill;
 import gov.nysenate.openleg.model.bill.BillId;
 import gov.nysenate.openleg.service.bill.data.BillDataService;
 import gov.nysenate.openleg.service.bill.data.BillNotFoundEx;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class DetailBillView extends BillView implements ViewObject
 {
-    private static final Logger logger = LoggerFactory.getLogger(DetailBillView.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** Contains BillInfoViews keyed by the BaseBillId string for every other bill that is referenced by this bill.
      *  This map eliminates possible duplications where for example a same as bill reference is identical to the

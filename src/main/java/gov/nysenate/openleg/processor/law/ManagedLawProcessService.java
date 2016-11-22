@@ -5,8 +5,8 @@ import gov.nysenate.openleg.dao.base.LimitOffset;
 import gov.nysenate.openleg.dao.base.SortOrder;
 import gov.nysenate.openleg.dao.law.data.LawFileDao;
 import gov.nysenate.openleg.model.law.LawFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class ManagedLawProcessService implements LawProcessService
 {
-    private static final Logger logger = LoggerFactory.getLogger(ManagedLawProcessService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private Environment env;
     @Autowired private LawFileDao lawFileDao;

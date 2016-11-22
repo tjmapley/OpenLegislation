@@ -2,8 +2,8 @@ package gov.nysenate.openleg.processor.law;
 
 import gov.nysenate.openleg.model.law.*;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +16,7 @@ import static java.util.stream.Collectors.toList;
 
 public abstract class AbstractLawBuilder implements LawBuilder
 {
-    private static final Logger logger = LoggerFactory.getLogger(AbstractLawBuilder.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** Pattern used for parsing the location ids to extract the document type and doc type id. */
     protected static Pattern locationPattern = Pattern.compile("^(ST|SP|SA|A|T|P|S|INDEX)(.*)");

@@ -17,8 +17,8 @@ import gov.nysenate.openleg.model.updates.UpdateToken;
 import gov.nysenate.openleg.model.updates.UpdateType;
 import gov.nysenate.openleg.service.calendar.data.CalendarDataService;
 import gov.nysenate.openleg.util.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -33,7 +33,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = BASE_API_PATH + "/calendars", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
 public class CalendarUpdatesCtrl extends BaseCtrl {
 
-    private static final Logger logger = LoggerFactory.getLogger(CalendarUpdatesCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired protected CalendarUpdatesDao calendarUpdatesDao;
     @Autowired protected CalendarDataService calendarDataService;

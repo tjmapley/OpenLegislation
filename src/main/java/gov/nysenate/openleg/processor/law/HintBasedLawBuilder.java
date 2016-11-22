@@ -5,8 +5,8 @@ import gov.nysenate.openleg.model.law.LawTree;
 import gov.nysenate.openleg.model.law.LawTreeNode;
 import gov.nysenate.openleg.model.law.LawVersionId;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
  */
 public class HintBasedLawBuilder extends IdBasedLawBuilder implements LawBuilder
 {
-    private static final Logger logger = LoggerFactory.getLogger(HintBasedLawBuilder.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** Ordered list of law document types used to constrain the hierarchy to certain nesting rules. */
     private LinkedList<LawDocumentType> expectedOrder;

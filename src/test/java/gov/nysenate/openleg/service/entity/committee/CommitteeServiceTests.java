@@ -8,12 +8,12 @@ import gov.nysenate.openleg.model.entity.CommitteeId;
 import gov.nysenate.openleg.model.entity.CommitteeSessionId;
 import gov.nysenate.openleg.service.entity.committee.data.CommitteeDataService;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class CommitteeServiceTests extends BaseTests{
-    private static Logger logger = LoggerFactory.getLogger(CommitteeServiceTests.class);
+    private static Logger logger = LogManager.getLogger();
 
     @Autowired
     CommitteeDataService committeeDataService;

@@ -4,14 +4,14 @@ import gov.nysenate.openleg.dao.agenda.reference.AgendaAlertDao;
 import gov.nysenate.openleg.model.spotcheck.SpotCheckRefType;
 import gov.nysenate.openleg.processor.agenda.reference.AgendaAlertProcessor;
 import gov.nysenate.openleg.service.spotcheck.base.BaseSpotcheckProcessService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AgendaSpotcheckProcessService extends BaseSpotcheckProcessService {
-    private static final Logger logger = LoggerFactory.getLogger(AgendaSpotcheckProcessService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private AgendaAlertCheckMailService alertCheckMailService;

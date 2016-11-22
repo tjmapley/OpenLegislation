@@ -24,8 +24,8 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  */
 public class BillTextTest extends BaseTests {
 
-    private static final Logger logger = LoggerFactory.getLogger(BillTextTest.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     SpotcheckRunService runService;

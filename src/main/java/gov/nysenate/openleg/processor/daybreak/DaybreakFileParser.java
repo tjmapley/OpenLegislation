@@ -6,8 +6,8 @@ import gov.nysenate.openleg.model.spotcheck.daybreak.DaybreakDocType;
 import gov.nysenate.openleg.model.spotcheck.daybreak.DaybreakFile;
 import gov.nysenate.openleg.model.spotcheck.daybreak.DaybreakFragment;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class DaybreakFileParser {
 
-    private static final Logger logger = LoggerFactory.getLogger(DaybreakFileParser.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** Matches a single row in the bill table */
     public static Pattern rowPattern = Pattern.compile("<tr.*?>(.+?)</tr>");

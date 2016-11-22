@@ -21,8 +21,8 @@ import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class ElasticAgendaSearchService implements AgendaSearchService, IndexedSearchService<Agenda>
 {
-    private static final Logger logger = LoggerFactory.getLogger(ElasticAgendaSearchService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private Environment env;
     @Autowired private EventBus eventBus;

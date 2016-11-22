@@ -8,8 +8,8 @@ import gov.nysenate.openleg.model.base.Version;
 import gov.nysenate.openleg.model.bill.BillId;
 import gov.nysenate.openleg.model.calendar.*;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ import java.util.TreeMap;
 @Service
 public class ProdCalendarDataService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProdCalendarDataService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private static final String BASE_URL = "http://open.nysenate.gov/legislation/2.0/calendar/";
 

@@ -7,8 +7,8 @@ import gov.nysenate.openleg.model.bill.VetoMessage;
 import gov.nysenate.openleg.model.bill.VetoType;
 import gov.nysenate.openleg.processor.base.ParseError;
 import gov.nysenate.openleg.util.OutputUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class VetoMemoParser extends BillTextParser
 {
-    private static final Logger logger = LoggerFactory.getLogger(VetoMemoParser.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** --- RegEx Patterns --- */
 

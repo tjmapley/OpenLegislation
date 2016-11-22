@@ -4,8 +4,8 @@ import gov.nysenate.openleg.dao.base.LimitOffset;
 import gov.nysenate.openleg.dao.base.SqlBaseDao;
 import gov.nysenate.openleg.model.hearing.PublicHearingFile;
 import gov.nysenate.openleg.util.FileIOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
@@ -25,7 +25,7 @@ import static gov.nysenate.openleg.util.DateUtils.toDate;
 @Repository
 public class SqlFsPublicHearingFileDao extends SqlBaseDao implements PublicHearingFileDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlFsPublicHearingFileDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** Directory were new PublicHearingFiles come in from external sources. */
     private File incomingPublicHearingDir;

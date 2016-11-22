@@ -6,8 +6,8 @@ import gov.nysenate.openleg.model.entity.SessionMember;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,11 +22,11 @@ import static java.util.stream.Collectors.toList;
  */
 public class MemberScraperUtils
 {
-    private static final Logger logger = LoggerFactory.getLogger(MemberScraperUtils.class);
+    private static final Logger logger = LogManager.getLogger();
 
-    static final String ASSEMBLY_MEMBER_DIR_URL = "http://assembly.state.ny.us/mem/";
-    static final String ASSEMBLY_MEMBER_LISTING_URL = "http://assembly.state.ny.us/mem/email/";
-    static final String SENATE_MEMBER_DIR_URL = "http://www.nysenate.gov/senators";
+    private static final String ASSEMBLY_MEMBER_DIR_URL = "http://assembly.state.ny.us/mem/";
+    private static final String ASSEMBLY_MEMBER_LISTING_URL = "http://assembly.state.ny.us/mem/email/";
+    private static final String SENATE_MEMBER_DIR_URL = "http://www.nysenate.gov/senators";
 
     public static List<SessionMember> getAssemblyMembers() throws IOException {
         Document directoryPage = Jsoup.connect(ASSEMBLY_MEMBER_DIR_URL).get();

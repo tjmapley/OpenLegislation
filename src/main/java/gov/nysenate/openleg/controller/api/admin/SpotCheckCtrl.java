@@ -24,8 +24,8 @@ import gov.nysenate.openleg.service.spotcheck.base.SpotCheckReportService;
 import gov.nysenate.openleg.service.spotcheck.base.SpotcheckRunService;
 import gov.nysenate.openleg.util.DateUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +44,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = BASE_ADMIN_API_PATH + "/spotcheck", produces = APPLICATION_JSON_VALUE)
 public class SpotCheckCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(SpotCheckCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private List<SpotCheckReportService<?>> reportServices;
     @Autowired private SpotcheckRunService spotcheckRunService;

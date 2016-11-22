@@ -5,8 +5,8 @@ import gov.nysenate.openleg.model.cache.CacheEvictIdEvent;
 import gov.nysenate.openleg.model.cache.CacheWarmEvent;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.config.SizeOfPolicyConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import static net.sf.ehcache.config.SizeOfPolicyConfiguration.MaxDepthExceededBe
 
 public interface CachingService<ContentId>
 {
-    static final Logger logger = LoggerFactory.getLogger(CachingService.class);
+    static final Logger logger = LogManager.getLogger();
 
     /**
      * Performs cache creation and any pre-caching of data.

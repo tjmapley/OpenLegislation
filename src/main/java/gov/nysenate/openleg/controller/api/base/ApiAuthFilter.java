@@ -8,8 +8,8 @@ import gov.nysenate.openleg.util.OutputUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ import java.io.IOException;
 @Component("apiAuthFilter")
 public class ApiAuthFilter implements Filter
 {
-    private static final Logger logger = LoggerFactory.getLogger(ApiAuthFilter.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     protected ApiUserService apiUserService;

@@ -5,8 +5,8 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 import gov.nysenate.openleg.util.DateUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.Optional;
  */
 public class LawDocIdFixer
 {
-    private static final Logger logger = LoggerFactory.getLogger(LawDocIdFixer.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** Hacks to fix various document id inconsistencies. */
     protected static Multimap<String, Pair<String, Range<LocalDate>>> docIdReplacements = ArrayListMultimap.create();

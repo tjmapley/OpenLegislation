@@ -10,8 +10,8 @@ import gov.nysenate.openleg.model.bill.VetoMessage;
 import gov.nysenate.openleg.model.bill.VetoType;
 import gov.nysenate.openleg.model.sobi.SobiFragment;
 import gov.nysenate.openleg.util.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -28,7 +28,7 @@ import static gov.nysenate.openleg.util.DateUtils.toDate;
 @Repository
 public class SqlVetoDao extends SqlBaseDao implements VetoDao
 {
-    public static final Logger logger = LoggerFactory.getLogger(SqlVetoDao.class);
+    public static final Logger logger = LogManager.getLogger();
 
     /** @inheritDoc */
     @Override

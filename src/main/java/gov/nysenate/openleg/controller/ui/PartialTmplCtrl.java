@@ -1,7 +1,7 @@
 package gov.nysenate.openleg.controller.ui;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class PartialTmplCtrl extends BaseContentPageCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(PartialTmplCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @PostConstruct
     public void init() {

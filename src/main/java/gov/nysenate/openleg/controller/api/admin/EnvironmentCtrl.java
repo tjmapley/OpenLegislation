@@ -15,8 +15,8 @@ import gov.nysenate.openleg.config.Environment;
 import gov.nysenate.openleg.controller.api.base.BaseCtrl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +35,7 @@ import static gov.nysenate.openleg.controller.api.base.BaseCtrl.BASE_ADMIN_API_P
 @RequestMapping(value = BASE_ADMIN_API_PATH + "/environment")
 public class EnvironmentCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(EnvironmentCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** A set of variables that are allowed to be modified, mapped to their respective setter functions */
     private ImmutableMap<String, Consumer<String>> mutableProperties;

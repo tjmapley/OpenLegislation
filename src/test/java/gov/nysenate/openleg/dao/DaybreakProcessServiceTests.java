@@ -6,8 +6,8 @@ import gov.nysenate.openleg.dao.bill.reference.daybreak.DaybreakDao;
 import gov.nysenate.openleg.model.spotcheck.daybreak.DaybreakBill;
 import gov.nysenate.openleg.processor.daybreak.DaybreakProcessService;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class DaybreakProcessServiceTests extends BaseTests {
 
-    private static Logger logger = LoggerFactory.getLogger(DaybreakProcessServiceTests.class);
+    private static Logger logger = LogManager.getLogger();
 
     @Autowired
     private DaybreakProcessService daybreakProcessService;

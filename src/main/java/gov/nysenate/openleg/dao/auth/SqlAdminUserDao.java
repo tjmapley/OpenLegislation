@@ -4,8 +4,8 @@ import gov.nysenate.openleg.dao.base.ImmutableParams;
 import gov.nysenate.openleg.dao.base.SqlBaseDao;
 import gov.nysenate.openleg.model.auth.AdminUser;
 import org.mindrot.jbcrypt.BCrypt;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public class SqlAdminUserDao extends SqlBaseDao implements AdminUserDao
 {
-    public static final Logger logger = LoggerFactory.getLogger(SqlAdminUserDao.class);
+    public static final Logger logger = LogManager.getLogger();
 
     /**
      * Add a new Admin account from an admin in the model

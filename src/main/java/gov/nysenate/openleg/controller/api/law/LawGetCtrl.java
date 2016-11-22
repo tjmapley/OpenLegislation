@@ -17,8 +17,8 @@ import gov.nysenate.openleg.service.law.data.LawDataService;
 import gov.nysenate.openleg.service.law.data.LawDocumentNotFoundEx;
 import gov.nysenate.openleg.service.law.data.LawTreeNotFoundEx;
 import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -38,7 +38,7 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping(value = BASE_API_PATH + "/laws", method = RequestMethod.GET)
 public class LawGetCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(LawGetCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private LawDataService lawDataService;
 

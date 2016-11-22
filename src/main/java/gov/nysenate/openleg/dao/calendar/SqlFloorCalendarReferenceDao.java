@@ -4,8 +4,8 @@ import gov.nysenate.openleg.dao.base.SqlBaseDao;
 import gov.nysenate.openleg.model.calendar.*;
 import gov.nysenate.openleg.model.spotcheck.SpotCheckReferenceId;
 import gov.nysenate.openleg.model.spotcheck.calendar.FloorCalendarSpotcheckReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * Created by kyle on 10/24/14.
  */
 public class SqlFloorCalendarReferenceDao extends SqlBaseDao implements FloorCalendarReferenceDAO{
-    private static final Logger logger = LoggerFactory.getLogger(SqlFloorCalendarReferenceDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
 
     // todo fix

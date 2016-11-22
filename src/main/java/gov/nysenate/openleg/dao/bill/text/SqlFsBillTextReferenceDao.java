@@ -11,8 +11,8 @@ import gov.nysenate.openleg.model.spotcheck.billtext.BillTextReference;
 import gov.nysenate.openleg.util.DateUtils;
 import gov.nysenate.openleg.util.FileIOUtils;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -37,7 +37,7 @@ import static gov.nysenate.openleg.dao.bill.text.SqlBillTextReferenceQuery.*;
 @Repository
 public class SqlFsBillTextReferenceDao extends SqlBaseDao implements BillTextReferenceDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(SqlFsBillTextReferenceDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     Environment environment;

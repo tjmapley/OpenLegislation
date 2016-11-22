@@ -15,8 +15,8 @@ import gov.nysenate.openleg.model.spotcheck.daybreak.DaybreakBill;
 import gov.nysenate.openleg.model.spotcheck.*;
 import gov.nysenate.openleg.service.bill.data.BillDataService;
 import gov.nysenate.openleg.service.spotcheck.base.BaseSpotCheckReportService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ import static java.util.stream.Collectors.toSet;
 @Service("daybreakReport")
 public class DaybreakReportService extends BaseSpotCheckReportService<BaseBillId>
 {
-    private static final Logger logger = LoggerFactory.getLogger(DaybreakReportService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private DaybreakCheckService daybreakCheckService;

@@ -17,8 +17,8 @@ import gov.nysenate.openleg.processor.bill.BillSobiProcessor;
 import gov.nysenate.openleg.processor.calendar.ActiveListProcessor;
 import gov.nysenate.openleg.processor.calendar.CalendarProcessor;
 import gov.nysenate.openleg.processor.entity.CommitteeProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 @Service
 public class ManagedSobiProcessService implements SobiProcessService
 {
-    private static final Logger logger = LoggerFactory.getLogger(ManagedSobiProcessService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private static final Pattern patchTagPattern = Pattern.compile("^\\s*</?PATCH>\\s*$");
 

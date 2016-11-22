@@ -6,8 +6,8 @@ import gov.nysenate.openleg.model.process.DataProcessAction;
 import gov.nysenate.openleg.model.process.DataProcessRun;
 import gov.nysenate.openleg.model.process.DataProcessUnit;
 import org.apache.shiro.dao.DataAccessException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -22,7 +22,7 @@ import static gov.nysenate.openleg.util.DateUtils.*;
 @Repository
 public class SqlDataProcessLogDao extends SqlBaseDao implements DataProcessLogDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlDataProcessLogDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** {@inheritDoc} */
     @Override

@@ -22,13 +22,12 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.shiro.authz.AuthorizationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -45,7 +44,7 @@ import static gov.nysenate.openleg.model.notification.NotificationType.REQUEST_E
 
 public abstract class BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(BaseCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     public static final String BASE_API_PATH = "/api/3";
     public static final String BASE_ADMIN_API_PATH = BASE_API_PATH + "/admin";

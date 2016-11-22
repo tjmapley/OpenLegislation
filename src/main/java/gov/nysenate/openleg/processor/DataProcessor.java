@@ -14,8 +14,8 @@ import gov.nysenate.openleg.service.process.DataProcessLogService;
 import gov.nysenate.openleg.service.spotcheck.agenda.AgendaSpotcheckProcessService;
 import gov.nysenate.openleg.service.spotcheck.base.BaseSpotcheckProcessService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ import java.util.Optional;
 @Service
 public class DataProcessor
 {
-    private static final Logger logger = LoggerFactory.getLogger(DataProcessor.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private Environment env;
     @Autowired private EventBus eventBus;

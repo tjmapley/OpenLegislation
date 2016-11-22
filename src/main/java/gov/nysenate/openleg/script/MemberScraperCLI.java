@@ -5,8 +5,8 @@ import gov.nysenate.openleg.util.MemberScraperUtils;
 import gov.nysenate.openleg.util.FileIOUtils;
 import gov.nysenate.openleg.util.RandomUtils;
 import org.apache.commons.cli.CommandLine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class MemberScraperCLI extends BaseScript
 {
-    private static final Logger logger = LoggerFactory.getLogger(MemberScraperCLI.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     protected void execute(CommandLine opts) throws Exception {

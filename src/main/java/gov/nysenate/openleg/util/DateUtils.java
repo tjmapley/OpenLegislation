@@ -3,8 +3,8 @@ package gov.nysenate.openleg.util;
 import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
 import org.postgresql.util.PGInterval;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 public abstract class DateUtils
 {
-    private static final Logger logger = LoggerFactory.getLogger(DateUtils.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** --- Date Formats --- */
 

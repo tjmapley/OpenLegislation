@@ -4,15 +4,15 @@ import gov.nysenate.openleg.BaseTests;
 import gov.nysenate.openleg.model.law.LawTree;
 import gov.nysenate.openleg.service.law.data.LawDataService;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 
 public class LawProcessorTests extends BaseTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(LawProcessorTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private LawDataService lawDataService;

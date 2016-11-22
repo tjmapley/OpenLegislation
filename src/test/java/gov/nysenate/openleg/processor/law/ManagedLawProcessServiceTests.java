@@ -4,8 +4,8 @@ import gov.nysenate.openleg.BaseTests;
 import gov.nysenate.openleg.dao.base.LimitOffset;
 import gov.nysenate.openleg.model.law.LawFile;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class ManagedLawProcessServiceTests extends BaseTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(ManagedLawProcessServiceTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private ManagedLawProcessService lawProcessService;

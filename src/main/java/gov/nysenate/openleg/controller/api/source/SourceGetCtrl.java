@@ -15,8 +15,8 @@ import gov.nysenate.openleg.dao.base.SortOrder;
 import gov.nysenate.openleg.dao.sobi.SobiDao;
 import gov.nysenate.openleg.model.sobi.SobiFile;
 import gov.nysenate.openleg.model.sobi.SobiFragment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = BASE_API_PATH + "/sources", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
 public class SourceGetCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(SourceGetCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private SobiDao sobiDao;
 

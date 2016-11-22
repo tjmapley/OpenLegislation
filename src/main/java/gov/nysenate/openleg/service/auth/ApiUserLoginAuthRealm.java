@@ -13,8 +13,8 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Component
 public class ApiUserLoginAuthRealm extends OpenLegAuthorizingRealm
 {
-    private static final Logger logger = LoggerFactory.getLogger(ApiUserLoginAuthRealm.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private static final class ApiCredentialsMatcher implements CredentialsMatcher
     {

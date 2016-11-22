@@ -10,8 +10,8 @@ import gov.nysenate.openleg.model.notification.*;
 import gov.nysenate.openleg.service.notification.data.NotificationService;
 import gov.nysenate.openleg.service.notification.subscription.NotificationSubscriptionDataService;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ import java.util.Map;
 @Service
 public class NotificationDispatcher {
 
-    private static final Logger logger = LoggerFactory.getLogger(NotificationDispatcher.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private EventBus eventBus;

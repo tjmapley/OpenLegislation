@@ -22,8 +22,8 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.config.CacheConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @Service
 public class CachedMemberService implements MemberService, CachingService<Integer>
 {
-    private static final Logger logger = LoggerFactory.getLogger(CachedMemberService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private EventBus eventBus;

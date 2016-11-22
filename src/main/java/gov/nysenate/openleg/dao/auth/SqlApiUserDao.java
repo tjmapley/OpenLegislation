@@ -4,8 +4,8 @@ import gov.nysenate.openleg.dao.base.ImmutableParams;
 import gov.nysenate.openleg.dao.base.SqlBaseDao;
 import gov.nysenate.openleg.model.auth.ApiUser;
 import gov.nysenate.openleg.service.auth.OpenLegRole;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class SqlApiUserDao extends SqlBaseDao implements ApiUserDao
 {
 
-    public static final Logger logger = LoggerFactory.getLogger(SqlApiUserDao.class);
+    public static final Logger logger = LogManager.getLogger();
 
     /** {@inheritDoc} */
     @Override

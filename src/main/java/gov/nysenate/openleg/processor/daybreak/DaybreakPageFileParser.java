@@ -7,8 +7,8 @@ import gov.nysenate.openleg.model.spotcheck.daybreak.DaybreakFile;
 import gov.nysenate.openleg.model.spotcheck.daybreak.PageFileEntry;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class DaybreakPageFileParser {
 
-    private static Logger logger = LoggerFactory.getLogger(DaybreakFileParser.class);
+    private static Logger logger = LogManager.getLogger();
 
     private static String publishDateMatchPattern = "MM/dd/yyyy";
 

@@ -10,8 +10,8 @@ import gov.nysenate.openleg.dao.base.LimitOffset;
 import gov.nysenate.openleg.model.entity.FullMember;
 import gov.nysenate.openleg.service.entity.member.data.MemberService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +27,7 @@ import static gov.nysenate.openleg.controller.api.base.BaseCtrl.BASE_ADMIN_API_P
 @RequestMapping(value = BASE_ADMIN_API_PATH + "/member")
 public class MemberManageCtrl extends BaseCtrl {
 
-    private static final Logger logger = LoggerFactory.getLogger(MemberManageCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired MemberService memberService;
 

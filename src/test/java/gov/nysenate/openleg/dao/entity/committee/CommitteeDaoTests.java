@@ -7,8 +7,8 @@ import gov.nysenate.openleg.model.entity.Chamber;
 import gov.nysenate.openleg.model.entity.Committee;
 import gov.nysenate.openleg.model.entity.CommitteeVersionId;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 
 
 public class CommitteeDaoTests extends BaseTests{
-    private static Logger logger = LoggerFactory.getLogger(CommitteeDaoTests.class);
+    private static Logger logger = LogManager.getLogger();
 
     @Autowired
     protected CommitteeDao committeeDao;

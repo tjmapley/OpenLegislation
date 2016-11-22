@@ -8,8 +8,8 @@ import gov.nysenate.openleg.model.spotcheck.SpotCheckRefType;
 import gov.nysenate.openleg.service.spotcheck.agenda.AgendaSpotcheckProcessService;
 import gov.nysenate.openleg.service.spotcheck.base.SpotcheckRunService;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class SpotcheckTests extends WebAppBaseTests {
-    private static final Logger logger = LoggerFactory.getLogger(SpotcheckTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     SpotcheckRunService spotcheckRunService;

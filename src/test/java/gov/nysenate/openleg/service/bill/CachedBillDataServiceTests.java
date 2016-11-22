@@ -10,15 +10,15 @@ import gov.nysenate.openleg.service.bill.data.CachedBillDataService;
 import gov.nysenate.openleg.util.OutputUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 
 public class CachedBillDataServiceTests extends BaseTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(CachedBillDataServiceTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     CachedBillDataService billData;

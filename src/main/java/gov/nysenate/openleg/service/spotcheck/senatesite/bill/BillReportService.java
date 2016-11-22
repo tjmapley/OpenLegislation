@@ -23,8 +23,8 @@ import gov.nysenate.openleg.service.bill.data.BillDataService;
 import gov.nysenate.openleg.service.bill.data.BillNotFoundEx;
 import gov.nysenate.openleg.service.spotcheck.base.BaseSpotCheckReportService;
 import gov.nysenate.openleg.util.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Service
 public class BillReportService extends BaseSpotCheckReportService<BillId> {
 
-    private static final Logger logger = LoggerFactory.getLogger(BillReportService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private BillIdSpotCheckReportDao billReportDao;
     @Autowired private SenateSiteDao senateSiteDao;

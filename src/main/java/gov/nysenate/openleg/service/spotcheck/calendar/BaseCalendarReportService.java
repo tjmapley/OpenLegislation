@@ -8,8 +8,8 @@ import gov.nysenate.openleg.model.calendar.CalendarId;
 import gov.nysenate.openleg.model.spotcheck.*;
 import gov.nysenate.openleg.service.spotcheck.base.BaseSpotCheckReportService;
 import gov.nysenate.openleg.util.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public abstract class BaseCalendarReportService extends BaseSpotCheckReportService<CalendarId> {
 
-    private static final Logger logger = LoggerFactory.getLogger(BaseCalendarReportService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private CalendarAlertReportDao reportDao;

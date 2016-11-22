@@ -1,7 +1,7 @@
 package gov.nysenate.openleg.controller.api.base;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -15,7 +15,7 @@ import java.io.IOException;
 @Component("corsFilter")
 public class CorsFilter implements Filter
 {
-    private static final Logger logger = LoggerFactory.getLogger(CorsFilter.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {

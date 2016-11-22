@@ -7,8 +7,8 @@ import gov.nysenate.openleg.model.bill.BillVoteId;
 import gov.nysenate.openleg.model.entity.SessionMember;
 import gov.nysenate.openleg.model.entity.MemberNotFoundEx;
 import gov.nysenate.openleg.service.entity.member.data.MemberService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.jdbc.core.RowCallbackHandler;
 
 import java.sql.ResultSet;
@@ -22,7 +22,7 @@ import java.util.TreeMap;
  */
 public class BillVoteRowHandler extends SqlBaseDao implements RowCallbackHandler
 {
-    private static final Logger logger = LoggerFactory.getLogger(BillVoteRowHandler.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private static final BillVoteIdRowMapper voteIdRowMapper = new BillVoteIdRowMapper();
     private final TreeMap<BillVoteId, BillVote> billVoteMap = new TreeMap<>();

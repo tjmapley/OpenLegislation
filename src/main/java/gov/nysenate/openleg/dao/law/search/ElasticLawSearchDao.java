@@ -16,8 +16,8 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.rescore.RescoreBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -29,7 +29,7 @@ import java.util.List;
 @Repository
 public class ElasticLawSearchDao extends ElasticBaseDao implements LawSearchDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(ElasticLawSearchDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     protected static String lawIndexName = SearchIndex.LAW.getIndexName();
 

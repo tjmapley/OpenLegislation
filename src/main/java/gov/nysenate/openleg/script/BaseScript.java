@@ -2,8 +2,8 @@ package gov.nysenate.openleg.script;
 
 import gov.nysenate.openleg.config.ConsoleApplicationConfig;
 import org.apache.commons.cli.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  */
 abstract public class BaseScript
 {
-    private static final Logger logger = LoggerFactory.getLogger(BaseScript.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** Used as the script name when printing help. */
     protected static String SCRIPT_NAME = "BaseScript";

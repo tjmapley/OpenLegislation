@@ -4,8 +4,8 @@ import gov.nysenate.openleg.config.Environment;
 import gov.nysenate.openleg.util.MailUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.*;
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public abstract class BaseCheckMailService {
 
-    private static final Logger logger = LoggerFactory.getLogger(BaseCheckMailService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     protected Environment environment;

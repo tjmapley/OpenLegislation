@@ -17,8 +17,8 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
@@ -29,7 +29,7 @@ import java.util.List;
 @Repository
 public class ElasticAgendaSearchDao extends ElasticBaseDao implements AgendaSearchDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(ElasticAgendaSearchDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     protected static final String agendaIndexName = SearchIndex.AGENDA.getIndexName();
 

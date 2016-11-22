@@ -10,8 +10,8 @@ import gov.nysenate.openleg.model.entity.SessionMember;
 import gov.nysenate.openleg.service.entity.member.data.MemberService;
 import gov.nysenate.openleg.service.entity.member.event.BulkMemberUpdateEvent;
 import gov.nysenate.openleg.service.entity.member.event.MemberUpdateEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 public abstract class BaseContentPageCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(BaseContentPageCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private MemberService memberData;
     @Autowired private EventBus eventBus;

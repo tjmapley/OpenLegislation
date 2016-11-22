@@ -10,8 +10,8 @@ import gov.nysenate.openleg.model.spotcheck.SpotCheckMismatchType;
 import gov.nysenate.openleg.model.spotcheck.billtext.ScrapeQueuePriority;
 import gov.nysenate.openleg.service.bill.event.BillFieldUpdateEvent;
 import gov.nysenate.openleg.service.spotcheck.base.SpotcheckMismatchEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct;
 /** Adds bills to the bill text scrape queue based on certain events */
 @Service
 public class BillTextScrapeQueueService {
-    private static final Logger logger = LoggerFactory.getLogger(BillTextScrapeQueueService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     BillTextReferenceDao btrDao;

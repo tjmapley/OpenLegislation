@@ -27,8 +27,8 @@ import gov.nysenate.openleg.util.BillTextUtils;
 import gov.nysenate.openleg.util.OutputUtils;
 import gov.nysenate.openleg.util.StringDiffer;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -52,7 +52,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = BASE_API_PATH + "/bills", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
 public class BillGetCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(BillGetCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired protected BillDataService billData;
     @Autowired protected BillSearchService billSearch;

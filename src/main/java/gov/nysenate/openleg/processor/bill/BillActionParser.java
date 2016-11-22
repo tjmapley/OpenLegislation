@@ -5,8 +5,8 @@ import gov.nysenate.openleg.model.bill.BillId;
 import gov.nysenate.openleg.model.entity.Chamber;
 import gov.nysenate.openleg.processor.base.ParseError;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  */
 public class BillActionParser
 {
-    private static final Logger logger = LoggerFactory.getLogger(BillActionParser.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** --- Patterns --- */
 

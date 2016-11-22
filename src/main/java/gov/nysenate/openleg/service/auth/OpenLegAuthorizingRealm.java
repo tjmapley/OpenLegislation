@@ -3,8 +3,8 @@ package gov.nysenate.openleg.service.auth;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.permission.RolePermissionResolver;
 import org.apache.shiro.realm.AuthorizingRealm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +14,7 @@ import java.util.Collections;
  */
 public abstract class OpenLegAuthorizingRealm extends AuthorizingRealm
 {
-    private static final Logger logger = LoggerFactory.getLogger(OpenLegAuthorizingRealm.class);
+    private static final Logger logger = LogManager.getLogger();
 
     protected static class OpenLegRolePermissionResolver implements RolePermissionResolver
     {

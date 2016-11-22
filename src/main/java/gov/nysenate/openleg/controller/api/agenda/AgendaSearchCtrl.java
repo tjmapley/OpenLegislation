@@ -14,8 +14,8 @@ import gov.nysenate.openleg.model.search.SearchResults;
 import gov.nysenate.openleg.service.agenda.data.AgendaDataService;
 import gov.nysenate.openleg.service.agenda.search.AgendaSearchService;
 import gov.nysenate.openleg.service.bill.data.BillDataService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -28,7 +28,7 @@ import static gov.nysenate.openleg.controller.api.base.BaseCtrl.BASE_API_PATH;
 @RequestMapping(value = BASE_API_PATH + "/agendas/", method = RequestMethod.GET)
 public class AgendaSearchCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(AgendaSearchCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private AgendaDataService agendaData;
     @Autowired private AgendaSearchService agendaSearch;

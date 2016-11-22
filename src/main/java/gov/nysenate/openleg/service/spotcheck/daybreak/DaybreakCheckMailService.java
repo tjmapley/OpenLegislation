@@ -4,8 +4,8 @@ import gov.nysenate.openleg.model.spotcheck.daybreak.*;
 import gov.nysenate.openleg.service.spotcheck.base.BaseCheckMailService;
 import gov.nysenate.openleg.service.spotcheck.base.CheckMailService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -21,7 +21,7 @@ import java.util.Map;
 @Service
 public class DaybreakCheckMailService extends BaseCheckMailService implements CheckMailService
 {
-    private static final Logger logger = LoggerFactory.getLogger(DaybreakCheckMailService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private File daybreakStagingDir;
 

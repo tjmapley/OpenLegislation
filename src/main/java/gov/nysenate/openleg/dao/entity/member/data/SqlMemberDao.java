@@ -6,8 +6,8 @@ import gov.nysenate.openleg.model.base.SessionYear;
 import gov.nysenate.openleg.model.entity.Chamber;
 import gov.nysenate.openleg.model.entity.SessionMember;
 import gov.nysenate.openleg.model.entity.Person;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
@@ -25,7 +25,7 @@ import java.util.TreeMap;
 @Repository("sqlMember")
 public class SqlMemberDao extends SqlBaseDao implements MemberDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlMemberDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** --- Implemented Methods --- */
 

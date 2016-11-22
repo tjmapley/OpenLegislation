@@ -9,8 +9,8 @@ import gov.nysenate.openleg.model.entity.Chamber;
 import gov.nysenate.openleg.model.entity.SessionMember;
 import gov.nysenate.openleg.service.entity.member.data.MemberService;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class SqlBaseDaoTests extends BaseTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlBaseDaoTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private MemberService memberService;

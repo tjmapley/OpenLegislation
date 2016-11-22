@@ -10,8 +10,8 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.mindrot.jbcrypt.BCrypt;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ import java.util.Collection;
 @Component
 public class AdminLoginAuthRealm extends OpenLegAuthorizingRealm
 {
-    private static final Logger logger = LoggerFactory.getLogger(AdminLoginAuthRealm.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** The IP whitelist is used here to restrict access to admin login to internal IPs only. */
     @Value("${api.auth.ip.whitelist}") private String ipWhitelist;

@@ -4,8 +4,8 @@ import gov.nysenate.openleg.dao.base.LimitOffset;
 import gov.nysenate.openleg.dao.transcript.TranscriptFileDao;
 import gov.nysenate.openleg.model.transcript.TranscriptFile;
 import gov.nysenate.openleg.model.transcript.TranscriptId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class ManagedTranscriptProcessService implements TranscriptProcessService
 {
-    private static Logger logger = LoggerFactory.getLogger(ManagedTranscriptProcessService.class);
+    private static Logger logger = LogManager.getLogger();
 
     @Autowired
     private TranscriptFileDao transcriptFileDao;

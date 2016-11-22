@@ -21,8 +21,8 @@ import gov.nysenate.openleg.processor.DataProcessor;
 import gov.nysenate.openleg.service.process.DataProcessLogService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +40,7 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping(value = BASE_ADMIN_API_PATH + "/process", method = RequestMethod.GET)
 public class DataProcessCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(DataProcessCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private Environment env;
     @Autowired private DataProcessLogService processLogs;

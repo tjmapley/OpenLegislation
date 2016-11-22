@@ -19,8 +19,8 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.config.CacheConfiguration;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.ehcache.EhCacheCache;
@@ -51,7 +51,7 @@ public class CachedSqlApiUserService implements ApiUserService, CachingService<S
 //    private static final String apiUserCacheName = ;
     private EhCacheCache apiUserCache;
 
-    private static final Logger logger = LoggerFactory.getLogger(CachedSqlApiUserService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @PostConstruct
     private void init() {

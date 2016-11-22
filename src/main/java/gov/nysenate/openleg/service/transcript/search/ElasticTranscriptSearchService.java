@@ -20,8 +20,8 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @Service
 public class ElasticTranscriptSearchService implements TranscriptSearchService, IndexedSearchService<Transcript> {
 
-    private static final Logger logger = LoggerFactory.getLogger(ElasticTranscriptSearchService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired protected Environment env;
     @Autowired protected EventBus eventBus;

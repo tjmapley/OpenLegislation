@@ -7,8 +7,8 @@ import gov.nysenate.openleg.model.updates.UpdateContentType;
 import gov.nysenate.openleg.model.updates.UpdateDigest;
 import gov.nysenate.openleg.model.updates.UpdateToken;
 import gov.nysenate.openleg.model.updates.UpdateType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
@@ -20,7 +20,7 @@ import static gov.nysenate.openleg.dao.agenda.data.SqlAgendaUpdatesQuery.*;
 @Repository
 public class SqlAgendaUpdatesDao extends SqlBaseDao implements AgendaUpdatesDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlAgendaUpdatesDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** {@inheritDoc} */
     @Override

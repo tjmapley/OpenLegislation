@@ -5,8 +5,8 @@ import gov.nysenate.openleg.processor.DataProcessor;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProcessDataCLI extends BaseScript
 {
-    private static final Logger logger = LoggerFactory.getLogger(ProcessDataCLI.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private Environment env;
     @Autowired private DataProcessor dataProcessor;

@@ -4,13 +4,13 @@ import gov.nysenate.openleg.BaseTests;
 import gov.nysenate.openleg.model.sobi.SobiProcessOptions;
 import gov.nysenate.openleg.processor.sobi.SobiProcessService;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ManagedSobiProcessServiceTest extends BaseTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(ManagedSobiProcessServiceTest.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private SobiProcessService sobiProcessService;

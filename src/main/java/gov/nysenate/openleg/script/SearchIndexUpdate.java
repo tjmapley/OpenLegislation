@@ -4,8 +4,8 @@ import gov.nysenate.openleg.config.Environment;
 import gov.nysenate.openleg.service.bill.data.BillDataService;
 import gov.nysenate.openleg.service.bill.search.BillSearchService;
 import org.apache.commons.cli.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SearchIndexUpdate extends BaseScript
 {
-    private static final Logger logger = LoggerFactory.getLogger(SearchIndexUpdate.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private Environment env;

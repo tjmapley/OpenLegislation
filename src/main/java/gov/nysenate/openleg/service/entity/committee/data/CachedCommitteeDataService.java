@@ -21,8 +21,8 @@ import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.MemoryUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -38,7 +38,7 @@ import java.util.List;
 @Service
 public class CachedCommitteeDataService implements CommitteeDataService, CachingService<CommitteeSessionId> {
 
-    private static final Logger logger = LoggerFactory.getLogger(CachedCommitteeDataService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private CacheManager cacheManager;
     @Autowired private CommitteeDao committeeDao;

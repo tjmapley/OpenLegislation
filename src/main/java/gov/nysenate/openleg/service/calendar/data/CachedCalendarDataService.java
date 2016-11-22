@@ -20,8 +20,8 @@ import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.MemoryUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @Service
 public class CachedCalendarDataService implements CalendarDataService, CachingService<CalendarId>
 {
-    private static final Logger logger = LoggerFactory.getLogger(CachedCalendarDataService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private CacheManager cacheManager;
     @Autowired private CalendarDao calendarDao;

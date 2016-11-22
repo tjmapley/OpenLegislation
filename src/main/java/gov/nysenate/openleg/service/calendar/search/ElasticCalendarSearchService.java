@@ -18,8 +18,8 @@ import gov.nysenate.openleg.service.calendar.event.CalendarUpdateEvent;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ import java.util.regex.Matcher;
 @Service
 public class ElasticCalendarSearchService implements CalendarSearchService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ElasticCalendarSearchService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private ElasticCalendarSearchDao calendarSearchDao;
     @Autowired private CalendarDataService calendarDataService;

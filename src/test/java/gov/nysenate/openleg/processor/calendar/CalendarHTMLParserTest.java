@@ -6,8 +6,8 @@ import gov.nysenate.openleg.util.OutputUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 
@@ -16,7 +16,7 @@ import java.io.File;
  */
 public class CalendarHTMLParserTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(CalendarHTMLParserTest.class);
+    private static final Logger logger = LogManager.getLogger();
 
 
 

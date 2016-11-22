@@ -23,8 +23,8 @@ import gov.nysenate.openleg.model.law.LawVersionId;
 import net.sf.ehcache.CacheManager;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +44,7 @@ import static gov.nysenate.openleg.controller.api.base.BaseCtrl.BASE_ADMIN_API_P
 @RequestMapping(value = BASE_ADMIN_API_PATH + "/cache")
 public class CacheCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(CacheCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private EventBus eventBus;
     @Autowired private CacheManager cacheManager;

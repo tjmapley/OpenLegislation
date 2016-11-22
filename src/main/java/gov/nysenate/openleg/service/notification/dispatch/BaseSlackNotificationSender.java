@@ -5,8 +5,8 @@ import gov.nysenate.openleg.model.notification.RegisteredNotification;
 import gov.nysenate.openleg.model.slack.SlackAddress;
 import gov.nysenate.openleg.service.slack.SlackChatService;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.regex.Matcher;
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public abstract class BaseSlackNotificationSender extends BaseNotificationSender {
 
-    private static final Logger logger = LoggerFactory.getLogger(BaseSlackNotificationSender.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private static final Pattern slackAddressPattern =
             Pattern.compile("^(?:#([a-z-]+))?(?:@([a-z]*))?$");

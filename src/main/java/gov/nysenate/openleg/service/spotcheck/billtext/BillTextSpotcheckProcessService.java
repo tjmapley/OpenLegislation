@@ -8,8 +8,8 @@ import gov.nysenate.openleg.service.scraping.ScrapedBillMemoParser;
 import gov.nysenate.openleg.service.scraping.ScrapedBillTextParser;
 import gov.nysenate.openleg.service.spotcheck.base.BaseSpotcheckProcessService;
 import gov.nysenate.openleg.service.spotcheck.base.SpotCheckNotificationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +37,7 @@ public class BillTextSpotcheckProcessService extends BaseSpotcheckProcessService
     @Autowired
     SpotCheckNotificationService notificationService;
 
-    private static final Logger logger = LoggerFactory.getLogger(BillTextSpotcheckProcessService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     public int doCollate() throws Exception {

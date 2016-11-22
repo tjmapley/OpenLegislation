@@ -6,13 +6,13 @@ import gov.nysenate.openleg.dao.base.SortOrder;
 import gov.nysenate.openleg.dao.law.data.LawFileDao;
 import gov.nysenate.openleg.model.law.LawFile;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LawParserTests extends BaseTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(LawParserTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private LawFileDao lawFileDao;

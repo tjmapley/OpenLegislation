@@ -1,7 +1,7 @@
 package gov.nysenate.openleg.model.spotcheck.daybreak;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class DaybreakReportSet<DaybreakDoc extends DaybreakDocument> {
 
-    Logger logger = LoggerFactory.getLogger(DaybreakReportSet.class);
+    Logger logger = LogManager.getLogger();
 
     /** Stores any generated reports */
     private Set<DaybreakReport<DaybreakDoc> > reportSet;

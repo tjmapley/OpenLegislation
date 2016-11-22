@@ -12,8 +12,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.File;
@@ -33,7 +33,7 @@ import java.util.Calendar;
  * Created by kyle on 10/6/14.
  */
 public class CalendarHTMLParser {
-    private static final Logger logger = LoggerFactory.getLogger(CalendarHTMLParser.class);
+    private static final Logger logger = LogManager.getLogger();
 
     public static FloorCalendarSpotcheckReference getSpotcheckReference(File html) throws Exception{
         String billCalNo = null;

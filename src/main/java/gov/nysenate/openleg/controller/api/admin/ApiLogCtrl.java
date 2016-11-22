@@ -14,8 +14,8 @@ import gov.nysenate.openleg.model.search.SearchResults;
 import gov.nysenate.openleg.service.auth.ApiUserService;
 import gov.nysenate.openleg.service.log.search.ApiLogSearchService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -31,7 +31,7 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping(value = BASE_ADMIN_API_PATH + "/apiLogs")
 public class ApiLogCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(ApiLogCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private ApiLogSearchService logSearchService;
     @Autowired private ApiUserService apiUserService;

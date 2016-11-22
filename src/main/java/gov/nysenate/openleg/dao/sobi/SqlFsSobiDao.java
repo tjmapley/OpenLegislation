@@ -8,8 +8,8 @@ import gov.nysenate.openleg.model.sobi.SobiFragment;
 import gov.nysenate.openleg.model.sobi.SobiFragmentType;
 import gov.nysenate.openleg.util.DateUtils;
 import org.apache.commons.io.FileExistsException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
@@ -37,7 +37,7 @@ import static gov.nysenate.openleg.util.FileIOUtils.getSortedFiles;
 @Repository
 public class SqlFsSobiDao extends SqlBaseDao implements SobiDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlFsSobiDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** Directory where new sobi files come in from external sources. */
     private File incomingSobiDir;

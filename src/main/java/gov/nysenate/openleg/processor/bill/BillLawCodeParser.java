@@ -3,15 +3,15 @@ package gov.nysenate.openleg.processor.bill;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import gov.nysenate.openleg.model.law.LawChapterCode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class BillLawCodeParser
 {
-    private static final Logger logger = LoggerFactory.getLogger(BillLawCodeParser.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private String sectionChar = "§";
 

@@ -7,8 +7,9 @@ import gov.nysenate.openleg.model.bill.BillId;
 import gov.nysenate.openleg.model.calendar.CalendarEntry;
 import gov.nysenate.openleg.model.calendar.CalendarId;
 import gov.nysenate.openleg.model.spotcheck.ActiveListSpotcheckReference;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ import java.util.List;
  * Created by kyle on 11/21/14.
  */
 public class ActiveListDAOTest extends BaseTests {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SqlActiveListReferenceDAO.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     ActiveListReferenceDAO activeReference;

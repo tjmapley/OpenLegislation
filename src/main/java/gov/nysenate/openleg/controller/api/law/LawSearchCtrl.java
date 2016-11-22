@@ -12,8 +12,8 @@ import gov.nysenate.openleg.model.search.SearchException;
 import gov.nysenate.openleg.model.search.SearchResults;
 import gov.nysenate.openleg.service.law.data.LawDataService;
 import gov.nysenate.openleg.service.law.search.LawSearchService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -25,7 +25,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = BaseCtrl.BASE_API_PATH + "/laws", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
 public class LawSearchCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(LawSearchCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private LawDataService lawData;
     @Autowired private LawSearchService lawSearch;

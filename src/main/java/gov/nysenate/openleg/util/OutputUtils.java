@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * OutputUtils serves as a simple utility class to convert Objects to string representations.
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class OutputUtils
 {
-    private static final Logger logger = LoggerFactory.getLogger(OutputUtils.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private static ObjectMapper jsonMapper = new ObjectMapper();
     static {

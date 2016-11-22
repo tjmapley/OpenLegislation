@@ -7,8 +7,8 @@ import gov.nysenate.openleg.model.base.SessionYear;
 import gov.nysenate.openleg.model.bill.Bill;
 import gov.nysenate.openleg.service.bill.data.BillDataService;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class ElasticBillSearchServiceTests extends BaseTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(ElasticBillSearchServiceTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     BillDataService billDataService;

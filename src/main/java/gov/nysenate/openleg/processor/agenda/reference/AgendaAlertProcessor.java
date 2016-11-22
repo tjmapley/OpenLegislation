@@ -4,8 +4,8 @@ import gov.nysenate.openleg.dao.agenda.reference.AgendaAlertDao;
 import gov.nysenate.openleg.model.spotcheck.agenda.AgendaAlertInfoCommittee;
 import gov.nysenate.openleg.processor.base.ParseError;
 import gov.nysenate.openleg.service.spotcheck.base.SpotCheckNotificationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class AgendaAlertProcessor {
 
-    private static final Logger logger = LoggerFactory.getLogger(AgendaAlertProcessor.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private AgendaAlertDao agendaAlertDao;

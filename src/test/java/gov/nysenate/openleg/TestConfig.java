@@ -4,8 +4,8 @@ import gov.nysenate.openleg.config.CacheConfigurationTests;
 import gov.nysenate.openleg.dao.calendar.alert.CalendarAlertDao;
 import gov.nysenate.openleg.processor.calendar.MockCalendarAlertDao;
 import net.sf.ehcache.CacheManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import org.springframework.core.io.Resource;
 @Profile({"test"})
 public class TestConfig
 {
-    private static final Logger logger = LoggerFactory.getLogger(TestConfig.class);
+    private static final Logger logger = LogManager.getLogger();
 
     public static final String PROPERTY_FILENAME = "test.app.properties";
 

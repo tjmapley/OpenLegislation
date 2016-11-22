@@ -6,8 +6,8 @@ import gov.nysenate.openleg.model.transcript.TranscriptId;
 import gov.nysenate.openleg.model.transcript.TranscriptNotFoundEx;
 import gov.nysenate.openleg.service.transcript.data.TranscriptDataService;
 import org.apache.pdfbox.exceptions.COSVisitorException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ import java.io.IOException;
 @RequestMapping(value = "/pdf/transcripts")
 public class TranscriptPdfCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(TranscriptPdfCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private TranscriptDataService transcriptData;

@@ -6,8 +6,8 @@ import com.google.common.collect.ImmutableMap;
 import gov.nysenate.openleg.config.Environment;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 public abstract class OldApiBaseDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(OldApiBaseDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     protected static final ObjectMapper mapper = new ObjectMapper();
 

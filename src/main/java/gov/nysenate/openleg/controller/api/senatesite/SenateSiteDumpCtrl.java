@@ -15,8 +15,8 @@ import gov.nysenate.openleg.util.AsyncRunner;
 import gov.nysenate.openleg.util.SenateSiteDumpFragParser;
 import gov.nysenate.openleg.util.SenateSiteDumpFragParser.SenateSiteDumpFragParserException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,7 @@ import static gov.nysenate.openleg.controller.api.base.BaseCtrl.BASE_API_PATH;
 @RequestMapping(BASE_API_PATH + "/senatesite")
 public class SenateSiteDumpCtrl extends BaseCtrl {
 
-    private static final Logger logger = LoggerFactory.getLogger(SenateSiteDumpCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private SenateSiteDao senateSiteDao;
     @Autowired private AsyncRunner asyncRunner;

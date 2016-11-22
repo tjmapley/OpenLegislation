@@ -5,13 +5,13 @@ import gov.nysenate.openleg.config.Environment;
 import gov.nysenate.openleg.model.spotcheck.SpotCheckRefType;
 import gov.nysenate.openleg.model.spotcheck.SpotCheckReferenceEvent;
 import gov.nysenate.openleg.processor.base.ProcessService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class BaseSpotcheckProcessService implements ProcessService
 {
-    private static final Logger logger = LoggerFactory.getLogger(BaseSpotcheckProcessService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired SpotCheckNotificationService spotCheckNotificationService;
 

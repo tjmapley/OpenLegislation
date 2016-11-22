@@ -14,8 +14,8 @@ import gov.nysenate.openleg.model.base.Version;
 import gov.nysenate.openleg.model.calendar.*;
 import gov.nysenate.openleg.service.calendar.data.CalendarDataService;
 import gov.nysenate.openleg.service.calendar.data.CalendarNotFoundEx;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,7 @@ import static gov.nysenate.openleg.controller.api.base.BaseCtrl.BASE_API_PATH;
 @RequestMapping(value = BASE_API_PATH + "/calendars", method = RequestMethod.GET)
 public class CalendarGetCtrl extends BaseCtrl
 {
-    private static final Logger logger = LoggerFactory.getLogger(CalendarGetCtrl.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private CalendarDataService calendarDataService;

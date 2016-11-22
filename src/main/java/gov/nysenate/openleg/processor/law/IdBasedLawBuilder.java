@@ -2,8 +2,8 @@ package gov.nysenate.openleg.processor.law;
 
 import gov.nysenate.openleg.model.law.*;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Stack;
 
@@ -12,7 +12,7 @@ import java.util.Stack;
  */
 public class IdBasedLawBuilder extends AbstractLawBuilder implements LawBuilder
 {
-    private static final Logger logger = LoggerFactory.getLogger(IdBasedLawBuilder.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** Stack of the current parent nodes, used to determine hierarchy. */
     protected Stack<LawTreeNode> parentNodes = new Stack<>();

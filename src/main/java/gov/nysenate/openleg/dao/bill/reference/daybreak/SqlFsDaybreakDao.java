@@ -15,8 +15,8 @@ import gov.nysenate.openleg.model.spotcheck.daybreak.*;
 import gov.nysenate.openleg.model.entity.Chamber;
 import gov.nysenate.openleg.util.DateUtils;
 import gov.nysenate.openleg.util.FileIOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -45,7 +45,7 @@ import static gov.nysenate.openleg.util.DateUtils.toDate;
 @Repository
 public class SqlFsDaybreakDao extends SqlBaseDao implements DaybreakDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlFsDaybreakDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** Directory where new daybreak files come in from external sources. */
     private File incomingDaybreakDir;

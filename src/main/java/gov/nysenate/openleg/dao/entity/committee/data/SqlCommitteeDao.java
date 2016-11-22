@@ -12,8 +12,8 @@ import gov.nysenate.openleg.model.entity.MemberNotFoundEx;
 import gov.nysenate.openleg.service.entity.member.data.MemberService;
 import gov.nysenate.openleg.util.DateUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
@@ -37,7 +37,7 @@ import static gov.nysenate.openleg.dao.entity.committee.data.SqlCommitteeQuery.*
 @Repository
 public class SqlCommitteeDao extends SqlBaseDao implements CommitteeDao
 {
-    public static final Logger logger = LoggerFactory.getLogger(SqlCommitteeDao.class);
+    public static final Logger logger = LogManager.getLogger();
 
     @Autowired
     MemberDao memberDao;

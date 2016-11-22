@@ -14,8 +14,8 @@ import org.apache.commons.io.FileExistsException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.lang3.text.StrSubstitutor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -32,7 +32,7 @@ import static gov.nysenate.openleg.util.DateUtils.*;
 @Repository
 public class FsSenateSiteDao implements SenateSiteDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(FsSenateSiteDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private Environment environment;
     @Autowired private SenateSiteDumpFragParser parser;

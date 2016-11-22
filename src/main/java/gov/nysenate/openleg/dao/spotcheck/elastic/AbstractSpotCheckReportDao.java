@@ -22,8 +22,8 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.dao.DataAccessException;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ public abstract class AbstractSpotCheckReportDao<ContentKey>
         extends ElasticBaseDao
         implements SpotCheckReportDao<ContentKey>, IndexedSearchService<SpotCheckReport<ContentKey>>{
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractSpotCheckReportDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** Subclasses should initialize with proper index name. */
     protected final String spotcheckIndex;

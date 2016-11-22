@@ -13,8 +13,8 @@ import gov.nysenate.openleg.service.spotcheck.daybreak.DaybreakReportService;
 import gov.nysenate.openleg.util.DateUtils;
 import gov.nysenate.openleg.util.OutputUtils;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class DaybreakCheckServiceTests extends BaseTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(DaybreakCheckServiceTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     SpotCheckService<BaseBillId, Bill, DaybreakBill> billSpotCheck;

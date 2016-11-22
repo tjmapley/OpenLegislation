@@ -7,13 +7,13 @@ import gov.nysenate.openleg.model.search.SearchException;
 import gov.nysenate.openleg.model.search.SearchResults;
 import gov.nysenate.openleg.service.entity.member.search.ElasticMemberSearchService;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ElasticMemberSearchServiceTests extends BaseTests {
 
-    private static final Logger logger = LoggerFactory.getLogger(ElasticMemberSearchServiceTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired ElasticMemberSearchService memberSearchService;
 

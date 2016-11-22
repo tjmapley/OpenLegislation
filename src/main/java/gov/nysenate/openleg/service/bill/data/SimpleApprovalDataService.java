@@ -5,8 +5,8 @@ import gov.nysenate.openleg.model.bill.ApprovalId;
 import gov.nysenate.openleg.model.bill.ApprovalMessage;
 import gov.nysenate.openleg.model.bill.BaseBillId;
 import gov.nysenate.openleg.model.sobi.SobiFragment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class SimpleApprovalDataService implements ApprovalDataService
 {
-    public static final Logger logger = LoggerFactory.getLogger(SimpleApprovalDataService.class);
+    public static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private ApprovalDao approvalDao;

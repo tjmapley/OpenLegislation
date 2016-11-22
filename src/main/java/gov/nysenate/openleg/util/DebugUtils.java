@@ -1,7 +1,7 @@
 package gov.nysenate.openleg.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  */
 public abstract class DebugUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(DebugUtils.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private static final String thisClassName = DebugUtils.class.getCanonicalName();
 

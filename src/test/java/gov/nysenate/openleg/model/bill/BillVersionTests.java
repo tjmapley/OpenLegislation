@@ -2,8 +2,8 @@ package gov.nysenate.openleg.model.bill;
 
 import gov.nysenate.openleg.model.base.Version;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 
 public class BillVersionTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(BillVersionTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Test
     public void testToString() throws Exception {

@@ -5,8 +5,8 @@ import gov.nysenate.openleg.dao.base.LimitOffset;
 import gov.nysenate.openleg.dao.base.SqlBaseDao;
 import gov.nysenate.openleg.model.calendar.alert.CalendarAlertFile;
 import gov.nysenate.openleg.util.FileIOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -29,7 +29,7 @@ import static gov.nysenate.openleg.util.DateUtils.toDate;
 @Repository
 public class SqlFsCalendarAlertFileDao extends SqlBaseDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(SqlFsCalendarAlertFileDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     private static final Pattern calendarAlertFilePattern =
             Pattern.compile("^(floor_cal|active_list)_alert-\\d{4}-\\d+[A-Z]?-\\d{8}T\\d{6}.html$");

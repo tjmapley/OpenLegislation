@@ -3,8 +3,8 @@ package gov.nysenate.openleg.dao.log.search;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import gov.nysenate.openleg.service.log.event.ApiLogEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct;
 @Service
 public class ApiLogStompService
 {
-    private static final Logger logger = LoggerFactory.getLogger(ApiLogStompService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Service
     public static class AsyncApiLogStomper

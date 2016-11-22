@@ -2,14 +2,14 @@ package gov.nysenate.openleg.dao.spotcheck;
 
 import gov.nysenate.openleg.BaseTests;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Created by PKS on 8/31/16.
  */
 public class ElasticSpotCheckReportDaoTests extends BaseTests{
-    private static final Logger logger = LoggerFactory.getLogger(ElasticSpotCheckReportDaoTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Test
     public void saveReportTest(){}

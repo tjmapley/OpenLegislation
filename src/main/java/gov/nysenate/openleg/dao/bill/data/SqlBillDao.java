@@ -19,8 +19,8 @@ import gov.nysenate.openleg.service.bill.data.ApprovalNotFoundException;
 import gov.nysenate.openleg.service.bill.data.VetoDataService;
 import gov.nysenate.openleg.service.bill.data.VetoNotFoundException;
 import gov.nysenate.openleg.service.entity.member.data.MemberService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataRetrievalFailureException;
@@ -43,7 +43,7 @@ import static gov.nysenate.openleg.util.DateUtils.toDate;
 @Repository
 public class SqlBillDao extends SqlBaseDao implements BillDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlBillDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private MemberService memberService;
     @Autowired private VetoDataService vetoDataService;

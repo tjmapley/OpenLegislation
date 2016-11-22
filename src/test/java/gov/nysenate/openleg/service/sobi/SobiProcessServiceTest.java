@@ -6,15 +6,15 @@ import gov.nysenate.openleg.dao.base.SortOrder;
 import gov.nysenate.openleg.model.sobi.SobiFragment;
 import gov.nysenate.openleg.processor.sobi.SobiProcessService;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class SobiProcessServiceTest extends BaseTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(SobiProcessServiceTest.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     private SobiProcessService sobiProcessService;

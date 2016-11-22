@@ -7,8 +7,8 @@ import gov.nysenate.openleg.model.bill.BillId;
 import gov.nysenate.openleg.model.calendar.Calendar;
 import gov.nysenate.openleg.model.calendar.*;
 import gov.nysenate.openleg.model.sobi.SobiFragment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowCallbackHandler;
@@ -29,7 +29,7 @@ import static gov.nysenate.openleg.util.DateUtils.toDate;
 @Repository
 public class SqlCalendarDao extends SqlBaseDao implements CalendarDao
 {
-    private static final Logger logger = LoggerFactory.getLogger(SqlCalendarDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** {@inheritDoc} */
     @Override

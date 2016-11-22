@@ -18,8 +18,8 @@ import org.elasticsearch.index.reindex.DeleteByQueryAction;
 import org.elasticsearch.index.reindex.DeleteByQueryRequestBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -29,7 +29,7 @@ import java.util.List;
 @Repository
 public class ElasticCalendarSearchDao extends ElasticBaseDao implements CalendarSearchDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(ElasticCalendarSearchDao.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     CalendarViewFactory calendarViewFactory;

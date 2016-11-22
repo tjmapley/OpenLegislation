@@ -18,8 +18,8 @@ import gov.nysenate.openleg.service.log.event.ApiLogIndexEvent;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,7 @@ import java.util.List;
 @Service
 public class ElasticApiLogSearchService implements ApiLogSearchService
 {
-    private static final Logger logger = LoggerFactory.getLogger(ElasticApiLogSearchService.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired private EventBus eventBus;
     @Autowired private ApiLogDao apiLogDao;

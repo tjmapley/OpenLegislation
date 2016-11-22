@@ -11,8 +11,8 @@ import gov.nysenate.openleg.model.spotcheck.daybreak.PageFileEntry;
 import gov.nysenate.openleg.model.entity.Chamber;
 import gov.nysenate.openleg.util.DateUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  */
 public class DaybreakFragmentParser {
 
-    private static Logger logger = LoggerFactory.getLogger(DaybreakFragmentParser.class);
+    private static Logger logger = LogManager.getLogger();
 
     /** Patterns for extracting metadata from bill actions */
     private static Pattern billActionPattern = Pattern.compile("(\\d{2}/\\d{2}/\\d{2}) (.*)");

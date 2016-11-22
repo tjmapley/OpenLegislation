@@ -8,8 +8,8 @@ import gov.nysenate.openleg.model.bill.*;
 import gov.nysenate.openleg.model.entity.Chamber;
 import gov.nysenate.openleg.model.entity.CommitteeVersionId;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -23,7 +23,7 @@ import static gov.nysenate.openleg.model.bill.BillStatusType.*;
  */
 public class BillActionAnalyzer
 {
-    private static final Logger logger = LoggerFactory.getLogger(BillActionAnalyzer.class);
+    private static final Logger logger = LogManager.getLogger();
 
     /** Pattern for extracting the committee from matching bill events. */
     private static final Pattern committeeEventTextPattern =

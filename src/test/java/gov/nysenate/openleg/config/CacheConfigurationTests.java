@@ -7,8 +7,8 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.statistics.StatisticsGateway;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class CacheConfigurationTests extends BaseTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(CacheConfigurationTests.class);
+    private static final Logger logger = LogManager.getLogger();
 
     @Autowired
     CacheTester cacheTester;
