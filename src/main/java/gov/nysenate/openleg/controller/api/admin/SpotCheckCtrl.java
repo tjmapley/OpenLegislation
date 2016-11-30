@@ -1,7 +1,9 @@
 package gov.nysenate.openleg.controller.api.admin;
 
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Table;
 import gov.nysenate.openleg.client.response.base.BaseResponse;
 import gov.nysenate.openleg.client.response.base.SimpleResponse;
 import gov.nysenate.openleg.client.response.base.ViewObjectResponse;
@@ -51,11 +53,18 @@ public class SpotCheckCtrl extends BaseCtrl
 
     private ImmutableMap<SpotCheckRefType, SpotCheckReportService<?>> reportServiceMap;
 
+    private Table<SpotCheckDataSource, SpotCheckContentType, SpotCheckReportService<?>> reportServiceTable = HashBasedTable.create();
+
     @PostConstruct
     public void init() {
         reportServiceMap = ImmutableMap.copyOf(
                 reportServices.stream()
                         .collect(Collectors.toMap(SpotCheckReportService::getSpotcheckRefType, Function.identity(),(a, b) -> b)));
+
+        reportServices.forEach(
+                reportService -> reportServiceTable.put(reportService.getSpotcheckRefType().getDataSource(),
+                                                        reportService.getSpotcheckRefType().getContentType(),
+                                                        reportService));
     }
 
     /**
@@ -253,6 +262,20 @@ public class SpotCheckCtrl extends BaseCtrl
         SpotCheckRefType refType = getSpotcheckRefType(reportType, "reportType");
         LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
         OpenMismatchSummary summary = reportServiceMap.get(refType).getOpenMismatchSummary(refType,earliestDateTime);
+        return new ViewObjectResponse<>(new OpenMismatchSummaryView(summary));
+    }
+
+    @RequiresPermissions("admin:view")
+    @RequestMapping(value = "/open-mismatches/summary", method = RequestMethod.GET, params = {"dataSource"})
+    public BaseResponse getOpenMismatchSummary(@RequestParam String dataSource,
+                                               @RequestParam String contentType,
+                                               @RequestParam(required = false) String observedAfter) {
+        SpotCheckDataSource spotCheckDataSource = getSpotcheckDataSource(dataSource,"dataSource");
+        SpotCheckContentType spotCheckContentType = getSpotcheckContentType(contentType, "contentType");
+        LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
+        Set<SpotCheckRefType> spotCheckRefTypes = new HashSet<>(SpotCheckRefType.get(spotCheckDataSource, spotCheckContentType));
+        OpenMismatchSummary summary = reportServiceTable.get(spotCheckDataSource, spotCheckContentType)
+                                                        .getOpenMismatchSummary(spotCheckRefTypes,earliestDateTime);
         return new ViewObjectResponse<>(new OpenMismatchSummaryView(summary));
     }
 
