@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Created by PKS on 9/15/16.
  */
-class ElasticObservation<ContentKey> {
+class ElasticObservation {
 
     protected String spotcheckReportId;
     protected SpotCheckReferenceId referenceId;
@@ -30,7 +30,7 @@ class ElasticObservation<ContentKey> {
 
     public ElasticObservation(){}
 
-    public ElasticObservation(String spotCheckReportId,Map<String, String> keyMap, SpotCheckObservation<ContentKey> observation,
+    public ElasticObservation(String spotCheckReportId, Map<String, String> keyMap, SpotCheckObservation observation,
                               SpotCheckMismatch spotCheckMismatch){
         spotcheckReportId = spotCheckReportId;
         referenceId = observation.getReferenceId();
@@ -147,7 +147,7 @@ class ElasticObservation<ContentKey> {
         issueIds = Ids;
     }
 
-    public SpotCheckObservation<ContentKey> toSpotCheckObservation(ContentKey key, String mismatchid){
+    public <ContentKey> SpotCheckObservation<ContentKey> toSpotCheckObservation(ContentKey key, String mismatchid){
         SpotCheckObservation<ContentKey> observation = new SpotCheckObservation<ContentKey>(referenceId, key);
         SpotCheckMismatch spotCheckMismatch = new SpotCheckMismatch(mismatchType, observedData, referenceData, notes);
         observation.setObservedDateTime(observedDateTime);
@@ -167,7 +167,7 @@ class ElasticObservation<ContentKey> {
 
         if (!(o instanceof ElasticObservation)) return false;
 
-        ElasticObservation<?> that = (ElasticObservation<?>) o;
+        ElasticObservation that = (ElasticObservation) o;
 
         return new EqualsBuilder()
                 .append(spotcheckReportId, that.spotcheckReportId)

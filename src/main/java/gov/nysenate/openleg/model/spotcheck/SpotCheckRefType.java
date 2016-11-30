@@ -84,14 +84,11 @@ public enum SpotCheckRefType
         return refNameMap.get(refName);
     }
 
-    // TODO: implement it
     public static List<SpotCheckRefType> get(SpotCheckDataSource dataSource, SpotCheckContentType contentType){
-        List<SpotCheckRefType> spotCheckRefTypes = new ArrayList<>();
-        Arrays.asList(SpotCheckRefType.values()).forEach(refType -> {
-            if(refType.getDataSource().equals(dataSource) && refType.getContentType().equals(contentType))
-                spotCheckRefTypes.add(refType);
-        });
-        return spotCheckRefTypes;
+        return Arrays.stream(SpotCheckRefType.values())
+                .filter(
+                        refType -> refType.getDataSource().equals(dataSource) && refType.getContentType().equals(contentType))
+                .collect(Collectors.toList());
     }
 
     /**

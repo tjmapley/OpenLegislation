@@ -2,7 +2,8 @@ package gov.nysenate.openleg.service.spotcheck.agenda;
 
 import gov.nysenate.openleg.config.Environment;
 import gov.nysenate.openleg.dao.agenda.reference.AgendaAlertDao;
-import gov.nysenate.openleg.dao.spotcheck.agendas.CommitteeAgendaReportDao;
+import gov.nysenate.openleg.dao.spotcheck.SpotCheckContentIdMapper;
+import gov.nysenate.openleg.dao.spotcheck.agendas.CommitteeAgendaAddendumIdMapper;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
 import gov.nysenate.openleg.model.agenda.*;
 import gov.nysenate.openleg.model.spotcheck.agenda.AgendaAlertInfoCommittee;
@@ -23,7 +24,7 @@ public abstract class BaseAgendaCheckReportService extends BaseSpotCheckReportSe
     private static final Logger logger = LogManager.getLogger(BaseAgendaCheckReportService.class);
 
     @Autowired
-    CommitteeAgendaReportDao reportDao;
+    CommitteeAgendaAddendumIdMapper committeeAgendaAddendumIdMapper;
 
     @Autowired
     AgendaSpotCheckService checkService;
@@ -42,8 +43,8 @@ public abstract class BaseAgendaCheckReportService extends BaseSpotCheckReportSe
     }
 
     @Override
-    protected SpotCheckReportDao<CommitteeAgendaAddendumId> getReportDao() {
-        return reportDao;
+    protected SpotCheckContentIdMapper<CommitteeAgendaAddendumId> getContentIdMapper() {
+        return committeeAgendaAddendumIdMapper;
     }
 
     /** {@inheritDoc} */

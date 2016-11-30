@@ -7,9 +7,12 @@ import gov.nysenate.openleg.client.view.base.ViewObject;
 import gov.nysenate.openleg.client.view.calendar.CalendarIdView;
 import gov.nysenate.openleg.client.view.committee.CommitteeVersionIdView;
 import gov.nysenate.openleg.client.view.entity.MemberView;
+import gov.nysenate.openleg.model.base.Version;
 import gov.nysenate.openleg.model.bill.Bill;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -19,7 +22,7 @@ import java.util.stream.Collectors;
 public class BillView extends BillInfoView implements ViewObject
 {
     protected ListView<String> amendmentVersions;
-    protected MapView<String, BillAmendmentView> amendments;
+    protected MapView<Version, BillAmendmentView> amendments;
     protected ListView<BillVoteView> votes;
     protected ListView<VetoMessageView> vetoMessages;
     protected ApprovalMessageView approvalMessage;
@@ -35,14 +38,16 @@ public class BillView extends BillInfoView implements ViewObject
         super(bill != null ? bill.getBillInfo() : null);
         if (bill != null) {
             // Only output amendments that are currently published
-            TreeMap<String, BillAmendmentView> amendmentMap = new TreeMap<>();
+            TreeMap<Version, BillAmendmentView> amendmentMap = new TreeMap<>();
+            List<String> versionList = new ArrayList<>();
             bill.getAmendPublishStatusMap().forEach((k,v) -> {
                 if (v.isPublished() && bill.hasAmendment(k)) {
-                    amendmentMap.put(k.getValue(), new BillAmendmentView(bill.getAmendment(k), v));
+                    amendmentMap.put(k, new BillAmendmentView(bill.getAmendment(k), v));
                 }
+                versionList.add(k.toString());
             });
             this.amendments = MapView.of(amendmentMap);
-            this.amendmentVersions = ListView.ofStringList(amendmentMap.keySet().stream().collect(Collectors.toList()));
+            this.amendmentVersions = ListView.ofStringList(versionList);
 
             this.votes = ListView.of(bill.getAmendmentList().stream()
                 .flatMap(a -> a.getVotesList().stream())
@@ -95,7 +100,7 @@ public class BillView extends BillInfoView implements ViewObject
         return amendmentVersions;
     }
 
-    public MapView<String, BillAmendmentView> getAmendments() {
+    public MapView<Version, BillAmendmentView> getAmendments() {
         return amendments;
     }
 

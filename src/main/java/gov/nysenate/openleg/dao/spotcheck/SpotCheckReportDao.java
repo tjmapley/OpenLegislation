@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * @param <ContentKey> - The class that can uniquely identify the instances being checked in the reports
  */
-public interface SpotCheckReportDao<ContentKey>
+public interface SpotCheckReportDao
 {
     /**
      * Retrieve a previously saved report from the backing store. The fetched record will only
@@ -23,7 +23,7 @@ public interface SpotCheckReportDao<ContentKey>
      * @param id SpotCheckReportId
      * @return SpotCheckReport<ContentKey> or DataAccessException if no matching report was found
      */
-    SpotCheckReport<ContentKey> getReport(SpotCheckReportId id) throws DataAccessException;
+    <ContentKey> SpotCheckReport<ContentKey> getReport(SpotCheckReportId id) throws DataAccessException;
 
     /**
      * Get a list of the report ids that have been saved with options to filter the result set.
@@ -34,15 +34,15 @@ public interface SpotCheckReportDao<ContentKey>
      * @param dateOrder SortOrder - Order the results by the report date/time.
      * @return List<SpotCheckReportId>
      */
-    List<SpotCheckReportSummary> getReportSummaries(SpotCheckRefType refType, LocalDateTime start,
+    <ContentKey> List<SpotCheckReportSummary> getReportSummaries(SpotCheckRefType refType, LocalDateTime start,
                                                     LocalDateTime end, SortOrder dateOrder);
 
     /**
      * Get a map of all unresolved or recently resolved observations spanning all reports of the given refType
      * @param query OpenMismatchQuery
      * */
-    SpotCheckOpenMismatches<ContentKey> getOpenMismatches(OpenMismatchQuery query);
-    SpotCheckOpenMismatches<ContentKey> getOpenMismatches(SpotCheckDataSource dataSource,SpotCheckContentType contentType, OpenMismatchQuery query);
+    <ContentKey> SpotCheckOpenMismatches<ContentKey> getOpenMismatches(OpenMismatchQuery query);
+    <ContentKey> SpotCheckOpenMismatches<ContentKey> getOpenMismatches(SpotCheckDataSource dataSource,SpotCheckContentType contentType, OpenMismatchQuery query);
 
 
     /**
@@ -52,7 +52,7 @@ public interface SpotCheckReportDao<ContentKey>
     * @param observedAfter
     * @return OpenMismatchesSummary
     */
-    OpenMismatchSummary getOpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter);
+    <ContentKey> OpenMismatchSummary getOpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter);
 
     /**
      * Get a summary of type/status/ignore counts pertaining to the given query
@@ -61,7 +61,7 @@ public interface SpotCheckReportDao<ContentKey>
      * @param observedAfter
      * @return OpenMismatchesSummary
      */
-    OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter);
+    <ContentKey> OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter);
 
     /**
      * Save the report to the backing store. This process may add additional observations to the
@@ -70,7 +70,7 @@ public interface SpotCheckReportDao<ContentKey>
      *
      * @param report SpotCheckReport<ContentKey> - The report to save into the backing store
      */
-    void saveReport(SpotCheckReport<ContentKey> report) throws DataAccessException;
+    <ContentKey> void saveReport(SpotCheckReport<ContentKey> report) throws DataAccessException;
 
     /**
      * Delete a report via the report id

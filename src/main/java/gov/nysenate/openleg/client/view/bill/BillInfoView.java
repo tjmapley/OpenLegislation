@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import gov.nysenate.openleg.client.view.base.ListView;
 import gov.nysenate.openleg.client.view.base.MapView;
 import gov.nysenate.openleg.client.view.base.ViewObject;
+import gov.nysenate.openleg.model.base.Version;
 import gov.nysenate.openleg.model.bill.BillInfo;
 import gov.nysenate.openleg.model.bill.BillStatusType;
 
@@ -24,7 +25,7 @@ public class BillInfoView extends SimpleBillInfoView implements ViewObject
     protected BillStatusView status;
     protected ListView<BillStatusView> milestones;
     protected ListView<BillActionView> actions;
-    protected MapView<String, PublishStatusView> publishStatusMap;
+    protected MapView<Version, PublishStatusView> publishStatusMap;
     protected ProgramInfoView programInfo;
 
     public BillInfoView(BillInfo billInfo) {
@@ -51,9 +52,9 @@ public class BillInfoView extends SimpleBillInfoView implements ViewObject
             milestones = ListView.of(billInfo.getMilestones().stream().map(BillStatusView::new).collect(toList()));
             actions = ListView.of(billInfo.getActions().stream().map(BillActionView::new).collect(toList()));
             publishStatusMap = billInfo.getAmendPublishStatusMap().entrySet().stream()
-                    .map((pubStatEntry) -> new PublishStatusView(pubStatEntry.getKey().getValue(), pubStatEntry.getValue()))
+                    .map((pubStatEntry) -> new PublishStatusView(pubStatEntry.getKey(), pubStatEntry.getValue()))
                     .collect(Collectors.collectingAndThen(
-                            Collectors.toMap(PublishStatusView::getVersion, Function.identity()),
+                            Collectors.toMap(PublishStatusView::getVersionAsVersion, Function.identity()),
                             MapView::of));
         }
     }
@@ -94,7 +95,7 @@ public class BillInfoView extends SimpleBillInfoView implements ViewObject
         return programInfo;
     }
 
-    public MapView<String, PublishStatusView> getPublishStatusMap() {
+    public MapView<Version, PublishStatusView> getPublishStatusMap() {
         return publishStatusMap;
     }
 

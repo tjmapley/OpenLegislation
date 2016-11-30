@@ -1,11 +1,14 @@
 package gov.nysenate.openleg.dao.spotcheck.agendas;
 
-import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportDao;
+import gov.nysenate.openleg.dao.spotcheck.SpotCheckContentIdMapper;
+import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
 import gov.nysenate.openleg.model.agenda.AgendaId;
 import gov.nysenate.openleg.model.agenda.CommitteeAgendaAddendumId;
 import gov.nysenate.openleg.model.base.Version;
 import gov.nysenate.openleg.model.entity.Chamber;
 import gov.nysenate.openleg.model.entity.CommitteeId;
+import gov.nysenate.openleg.model.spotcheck.SpotCheckContentType;
+import gov.nysenate.openleg.model.spotcheck.SpotCheckDataSource;
 import gov.nysenate.openleg.model.spotcheck.SpotCheckRefType;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +19,17 @@ import java.util.Map;
  * Created by PKS on 4/28/16.
  */
 @Repository
-public class CommitteeAgendaAddendumIdSpotCheckReportDao extends AbstractSpotCheckReportDao<CommitteeAgendaAddendumId> {
+public class CommitteeAgendaAddendumIdMapper implements SpotCheckContentIdMapper<CommitteeAgendaAddendumId> {
+
+    @Override
+    public SpotCheckContentType getContentType() {
+        return SpotCheckContentType.AGENDA;
+    }
+
+    @Override
+    public SpotCheckDataSource getDataSource() {
+        return SpotCheckDataSource.OPENLEG;
+    }
 
     @Override
     public CommitteeAgendaAddendumId getKeyFromMap(Map<String, String> keyMap) {
@@ -42,7 +55,4 @@ public class CommitteeAgendaAddendumIdSpotCheckReportDao extends AbstractSpotChe
         return null;
     }
 
-    public CommitteeAgendaAddendumIdSpotCheckReportDao() {
-        super(SpotCheckRefType.SENATE_SITE_AGENDA);
-    }
 }

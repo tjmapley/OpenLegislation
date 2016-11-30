@@ -1,7 +1,10 @@
 package gov.nysenate.openleg.dao.spotcheck.bills;
 
-import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportDao;
+import gov.nysenate.openleg.dao.spotcheck.SpotCheckContentIdMapper;
+import gov.nysenate.openleg.dao.spotcheck.elastic.ElasticSpotCheckReportDao;
 import gov.nysenate.openleg.model.bill.BaseBillId;
+import gov.nysenate.openleg.model.spotcheck.SpotCheckContentType;
+import gov.nysenate.openleg.model.spotcheck.SpotCheckDataSource;
 import gov.nysenate.openleg.model.spotcheck.SpotCheckRefType;
 import org.springframework.stereotype.Repository;
 
@@ -9,9 +12,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
-public abstract class BaseBillIdSpotCheckReportDao extends AbstractSpotCheckReportDao<BaseBillId>
+public class BaseBillIdMapper implements SpotCheckContentIdMapper<BaseBillId>
 {
     /** --- Override Methods --- */
+
+    @Override
+    public SpotCheckContentType getContentType() {
+        return SpotCheckContentType.BILL;
+    }
+
+    @Override
+    public SpotCheckDataSource getDataSource() {
+        return SpotCheckDataSource.OPENLEG;
+    }
 
     /**
      * {@inheritDoc
@@ -20,7 +33,6 @@ public abstract class BaseBillIdSpotCheckReportDao extends AbstractSpotCheckRepo
      * has the same contents as the result of {@link #getMapFromKey(BaseBillId)}.
      * Returns null if the given map is also null.
      */
-    @Override
     public BaseBillId getKeyFromMap(Map<String, String> keyMap) {
         if (keyMap != null) {
             return new BaseBillId(keyMap.get("print_no"), Integer.parseInt(keyMap.get("session_year")));
@@ -34,7 +46,6 @@ public abstract class BaseBillIdSpotCheckReportDao extends AbstractSpotCheckRepo
      * Converts the baseBillId into a Map that fully represents it.
      * Returns null if the given baseBillId is also null.
      */
-    @Override
     public Map<String, String> getMapFromKey(BaseBillId baseBillId) {
         if (baseBillId != null) {
             Map<String, String> keyMap = new HashMap<>();
@@ -43,9 +54,5 @@ public abstract class BaseBillIdSpotCheckReportDao extends AbstractSpotCheckRepo
             return keyMap;
         }
         return null;
-    }
-
-    BaseBillIdSpotCheckReportDao(SpotCheckRefType refType) {
-        super(refType);
     }
 }

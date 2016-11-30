@@ -2,6 +2,7 @@ package gov.nysenate.openleg.client.view.bill;
 
 import gov.nysenate.openleg.client.view.base.ViewObject;
 import gov.nysenate.openleg.model.base.PublishStatus;
+import gov.nysenate.openleg.model.base.Version;
 
 public class PublishStatusView implements ViewObject
 {
@@ -17,6 +18,14 @@ public class PublishStatusView implements ViewObject
         }
     }
 
+    public PublishStatusView(Version version, PublishStatus publishStatus) {
+        if (publishStatus != null) {
+            this.version = version.toString();
+            this.published = publishStatus.isPublished();
+            this.effectDateTime = publishStatus.getEffectDateTime().toString();
+        }
+    }
+
     @Override
     public String getViewType() {
         return "publish-status";
@@ -25,6 +34,8 @@ public class PublishStatusView implements ViewObject
     public String getVersion() {
         return version;
     }
+
+    public Version getVersionAsVersion() { return Version.of(version);}
 
     public boolean isPublished() {
         return published;
