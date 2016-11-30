@@ -1,15 +1,15 @@
 angular.module('open.spotcheck')
     .controller('ReportCtrl', ['$scope', ReportCtrl])
     .controller('SpotcheckOpenSummaryCtrl',
-        ['$scope', '$filter', 'SpotcheckOpenMismatchSummaryAPI',  showAPIData]); //for spotcheck summaries
+        ['$scope', '$filter', 'SpotcheckOpenMismatchSummaryAPI', showAPIData]);
 
-function ReportCtrl($scope) {
-    $scope.hooplah = function () {
+function ReportCtrl($scope){
+    $scope.hooplah = function(){
 
         $scope.date = moment().format('l');
     };
 
-    function init() {
+    function init(){
         $scope.hooplah();
     }
 
@@ -18,27 +18,27 @@ function ReportCtrl($scope) {
         secondary: 'OpenLegislation - NYSenate.gov'
     };
 
+    init();
+}
 
-    function showAPIData($scope, $filter, openSummaryApi) {
-        $scope.summaries = {};
+function showAPIData($scope, $filter, openSummaryApi){
+    $scope.summaries = {};
 
-        $scope.init = function () {
-            $scope.setHeaderText('Summary of Open Mismatches');
-            getSummaries();
-        };
+    $scope.init = function(){
+        $scope.setHeaderText('Summary of Open Mismatches');
+        getSummaries();
+    };
 
-        function getSummaries() {
-            $scope.loadingSummaries = true;
-            openSummaryApi.get({}, function (response) {
-                $scope.summaries = response.result.summaryMap;
-                $scope.loadingSummaries = false;
-            }, function (errorResponse) {
-                $scope.loadingSummaries = false;
-                $scope.summaryRequestError = true;
-            })
-        }
-
-        init();
-
+    function getSummaries(){
+        $scope.loadingSummaries = true;
+        openSummaryApi.get({}, function(response){
+            $scope.summaries = response.result.summaryMap;
+            $scope.loadingSummaries = false;
+        }, function(errorResponse){
+            $scope.loadingSummaries = false;
+            $scope.summaryRequestError = true;
+        })
     }
+
+
 }
