@@ -6,7 +6,8 @@ import gov.nysenate.openleg.dao.base.PaginatedList;
 import gov.nysenate.openleg.dao.base.SortOrder;
 import gov.nysenate.openleg.dao.bill.data.BillUpdatesDao;
 import gov.nysenate.openleg.dao.bill.reference.senatesite.SenateSiteDao;
-import gov.nysenate.openleg.dao.spotcheck.bills.BillIdSpotCheckReportDao;
+import gov.nysenate.openleg.dao.spotcheck.SpotCheckContentIdMapper;
+import gov.nysenate.openleg.dao.spotcheck.bills.BillIdMapper;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
 import gov.nysenate.openleg.model.base.PublishStatus;
 import gov.nysenate.openleg.model.bill.BaseBillId;
@@ -38,18 +39,17 @@ public class BillReportService extends BaseSpotCheckReportService<BillId> {
 
     private static final Logger logger = LogManager.getLogger();
 
-    @Autowired private BillIdSpotCheckReportDao billReportDao;
+    @Autowired private BillIdMapper billReportDao;
     @Autowired private SenateSiteDao senateSiteDao;
     @Autowired private BillJsonParser billJsonParser;
-
     @Autowired private BillDataService billDataService;
     @Autowired private BillUpdatesDao billUpdatesDao;
-
     @Autowired private BillCheckService billCheckService;
+    @Autowired private BillIdMapper billIdMapper;
 
     @Override
-    protected SpotCheckReportDao<BillId> getReportDao() {
-        return billReportDao;
+    protected SpotCheckContentIdMapper<BillId> getContentIdMapper() {
+        return billIdMapper;
     }
 
     @Override

@@ -1,7 +1,10 @@
 package gov.nysenate.openleg.dao.spotcheck.bills;
 
-import gov.nysenate.openleg.dao.spotcheck.elastic.AbstractSpotCheckReportDao;
+import gov.nysenate.openleg.dao.spotcheck.SpotCheckContentIdMapper;
+import gov.nysenate.openleg.dao.spotcheck.elastic.ElasticSpotCheckReportDao;
 import gov.nysenate.openleg.model.bill.BillId;
+import gov.nysenate.openleg.model.spotcheck.SpotCheckContentType;
+import gov.nysenate.openleg.model.spotcheck.SpotCheckDataSource;
 import gov.nysenate.openleg.model.spotcheck.SpotCheckRefType;
 import org.springframework.stereotype.Repository;
 
@@ -9,9 +12,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
-public class BillIdSpotCheckReportDao extends AbstractSpotCheckReportDao<BillId> {
+public class BillIdMapper implements SpotCheckContentIdMapper<BillId> {
 
     /** --- Override Methods --- */
+
+    @Override
+    public SpotCheckContentType getContentType() {
+        return SpotCheckContentType.BILL;
+    }
+
+    @Override
+    public SpotCheckDataSource getDataSource() {
+        return SpotCheckDataSource.NYSENATE_DOT_GOV;
+    }
 
     /**
      * {@inheritDoc
@@ -44,9 +57,5 @@ public class BillIdSpotCheckReportDao extends AbstractSpotCheckReportDao<BillId>
             return keyMap;
         }
         return null;
-    }
-
-    public BillIdSpotCheckReportDao() {
-        super(SpotCheckRefType.SENATE_SITE_BILLS);
     }
 }

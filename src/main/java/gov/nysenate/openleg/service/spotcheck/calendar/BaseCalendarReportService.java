@@ -1,7 +1,8 @@
 package gov.nysenate.openleg.service.spotcheck.calendar;
 
 import gov.nysenate.openleg.config.Environment;
-import gov.nysenate.openleg.dao.spotcheck.calendars.CalendarAlertReportDao;
+import gov.nysenate.openleg.dao.spotcheck.SpotCheckContentIdMapper;
+import gov.nysenate.openleg.dao.spotcheck.calendars.CalendarAlertMapper;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
 import gov.nysenate.openleg.model.calendar.Calendar;
 import gov.nysenate.openleg.model.calendar.CalendarId;
@@ -24,7 +25,7 @@ public abstract class BaseCalendarReportService extends BaseSpotCheckReportServi
     private static final Logger logger = LogManager.getLogger();
 
     @Autowired
-    private CalendarAlertReportDao reportDao;
+    private CalendarAlertMapper calendarAlertMapper;
 
     @Autowired
     private CalendarCheckService checkService;
@@ -51,8 +52,8 @@ public abstract class BaseCalendarReportService extends BaseSpotCheckReportServi
     }
 
     @Override
-    protected SpotCheckReportDao<CalendarId> getReportDao() {
-        return reportDao;
+    protected SpotCheckContentIdMapper<CalendarId> getContentIdMapper() {
+        return calendarAlertMapper;
     }
 
     @Override

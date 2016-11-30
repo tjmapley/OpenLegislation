@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Created by PKS on 9/15/16.
  */
-class ElasticReport<ContentKey> {
+class ElasticReport {
 
     protected SpotCheckReportId reportId;
 
@@ -20,7 +20,7 @@ class ElasticReport<ContentKey> {
 
     public ElasticReport(){}
 
-    public ElasticReport(SpotCheckReport<ContentKey> report){
+    public <ContentKey> ElasticReport(SpotCheckReport<ContentKey> report){
         reportId = report.getReportId();
         notes = report.getNotes();
         observationsCount = report.getObservedCount();
@@ -50,7 +50,7 @@ class ElasticReport<ContentKey> {
         observationsCount = count;
     }
 
-    public SpotCheckReport<ContentKey> toSpotCheckReport(){
+    public <ContentKey> SpotCheckReport<ContentKey> toSpotCheckReport(){
         return new SpotCheckReport<>(reportId,notes);
     }
 
@@ -60,7 +60,7 @@ class ElasticReport<ContentKey> {
 
         if (!(o instanceof ElasticReport)) return false;
 
-        ElasticReport<?> that = (ElasticReport<?>) o;
+        ElasticReport that = (ElasticReport) o;
 
         return new EqualsBuilder()
                 .append(reportId, that.reportId)

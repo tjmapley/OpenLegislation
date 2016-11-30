@@ -1,8 +1,10 @@
 package gov.nysenate.openleg.service.spotcheck.base;
 
 import gov.nysenate.openleg.dao.base.SortOrder;
+import gov.nysenate.openleg.dao.spotcheck.SpotCheckContentIdMapper;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
 import gov.nysenate.openleg.model.spotcheck.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.time.LocalDateTime;
@@ -17,7 +19,14 @@ public abstract class BaseSpotCheckReportService<ContentKey> implements SpotChec
     /**
      * @return SpotCheckReportDao - the report dao that is used by the implementing report service
      */
-    protected abstract SpotCheckReportDao<ContentKey> getReportDao();
+    protected abstract SpotCheckContentIdMapper<ContentKey> getContentIdMapper();
+
+    @Autowired private SpotCheckReportDao spotCheckReportDao;
+
+    @Override
+    public SpotCheckReportDao getReportDao(){
+        return spotCheckReportDao;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -26,7 +35,7 @@ public abstract class BaseSpotCheckReportService<ContentKey> implements SpotChec
             throw new IllegalArgumentException("Supplied reportId cannot be null");
         }
         try {
-            return getReportDao().getReport(reportId);
+            return spotCheckReportDao.getReport(reportId);
         } catch (EmptyResultDataAccessException ex) {
             throw new SpotCheckReportNotFoundEx(reportId);
         }
@@ -36,20 +45,20 @@ public abstract class BaseSpotCheckReportService<ContentKey> implements SpotChec
     @Override
     public List<SpotCheckReportSummary> getReportSummaries(SpotCheckRefType reportType,
                                                            LocalDateTime start, LocalDateTime end, SortOrder dateOrder) {
-        return getReportDao().getReportSummaries(reportType, start, end, dateOrder);
+        return spotCheckReportDao.getReportSummaries(reportType, start, end, dateOrder);
     }
 
     /** {@inheritDoc} */
     @Override
     public SpotCheckOpenMismatches<ContentKey> getOpenObservations(OpenMismatchQuery query) {
-        return getReportDao().getOpenMismatches(query);
+        return spotCheckReportDao.getOpenMismatches(query);
     }
 
     /** {@inheritDoc} */
     @Override
     public SpotCheckOpenMismatches<ContentKey> getOpenObservations(
             SpotCheckDataSource dataSource, SpotCheckContentType contentType, OpenMismatchQuery query) {
-        return getReportDao().getOpenMismatches(dataSource, contentType, query);
+        return spotCheckReportDao.getOpenMismatches(dataSource, contentType, query);
     }
 
     /** {@inheritDoc}
@@ -57,7 +66,7 @@ public abstract class BaseSpotCheckReportService<ContentKey> implements SpotChec
      * @param observedAfter*/
     @Override
     public OpenMismatchSummary getOpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter) {
-        return getReportDao().getOpenMismatchSummary(refType, observedAfter);
+        return spotCheckReportDao.getOpenMismatchSummary(refType, observedAfter);
     }
 
     /** {@inheritDoc}
@@ -65,13 +74,13 @@ public abstract class BaseSpotCheckReportService<ContentKey> implements SpotChec
      * @param observedAfter*/
     @Override
     public OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter) {
-        return getReportDao().getOpenMismatchSummary(refTypes, observedAfter);
+        return spotCheckReportDao.getOpenMismatchSummary(refTypes, observedAfter);
     }
 
     /** {@inheritDoc} */
     @Override
     public void saveReport(SpotCheckReport<ContentKey> report) {
-        getReportDao().saveReport(report);
+        spotCheckReportDao.saveReport(report);
     }
 
     /** {@inheritDoc} */
@@ -80,22 +89,22 @@ public abstract class BaseSpotCheckReportService<ContentKey> implements SpotChec
         if (reportId == null) {
             throw new IllegalArgumentException("Supplied reportId to delete cannot be null");
         }
-        getReportDao().deleteReport(reportId);
+        spotCheckReportDao.deleteReport(reportId);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setMismatchIgnoreStatus(int mismatchId, SpotCheckMismatchIgnore ignoreStatus) {
-        getReportDao().setMismatchIgnoreStatus(mismatchId, ignoreStatus);
+        spotCheckReportDao.setMismatchIgnoreStatus(mismatchId, ignoreStatus);
     }
 
     @Override
     public void addIssueId(int mismatchId, String issueId) {
-        getReportDao().addIssueId(mismatchId, issueId);
+        spotCheckReportDao.addIssueId(mismatchId, issueId);
     }
 
     @Override
     public void deleteIssueId(int mismatchId, String issueId) {
-        getReportDao().deleteIssueId(mismatchId, issueId);
+        spotCheckReportDao.deleteIssueId(mismatchId, issueId);
     }
 }

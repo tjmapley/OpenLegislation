@@ -115,8 +115,7 @@ public abstract class ElasticBaseDao
             searchBuilder.setPostFilter(postFilter);
         }
         // Add the sort by fields
-        searchBuilder.addSort(sort.get(1));
-        //sort.forEach(searchBuilder::addSort);
+        sort.forEach(searchBuilder::addSort);
         logger.debug("{}", searchBuilder);
         return searchBuilder;
     }

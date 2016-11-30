@@ -43,7 +43,7 @@ public class SenateSiteDumpCtrl extends BaseCtrl {
      *
      * Usage: (POST) /api/3/senatesite/dump
      */
-    @RequiresPermissions("senatesite:dump:post")
+    //@RequiresPermissions("senatesite:dump:post")
     @RequestMapping(value = "/dump", method = RequestMethod.POST, consumes = "application/json")
     public BaseResponse sendSenateSiteDumpFragment(@RequestBody String billFragmentJson) throws IOException {
         if(saveDump(billFragmentJson)){

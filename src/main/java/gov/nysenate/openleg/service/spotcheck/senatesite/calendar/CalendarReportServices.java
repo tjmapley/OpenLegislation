@@ -6,8 +6,10 @@ import gov.nysenate.openleg.dao.base.PaginatedList;
 import gov.nysenate.openleg.dao.base.SortOrder;
 import gov.nysenate.openleg.dao.bill.reference.senatesite.SenateSiteDao;
 import gov.nysenate.openleg.dao.calendar.data.CalendarUpdatesDao;
+import gov.nysenate.openleg.dao.spotcheck.SpotCheckContentIdMapper;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
-import gov.nysenate.openleg.dao.spotcheck.calendars.CalendarEntryListIdSpotCheckReportDao;
+import gov.nysenate.openleg.dao.spotcheck.calendars.CalendarEntryListIdMapper;
+import gov.nysenate.openleg.dao.spotcheck.elastic.ElasticSpotCheckReportDao;
 import gov.nysenate.openleg.model.base.Version;
 import gov.nysenate.openleg.model.calendar.Calendar;
 import gov.nysenate.openleg.model.calendar.CalendarId;
@@ -47,11 +49,11 @@ public class CalendarReportServices extends BaseSpotCheckReportService<CalendarE
     @Autowired private CalendarJsonParser calendarJsonParser;
     @Autowired private CalendarUpdatesDao calendarUpdatesDao;
     @Autowired private CalendarDataService calendarDataService;
-    @Autowired private CalendarEntryListIdSpotCheckReportDao calendarEntryListIdSpotCheckReportDao;
+    @Autowired private CalendarEntryListIdMapper calendarEntryListIdMapper;
 
     @Override
-    protected SpotCheckReportDao<CalendarEntryListId> getReportDao() {
-        return calendarEntryListIdSpotCheckReportDao;
+    protected SpotCheckContentIdMapper<CalendarEntryListId> getContentIdMapper() {
+        return calendarEntryListIdMapper;
     }
 
     @Override

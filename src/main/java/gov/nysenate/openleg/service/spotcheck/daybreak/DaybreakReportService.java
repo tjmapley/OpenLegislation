@@ -4,8 +4,9 @@ import com.google.common.collect.Range;
 import com.google.common.collect.Sets;
 import gov.nysenate.openleg.dao.base.LimitOffset;
 import gov.nysenate.openleg.dao.bill.reference.daybreak.DaybreakDao;
-import gov.nysenate.openleg.dao.spotcheck.bills.DaybreakBillIdSpotCheckReportDao;
+import gov.nysenate.openleg.dao.spotcheck.SpotCheckContentIdMapper;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
+import gov.nysenate.openleg.dao.spotcheck.bills.BaseBillIdMapper;
 import gov.nysenate.openleg.model.base.PublishStatus;
 import gov.nysenate.openleg.model.base.SessionYear;
 import gov.nysenate.openleg.model.base.Version;
@@ -45,7 +46,7 @@ public class DaybreakReportService extends BaseSpotCheckReportService<BaseBillId
     private DaybreakDao daybreakDao;
 
     @Autowired
-    private DaybreakBillIdSpotCheckReportDao reportDao;
+    private BaseBillIdMapper baseBillIdMapper;
 
     @Autowired
     private BillDataService billDataService;
@@ -58,8 +59,8 @@ public class DaybreakReportService extends BaseSpotCheckReportService<BaseBillId
     }
 
     @Override
-    protected SpotCheckReportDao<BaseBillId> getReportDao() {
-        return reportDao;
+    protected SpotCheckContentIdMapper<BaseBillId> getContentIdMapper() {
+        return baseBillIdMapper;
     }
 
     /** {@inheritDoc} */

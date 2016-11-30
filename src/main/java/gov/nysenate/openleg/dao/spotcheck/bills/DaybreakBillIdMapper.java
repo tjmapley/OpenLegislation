@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
  * Created by PKS on 10/13/16.
  */
 @Repository
-public class ScrapedBillIdSpotCheckReportDao extends BaseBillIdSpotCheckReportDao {
-    ScrapedBillIdSpotCheckReportDao() {
-        super(SpotCheckRefType.LBDC_SCRAPED_BILL);
-    }
+public class DaybreakBillIdMapper extends BaseBillIdMapper {
+//    public DaybreakBillIdMapper(){
+//        super(SpotCheckRefType.LBDC_DAYBREAK);
+//    }
 }

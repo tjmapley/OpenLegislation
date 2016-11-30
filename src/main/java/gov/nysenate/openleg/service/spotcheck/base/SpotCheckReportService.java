@@ -1,6 +1,7 @@
 package gov.nysenate.openleg.service.spotcheck.base;
 
 import gov.nysenate.openleg.dao.base.SortOrder;
+import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
 import gov.nysenate.openleg.model.spotcheck.*;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.util.Set;
 public interface SpotCheckReportService<ContentKey>
 {
 
+    SpotCheckReportDao getReportDao();
     /**
      * @return The SpotCheckRefType that is used for this report
      */
