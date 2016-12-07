@@ -8,6 +8,7 @@ import gov.nysenate.openleg.dao.spotcheck.MismatchOrderBy;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 /** Contains query parameters used to poll for open spotcheck mismatches */
@@ -15,6 +16,10 @@ public class OpenMismatchQuery {
 
     /** The type of reports to query from */
     Set<SpotCheckRefType> refTypes;
+
+    /** Map of dataSource and ContentType */
+    Map<SpotCheckDataSource, Set<SpotCheckContentType>> dataSourceSetMap;
+
     /** A set of mismatch types to filter by */
     Collection<SpotCheckMismatchType> mismatchTypes;
     /** Get mismatches observed on or after this date */
@@ -86,6 +91,8 @@ public class OpenMismatchQuery {
     public Set<SpotCheckRefType> getRefTypes() {
         return refTypes;
     }
+
+    public Map<SpotCheckDataSource, Set<SpotCheckContentType>> getDataSourceSetMap() { return dataSourceSetMap; }
 
     public Collection<SpotCheckMismatchType> getMismatchTypes() {
         return mismatchTypes;

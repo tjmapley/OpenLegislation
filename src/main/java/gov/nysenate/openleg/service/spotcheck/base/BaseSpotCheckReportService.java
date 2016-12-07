@@ -61,13 +61,6 @@ public abstract class BaseSpotCheckReportService<ContentKey> implements SpotChec
         return spotCheckReportDao.getOpenMismatches(dataSource, contentType, query);
     }
 
-    /** {@inheritDoc}
-     * @param refType
-     * @param observedAfter*/
-    @Override
-    public OpenMismatchSummary getOpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter) {
-        return spotCheckReportDao.getOpenMismatchSummary(refType, observedAfter);
-    }
 
     /** {@inheritDoc}
      * @param refTypes
@@ -94,17 +87,18 @@ public abstract class BaseSpotCheckReportService<ContentKey> implements SpotChec
 
     /** {@inheritDoc} */
     @Override
-    public void setMismatchIgnoreStatus(int mismatchId, SpotCheckMismatchIgnore ignoreStatus) {
-        spotCheckReportDao.setMismatchIgnoreStatus(mismatchId, ignoreStatus);
+    public void setMismatchIgnoreStatus(SpotCheckDataSource dataSource, SpotCheckContentType contentType,
+                                        int mismatchId, SpotCheckMismatchIgnore ignoreStatus) {
+        spotCheckReportDao.setMismatchIgnoreStatus(dataSource, contentType, mismatchId, ignoreStatus);
     }
 
     @Override
-    public void addIssueId(int mismatchId, String issueId) {
-        spotCheckReportDao.addIssueId(mismatchId, issueId);
+    public void addIssueId(SpotCheckDataSource dataSource, SpotCheckContentType contentType, int mismatchId, String issueId) {
+        spotCheckReportDao.addIssueId(dataSource, contentType, mismatchId, issueId);
     }
 
     @Override
-    public void deleteIssueId(int mismatchId, String issueId) {
-        spotCheckReportDao.deleteIssueId(mismatchId, issueId);
+    public void deleteIssueId(SpotCheckDataSource dataSource, SpotCheckContentType contentType, int mismatchId, String issueId) {
+        spotCheckReportDao.deleteIssueId(dataSource, contentType, mismatchId, issueId);
     }
 }

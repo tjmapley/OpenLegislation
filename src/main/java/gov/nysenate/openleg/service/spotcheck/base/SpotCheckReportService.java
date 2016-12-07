@@ -89,15 +89,6 @@ public interface SpotCheckReportService<ContentKey>
     /**
      * Get a summary of type/status/ignore counts pertaining to the given query
      *
-     * @param refType
-     * @param observedAfter
-     * @return OpenMismatchesSummary
-     */
-    OpenMismatchSummary getOpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter);
-
-    /**
-     * Get a summary of type/status/ignore counts pertaining to the given query
-     *
      * @param refTypes
      * @param observedAfter
      * @return OpenMismatchesSummary
@@ -115,19 +106,20 @@ public interface SpotCheckReportService<ContentKey>
      * @param mismatchId int
      * @param ignoreStatus SpotCheckMismatchIgnore
      */
-    void setMismatchIgnoreStatus(int mismatchId, SpotCheckMismatchIgnore ignoreStatus);
+    void setMismatchIgnoreStatus(SpotCheckDataSource dataSource, SpotCheckContentType contentType,
+                                 int mismatchId, SpotCheckMismatchIgnore ignoreStatus);
 
     /**
      * Adds the given issue id to the tracked issue ids of mismatch specified by the given mismatch id
      * @param mismatchId int
      * @param issueId String
      */
-    void addIssueId(int mismatchId, String issueId);
+    void addIssueId(SpotCheckDataSource dataSource, SpotCheckContentType contentType, int mismatchId, String issueId);
 
     /**
      * Removes the given issue id from the tracked issue ids of the mismatch specified by the given mismatch id
      * @param mismatchId int
      * @param issueId String
      */
-    void deleteIssueId(int mismatchId, String issueId);
+    void deleteIssueId(SpotCheckDataSource dataSource, SpotCheckContentType contentType, int mismatchId, String issueId);
 }

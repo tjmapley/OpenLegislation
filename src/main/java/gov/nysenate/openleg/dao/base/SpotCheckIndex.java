@@ -4,7 +4,8 @@ import gov.nysenate.openleg.model.spotcheck.SpotCheckContentType;
 import gov.nysenate.openleg.model.spotcheck.SpotCheckDataSource;
 import gov.nysenate.openleg.model.spotcheck.SpotCheckRefType;
 
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static gov.nysenate.openleg.model.spotcheck.SpotCheckContentType.*;
 import static gov.nysenate.openleg.model.spotcheck.SpotCheckDataSource.*;
@@ -14,12 +15,12 @@ import static gov.nysenate.openleg.model.spotcheck.SpotCheckDataSource.*;
  * Created by PKS on 8/24/16.
  */
 public enum SpotCheckIndex {
-    SENATE_SITE_CALENDAR("senate-site-calendar", NYSENATE_DOT_GOV, CALENDAR),
-    SENATE_SITE_AGENDA("senate-site-agenda", NYSENATE_DOT_GOV, AGENDA),
-    SENATE_SITE_BILL("senate-site-bill", NYSENATE_DOT_GOV, BILL),
-    LDBC_BILL("ldbc-bill", OPENLEG, BILL),
-    LDBC_CALENDAR("ldbc-calendar", OPENLEG, CALENDAR),
-    LDBC_AGENDA("ldbc-agenda", OPENLEG, AGENDA)
+    SENATE_SITE_CALENDAR("senate-site-calendars", NYSENATE_DOT_GOV, CALENDAR),
+    SENATE_SITE_AGENDA("senate-site-agendas", NYSENATE_DOT_GOV, AGENDA),
+    SENATE_SITE_BILL("senate-site-bills", NYSENATE_DOT_GOV, BILL),
+    LDBC_BILL("ldbc-bills", OPENLEG, BILL),
+    LDBC_CALENDAR("ldbc-calendars", OPENLEG, CALENDAR),
+    LDBC_AGENDA("ldbc-agendas", OPENLEG, AGENDA)
     ;
 
     String indexName;
@@ -43,10 +44,32 @@ public enum SpotCheckIndex {
         return contentType;
     }
 
-    public static SpotCheckIndex valueOf(SpotCheckDataSource dataSource, SpotCheckContentType contentType){
+    public static Set<SpotCheckIndex> getIndices(Map<SpotCheckDataSource, Set<SpotCheckContentType>> dataSourceSetMap){
+        Set<SpotCheckIndex> indices = new HashSet<>();
+        dataSourceSetMap.forEach((dataSource, contentTypes) ->
+            contentTypes.forEach(contentType -> indices.add(getIndex(dataSource, contentType)))
+        );
+        return indices;
+    }
+    public static Set<SpotCheckIndex> getIndices(SpotCheckDataSource dataSource, Set<SpotCheckContentType> contentTypes){
+         return Arrays.stream(SpotCheckIndex.values())
+                    .filter(spotCheckIndex -> spotCheckIndex.getDataSource().equals(dataSource))
+                    .filter(spotCheckIndex -> contentTypes.contains(spotCheckIndex.getContentType()))
+                    .collect(Collectors.toSet());
+    }
+
+    public static SpotCheckIndex getIndex(SpotCheckDataSource dataSource, SpotCheckContentType contentType){
         return Arrays.stream(SpotCheckIndex.values())
                 .filter(spotCheckIndex -> spotCheckIndex.getContentType().equals(contentType))
                 .filter(spotCheckIndex ->  spotCheckIndex.getDataSource().equals(dataSource))
                 .findFirst().get();
+    }
+
+    public static List<String> getIndices(SpotCheckRefType refType){
+        return Arrays.stream(SpotCheckIndex.values())
+                .filter(index -> index.dataSource.equals(refType.getDataSource()))
+                .filter(index -> index.contentType.equals(refType.getContentType()))
+                .map(SpotCheckIndex::getIndexName)
+                .collect(Collectors.toList());
     }
 }

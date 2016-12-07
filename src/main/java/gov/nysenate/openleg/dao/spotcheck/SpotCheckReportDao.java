@@ -6,6 +6,7 @@ import org.springframework.dao.DataAccessException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -37,6 +38,11 @@ public interface SpotCheckReportDao
     <ContentKey> List<SpotCheckReportSummary> getReportSummaries(SpotCheckRefType refType, LocalDateTime start,
                                                     LocalDateTime end, SortOrder dateOrder);
 
+    <ContentKey> List<SpotCheckReportSummary> getReportSummaries(Map<SpotCheckDataSource, Set<SpotCheckContentType>> dataSourceSetMap,
+                                                                         LocalDateTime start,
+                                                                         LocalDateTime end,
+                                                                         SortOrder dateOrder);
+
     /**
      * Get a map of all unresolved or recently resolved observations spanning all reports of the given refType
      * @param query OpenMismatchQuery
@@ -44,15 +50,8 @@ public interface SpotCheckReportDao
     <ContentKey> SpotCheckOpenMismatches<ContentKey> getOpenMismatches(OpenMismatchQuery query);
     <ContentKey> SpotCheckOpenMismatches<ContentKey> getOpenMismatches(SpotCheckDataSource dataSource,SpotCheckContentType contentType, OpenMismatchQuery query);
 
-
-    /**
-    * Get a summary of type/status/ignore counts pertaining to the given query
-    *
-    * @param refType
-    * @param observedAfter
-    * @return OpenMismatchesSummary
-    */
-    <ContentKey> OpenMismatchSummary getOpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter);
+    <ContentKey> OpenMismatchSummary getOpenMismatchSummary(Map<SpotCheckDataSource, Set<SpotCheckContentType>> dataSourceSetMap,
+                                                            LocalDateTime observedAfter);
 
     /**
      * Get a summary of type/status/ignore counts pertaining to the given query
@@ -84,19 +83,19 @@ public interface SpotCheckReportDao
      * @param mismatchId int
      * @param ignoreStatus SpotCheckMismatchIgnore
      */
-    void setMismatchIgnoreStatus(int mismatchId, SpotCheckMismatchIgnore ignoreStatus);
+    void setMismatchIgnoreStatus(SpotCheckDataSource dataSource, SpotCheckContentType contentType, int mismatchId, SpotCheckMismatchIgnore ignoreStatus);
 
     /**
      * Adds the given issue id to the tracked issue ids of mismatch specified by the given mismatch id
      * @param mismatchId int
      * @param issueId String
      */
-    void addIssueId(int mismatchId, String issueId);
+    void addIssueId(SpotCheckDataSource dataSource, SpotCheckContentType contentType, int mismatchId, String issueId);
 
     /**
      * Removes the given issue id from the tracked issue ids of the mismatch specified by the given mismatch id
      * @param mismatchId int
      * @param issueId String
      */
-    void deleteIssueId(int mismatchId, String issueId);
+    void deleteIssueId(SpotCheckDataSource dataSource, SpotCheckContentType contentType, int mismatchId, String issueId);
 }

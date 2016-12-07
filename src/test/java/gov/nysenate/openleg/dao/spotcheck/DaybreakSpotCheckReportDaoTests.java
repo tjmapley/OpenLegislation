@@ -48,12 +48,15 @@ public class DaybreakSpotCheckReportDaoTests extends BaseTests
 
     @Test
     public void setIgnoreStatusTest() {
+        //TODO: Test cases should be updated to cover all combinations of DataSource and ContentType.
+        SpotCheckDataSource dataSource = SpotCheckDataSource.OPENLEG;
+        SpotCheckContentType contentType = SpotCheckContentType.BILL;
         //Shouldn't do anything
-        reportDao.setMismatchIgnoreStatus(-1, SpotCheckMismatchIgnore.IGNORE_PERMANENTLY);
+        reportDao.setMismatchIgnoreStatus(dataSource, contentType, -1, SpotCheckMismatchIgnore.IGNORE_PERMANENTLY);
         // Should set ignore status
-        reportDao.setMismatchIgnoreStatus(5235, SpotCheckMismatchIgnore.IGNORE_PERMANENTLY);
+        reportDao.setMismatchIgnoreStatus(dataSource, contentType, 5235, SpotCheckMismatchIgnore.IGNORE_PERMANENTLY);
         // Should delete ignore status
-        reportDao.setMismatchIgnoreStatus(5235, null);
+        reportDao.setMismatchIgnoreStatus(dataSource, contentType,5235, null);
     }
 
     @Test

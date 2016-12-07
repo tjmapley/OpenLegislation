@@ -9,11 +9,15 @@ import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
+import org.elasticsearch.action.get.GetRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.action.update.UpdateRequestBuilder;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.IndexNotFoundException;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
@@ -104,7 +108,7 @@ public abstract class ElasticBaseDao
                 .setFetchSource(fetchSource);
         if (highlightedFields != null) {
             HighlightBuilder highlightBuilder = new HighlightBuilder();
-            highlightedFields.stream().forEach(highlightBuilder::field);
+            highlightedFields.forEach(highlightBuilder::field);
             searchBuilder.highlighter(highlightBuilder);
         }
         if (rescorer != null) {
@@ -118,6 +122,46 @@ public abstract class ElasticBaseDao
         sort.forEach(searchBuilder::addSort);
         logger.debug("{}", searchBuilder);
         return searchBuilder;
+    }
+
+    /**
+     *
+     * @param indices
+     * @param query
+     * @param setScroll
+     * @param size
+     * @param types
+     * @return
+     */
+
+    protected SearchRequestBuilder getSearchRequest(String[] indices, QueryBuilder query, QueryBuilder postFilter,
+                                                    List<SortBuilder> sorts,
+                                                    boolean setScroll, int size, String... types){
+        SearchRequestBuilder searchBuilder = searchClient.prepareSearch()
+                .setIndices(indices)
+                .setTypes(types)
+                .setQuery(query);
+        if(postFilter != null)
+            searchBuilder.setPostFilter(postFilter);
+        if(setScroll)
+            searchBuilder.setScroll(new TimeValue(60000));
+        if(sorts != null)
+            sorts.forEach(searchBuilder::addSort);
+        switch (size){
+            case 0 : searchBuilder.setSize(100);
+                        break;
+            default: searchBuilder.setSize(size);
+        }
+        return searchBuilder;
+    }
+
+    protected IndexRequestBuilder getIndexRequest(String index, String type, String Id){
+        IndexRequestBuilder indexBuilder = searchClient.prepareIndex()
+                .setIndex(index)
+                .setType(type)
+                .setId(Id);
+
+        return indexBuilder;
     }
 
     /**
@@ -159,6 +203,22 @@ public abstract class ElasticBaseDao
             return Optional.of(responseMapper.apply(getResponse));
         }
         return Optional.empty();
+    }
+
+    protected GetRequestBuilder getRequest(String index, String type, String Id){
+        GetRequestBuilder getBuilder = searchClient.prepareGet()
+                .setIndex(index)
+                .setType(type)
+                .setId(Id);
+        return getBuilder;
+    }
+
+    protected UpdateRequestBuilder getUpdateRequest(String index, String type, String Id){
+        UpdateRequestBuilder updateBuilder = searchClient.prepareUpdate()
+                .setIndex(index)
+                .setType(type)
+                .setId(Id);
+        return updateBuilder;
     }
 
     /**

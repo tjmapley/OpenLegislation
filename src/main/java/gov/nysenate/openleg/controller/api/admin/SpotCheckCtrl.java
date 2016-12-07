@@ -21,6 +21,7 @@ import gov.nysenate.openleg.controller.api.base.BaseCtrl;
 import gov.nysenate.openleg.dao.base.LimitOffset;
 import gov.nysenate.openleg.dao.base.SortOrder;
 import gov.nysenate.openleg.dao.spotcheck.MismatchOrderBy;
+import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
 import gov.nysenate.openleg.model.spotcheck.*;
 import gov.nysenate.openleg.service.spotcheck.base.SpotCheckReportService;
 import gov.nysenate.openleg.service.spotcheck.base.SpotcheckRunService;
@@ -51,21 +52,8 @@ public class SpotCheckCtrl extends BaseCtrl
     @Autowired private List<SpotCheckReportService<?>> reportServices;
     @Autowired private SpotcheckRunService spotcheckRunService;
 
-    private ImmutableMap<SpotCheckRefType, SpotCheckReportService<?>> reportServiceMap;
+    @Autowired private SpotCheckReportDao reportDao;
 
-    private Table<SpotCheckDataSource, SpotCheckContentType, SpotCheckReportService<?>> reportServiceTable = HashBasedTable.create();
-
-    @PostConstruct
-    public void init() {
-        reportServiceMap = ImmutableMap.copyOf(
-                reportServices.stream()
-                        .collect(Collectors.toMap(SpotCheckReportService::getSpotcheckRefType, Function.identity(),(a, b) -> b)));
-
-        reportServices.forEach(
-                reportService -> reportServiceTable.put(reportService.getSpotcheckRefType().getDataSource(),
-                                                        reportService.getSpotcheckRefType().getContentType(),
-                                                        reportService));
-    }
 
     /**
      * SpotCheck Report Summary Retrieval API
@@ -94,16 +82,7 @@ public class SpotCheckCtrl extends BaseCtrl
         LocalDateTime toDateTime = parseISODateTime(to, "to");
         SortOrder order = getSortOrder(webRequest, SortOrder.DESC);
         SpotCheckRefType refType = reportType != null ? getSpotcheckRefType(reportType, "reportType") : null;
-        List<SpotCheckReportSummary> summaries = new ArrayList<>();
-        if (refType == null){
-            reportServiceMap.forEach((k, v) ->{
-                summaries.addAll(v.getReportSummaries(k,fromDateTime,toDateTime,order));
-            });
-        }
-        else {
-            SpotCheckReportService<?> reportService = reportServiceMap.get(refType);
-            summaries.addAll(reportService.getReportSummaries(refType, fromDateTime, toDateTime, order));
-        }
+        List<SpotCheckReportSummary> summaries = reportDao.getReportSummaries(refType, fromDateTime, toDateTime, order);
 
         // Construct the client response
         return new ReportSummaryResponse<>(
@@ -138,8 +117,10 @@ public class SpotCheckCtrl extends BaseCtrl
         logger.debug("Retrieving {} report {}", reportType, reportDateTime);
         SpotCheckRefType refType = getSpotcheckRefType(reportType, "reportType");
         return new ReportDetailResponse<>(
-                reportServiceMap.get(refType)
-                        .getReport(new SpotCheckReportId(refType, parseISODateTime(reportDateTime, "reportDateTime"))));
+                reportDao.getReport(
+                        new SpotCheckReportId(refType, parseISODateTime(reportDateTime, "reportDateTime"))
+                )
+        );
     }
 
     /**
@@ -186,8 +167,8 @@ public class SpotCheckCtrl extends BaseCtrl
                 LocalDateTime.now();
         OpenMismatchQuery query = new OpenMismatchQuery(refTypes, mismatchTypes, afterDateTime, beforeDateTime,
                 mismatchOrderBy, order, limOff, resolvedShown, ignoredShown, ignoredOnly, trackedShown, untrackedShown);
-        SpotCheckOpenMismatches<?> observations = reportServiceMap.get(refType).getOpenObservations(query);
-        OpenMismatchSummary summary = reportServiceMap.get(refType).getOpenMismatchSummary(refType, afterDateTime);
+        SpotCheckOpenMismatches<?> observations = reportDao.getOpenMismatches(query);
+        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(Sets.newHashSet(refType), afterDateTime);
         return new OpenMismatchesResponse<>(observations, summary, query);
     }
 
@@ -212,8 +193,8 @@ public class SpotCheckCtrl extends BaseCtrl
      *                     untrackedShown - boolean - optional, default true - will return untracked issues if set to true
      */
     @RequiresPermissions("admin:view")
-    @RequestMapping(value = "/open-mismatches", method = RequestMethod.GET, params = {"dataSource"})
-    public BaseResponse getOpenMismatches(@RequestParam String dataSource,
+    @RequestMapping(value = "{dataSource}/open-mismatches", method = RequestMethod.GET, params = {"dataSource"})
+    public BaseResponse getOpenMismatches(@PathVariable String dataSource,
                                           @RequestParam String contentType,
                                           @RequestParam(required = false) String[] mismatchType,
                                           @RequestParam(required = false) String orderBy,
@@ -238,7 +219,7 @@ public class SpotCheckCtrl extends BaseCtrl
                 LocalDateTime.now();
         OpenMismatchQuery query = new OpenMismatchQuery(mismatchTypes, afterDateTime, beforeDateTime,
                 mismatchOrderBy, order, limOff, resolvedShown, ignoredShown, ignoredOnly, trackedShown, untrackedShown);
-        SpotCheckOpenMismatches<?> observations = getAnyReportService().getOpenObservations(spotcheckDataSource, spotcheckContentType, query);
+        SpotCheckOpenMismatches<?> observations = reportDao.getOpenMismatches(spotcheckDataSource, spotcheckContentType, query);
         OpenMismatchSummary summary = getAnyReportService().getOpenMismatchSummary(refTypes, afterDateTime);
         return new OpenMismatchesResponse<>(observations, summary, query);
     }
@@ -261,21 +242,25 @@ public class SpotCheckCtrl extends BaseCtrl
                                           @RequestParam(required = false) String observedAfter) {
         SpotCheckRefType refType = getSpotcheckRefType(reportType, "reportType");
         LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
-        OpenMismatchSummary summary = reportServiceMap.get(refType).getOpenMismatchSummary(refType,earliestDateTime);
+        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(Sets.newHashSet(refType),earliestDateTime);
         return new ViewObjectResponse<>(new OpenMismatchSummaryView(summary));
     }
 
     @RequiresPermissions("admin:view")
-    @RequestMapping(value = "/open-mismatches/summary", method = RequestMethod.GET, params = {"dataSource"})
-    public BaseResponse getOpenMismatchSummary(@RequestParam String dataSource,
-                                               @RequestParam String contentType,
+    @RequestMapping(value = "{dataSource}/open-mismatches/summary", method = RequestMethod.GET, params = {"dataSource"})
+    public BaseResponse getOpenMismatchSummary(@PathVariable String dataSource,
+                                               @RequestParam(required = false) String contentType,
                                                @RequestParam(required = false) String observedAfter) {
         SpotCheckDataSource spotCheckDataSource = getSpotcheckDataSource(dataSource,"dataSource");
-        SpotCheckContentType spotCheckContentType = getSpotcheckContentType(contentType, "contentType");
+        Set<SpotCheckContentType> spotCheckContentTypes = Sets.newHashSet(SpotCheckContentType.values());
+        if(contentType != null) {
+            spotCheckContentTypes.retainAll(
+                    Collections.singletonList(getSpotcheckContentType(contentType, "contentType"))
+            );
+        }
+        Map<SpotCheckDataSource, Set<SpotCheckContentType>> sourceSetMap = ImmutableMap.of(spotCheckDataSource, spotCheckContentTypes);
         LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
-        Set<SpotCheckRefType> spotCheckRefTypes = new HashSet<>(SpotCheckRefType.get(spotCheckDataSource, spotCheckContentType));
-        OpenMismatchSummary summary = reportServiceTable.get(spotCheckDataSource, spotCheckContentType)
-                                                        .getOpenMismatchSummary(spotCheckRefTypes,earliestDateTime);
+        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(sourceSetMap,earliestDateTime);
         return new ViewObjectResponse<>(new OpenMismatchSummaryView(summary));
     }
 
@@ -296,13 +281,8 @@ public class SpotCheckCtrl extends BaseCtrl
                                                @RequestParam(required = false) String observedAfter) {
         Set<SpotCheckRefType> refTypes = getSpotcheckRefTypes(reportTypes, "reportTypes");
         LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
-        //OpenMismatchSummary summary = getAnyReportService().getOpenMismatchSummary(refTypes, earliestDateTime);
-        // TODO: Remove loop after DAO refactor.
-        List<OpenMismatchSummary> summaries = new ArrayList<>();
-        reportServiceMap.forEach((k, v) -> {
-            summaries.add(v.getOpenMismatchSummary(k, earliestDateTime));
-        });
-        return new ViewObjectResponse<>(new OpenMismatchSummaryView(summaries));
+        OpenMismatchSummary summary = getAnyReportService().getOpenMismatchSummary(refTypes, earliestDateTime);
+        return new ViewObjectResponse<>(new OpenMismatchSummaryView(summary));
     }
 
     /**
@@ -315,13 +295,17 @@ public class SpotCheckCtrl extends BaseCtrl
      * Request Parameters: ignoreLevel - string - specifies desired ignore level or unsets ignore if null or not present
      *                                  @see SpotCheckMismatchIgnore
      */
-    @RequestMapping(value = "{type}/mismatch/{mismatchId}/ignore", method = RequestMethod.POST)
-    public BaseResponse setIgnoreStatus(@PathVariable String type, @PathVariable int mismatchId, @RequestParam(required = false) String ignoreLevel) {
+    @RequestMapping(value = "{dataSource}/{contentType}/mismatch/{mismatchId}/ignore", method = RequestMethod.POST)
+    public BaseResponse setIgnoreStatus(@PathVariable String dataSource,
+                                        @PathVariable String contentType,
+                                        @PathVariable int mismatchId,
+                                        @RequestParam(required = false) String ignoreLevel) {
         SpotCheckMismatchIgnore ignoreStatus = ignoreLevel != null
                 ? getEnumParameter("ignoreLevel", ignoreLevel, SpotCheckMismatchIgnore.class)
                 : null;
-        SpotCheckRefType refType = getSpotcheckRefType(type,"type");
-        reportServiceMap.get(refType).setMismatchIgnoreStatus(mismatchId, ignoreStatus);
+        SpotCheckDataSource spotCheckDataSource = getSpotcheckDataSource(dataSource, "dataSource");
+        SpotCheckContentType spotCheckContentType = getSpotcheckContentType(contentType, "contentType");
+        reportDao.setMismatchIgnoreStatus(spotCheckDataSource, spotCheckContentType, mismatchId, ignoreStatus);
         return new SimpleResponse(true, "ignore level set", "ignore-level-set");
     }
 
@@ -332,10 +316,14 @@ public class SpotCheckCtrl extends BaseCtrl
      *
      * Usage: (POST) /api/3/admin/spotcheck/{refType}/mismatch/{mismatchId}/issue/{issueId}
      */
-    @RequestMapping(value = "{type}/mismatch/{mismatchId}/issue/{issueId}", method = RequestMethod.POST)
-    public BaseResponse addMismatchIssueId(@PathVariable String type, @PathVariable int mismatchId, @PathVariable String issueId) {
-        SpotCheckRefType refType = getSpotcheckRefType(type,"type");
-        reportServiceMap.get(refType).addIssueId(mismatchId, issueId);
+    @RequestMapping(value = "{dataSource}/{contentType}/mismatch/{mismatchId}/issue/{issueId}", method = RequestMethod.POST)
+    public BaseResponse addMismatchIssueId(@PathVariable String dataSource,
+                                           @PathVariable String contentType,
+                                           @PathVariable int mismatchId,
+                                           @PathVariable String issueId) {
+        SpotCheckDataSource spotCheckDataSource = getSpotcheckDataSource(dataSource, "dataSource");
+        SpotCheckContentType spotCheckContentType = getSpotcheckContentType(contentType, "contentType");
+        reportDao.addIssueId(spotCheckDataSource, spotCheckContentType, mismatchId, issueId);
         return new SimpleResponse(true, "issue id added", "issue-id-added");
     }
 
@@ -346,10 +334,14 @@ public class SpotCheckCtrl extends BaseCtrl
      *
      * Usage: (DELETE) /api/3/admin/spotcheck/{refType}/mismatch/{mismatchId}/issue/{issueId}
      */
-    @RequestMapping(value = "{type}/mismatch/{mismatchId}/issue/{issueId}", method = RequestMethod.DELETE)
-    public BaseResponse deleteMismatchIssueId(@PathVariable String type, @PathVariable int mismatchId, @PathVariable String issueId) {
-        SpotCheckRefType refType = getSpotcheckRefType(type,"type");
-        reportServiceMap.get(refType).deleteIssueId(mismatchId, issueId);
+    @RequestMapping(value = "{dataSource}/{contentType}/mismatch/{mismatchId}/issue/{issueId}", method = RequestMethod.DELETE)
+    public BaseResponse deleteMismatchIssueId(@PathVariable String dataSource,
+                                              @PathVariable String contentType,
+                                              @PathVariable int mismatchId,
+                                              @PathVariable String issueId) {
+        SpotCheckDataSource spotCheckDataSource = getSpotcheckDataSource(dataSource, "dataSource");
+        SpotCheckContentType spotCheckContentType = getSpotcheckContentType(contentType, "contentType");
+        reportDao.deleteIssueId(spotCheckDataSource, spotCheckContentType, mismatchId, issueId);
         return new SimpleResponse(true, "issue id deleted", "issue-id-deleted");
     }
 
