@@ -44,7 +44,8 @@ public class ElasticBillSearchDao extends ElasticBaseDao implements BillSearchDa
     public SearchResults<BaseBillId> searchBills(QueryBuilder query, QueryBuilder postFilter, RescoreBuilder rescorer,
                                                  List<SortBuilder> sort, LimitOffset limOff) {
         SearchRequestBuilder searchBuilder =
-            getSearchRequest(billIndexName, query, postFilter, highlightedFields, rescorer , sort, limOff, false);
+            getSearchRequest(Collections.singleton(billIndexName),
+                    query, postFilter, highlightedFields, rescorer , sort, limOff, false);
         SearchResponse response = searchBuilder.execute().actionGet();
         logger.debug("Bill search result with query {} took {} ms", query, response.getTookInMillis());
         return getSearchResults(response, limOff, this::getBaseBillIdFromHit);

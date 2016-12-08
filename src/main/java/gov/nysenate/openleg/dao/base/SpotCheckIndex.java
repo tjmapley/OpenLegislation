@@ -65,11 +65,7 @@ public enum SpotCheckIndex {
                 .findFirst().get();
     }
 
-    public static List<String> getIndices(SpotCheckRefType refType){
-        return Arrays.stream(SpotCheckIndex.values())
-                .filter(index -> index.dataSource.equals(refType.getDataSource()))
-                .filter(index -> index.contentType.equals(refType.getContentType()))
-                .map(SpotCheckIndex::getIndexName)
-                .collect(Collectors.toList());
+    public static SpotCheckIndex getIndex(SpotCheckRefType refType){
+        return getIndex(refType.getDataSource(), refType.getContentType());
     }
 }

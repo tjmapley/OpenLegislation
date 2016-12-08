@@ -12,11 +12,13 @@ import gov.nysenate.openleg.dao.spotcheck.SpotCheckContentIdMapper;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
 import gov.nysenate.openleg.model.search.ClearIndexEvent;
 import gov.nysenate.openleg.model.search.RebuildIndexEvent;
+import gov.nysenate.openleg.model.search.SearchResults;
 import gov.nysenate.openleg.model.spotcheck.*;
 import gov.nysenate.openleg.service.base.search.IndexedSearchService;
 import gov.nysenate.openleg.util.OutputUtils;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
@@ -40,6 +42,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -191,49 +194,73 @@ public class ElasticSpotCheckReportDao
     @Override
     public <ContentKey> SpotCheckOpenMismatches<ContentKey> getOpenMismatches(OpenMismatchQuery query) {
 
-        List<String> indexes = new ArrayList<>();
-        query.getRefTypes().forEach(spotCheckRefType -> {
-            indexes.add(getSpotcheckIndexName(spotCheckRefType.getDataSource(), spotCheckRefType.getContentType()));
-        });
-        String[] spotCheckIndexes = indexes.stream().toArray(String[]::new);
+        Set<String> indices = query.getRefTypes().stream()
+                .map(SpotCheckIndex::getIndex)
+                .map(SpotCheckIndex::getIndexName)
+                .collect(Collectors.toSet());
+
         BoolQueryBuilder queryFilters = QueryBuilders.boolQuery();
         query.getMismatchTypes().forEach(spotCheckMismatchType -> {
             queryFilters.should(QueryBuilders.matchQuery("mismatchType", spotCheckMismatchType.toString()));
         });
-        SearchResponse searchResponse = searchClient.prepareSearch()
-                .setIndices(spotCheckIndexes)
-                .setTypes(observationType)
-                .setQuery(
-                        rangeQuery("observedDateTime")
-                                .from(query.getObservedAfter().toString())
-                                .to(query.getObservedBefore().toString())
-                )
-                .setPostFilter(queryFilters)
-                .addSort(query.getOrderBy().getColName(), SortOrder.valueOf(query.getOrder().toString()))
-                .setScroll(new TimeValue(60000))
-                .setSize(query.getLimitOffset().getLimit())
-                .execute().actionGet();
-        Map<ContentKey, SpotCheckObservation<ContentKey>> observations = new HashMap<>();
-        List<Integer> countList = new ArrayList<>();
-        Integer offset = query.getLimitOffset().getOffsetStart();
-        Integer scroll = 1;
-        do {
-            if (offset.equals(scroll)) {
-                searchResponse.getHits().forEach(observation -> {
-                    SpotCheckObservation<ContentKey> spotcheckObservation = getSpotcheckObservationFrom(observation);
-                    countList.add(spotcheckObservation.getMismatches().values().size());
-                    observations.put(spotcheckObservation.getKey(), spotcheckObservation);
-                });
-            }
-            scroll += 10;
-            searchResponse = searchClient.prepareSearchScroll(searchResponse.getScrollId())
-                    .setScroll(new TimeValue(60000))
-                    .execute()
-                    .actionGet();
-        }
-        while (searchResponse.getHits().getHits().length != 0 || observations.size() != query.getLimitOffset().getLimit());
-        Integer totalMismatches = countList.stream().mapToInt(Integer::intValue).sum();
-        return new SpotCheckOpenMismatches<>(query.getRefTypes(), observations, totalMismatches);
+
+        QueryBuilder esQuery = rangeQuery("observedDateTime")
+                .from(query.getObservedAfter().toString())
+                .to(query.getObservedBefore().toString());
+
+        SortBuilder sort = SortBuilders.fieldSort(query.getOrderBy().getColName())
+                .order(SortOrder.valueOf(query.getOrder().toString()));
+
+        // Get search request
+        SearchRequestBuilder searchRequest = getSearchRequest(indices, esQuery, queryFilters,
+                null, null,
+                Collections.singletonList(sort), query.getLimitOffset(), true);
+
+        // Get search response
+        SearchResponse searchResponse = searchRequest.execute().actionGet();
+
+        // Get search results
+        SearchResults<SpotCheckObservation<ContentKey>> searchResults =
+                getSearchResults(searchResponse, query.getLimitOffset(),
+                        this::getSpotcheckObservationFrom);
+
+        // Extract observations from results
+        Map<ContentKey, SpotCheckObservation<ContentKey>> observationMap =
+                searchResults.getRawResults().stream()
+                        .collect(Collectors.toMap(SpotCheckObservation::getKey, Function.identity()));
+
+        return new SpotCheckOpenMismatches<>(query.getRefTypes(), observationMap, searchResults.getTotalResults());
+//
+//        String[] spotCheckIndexes = indexes.stream().toArray(String[]::new);
+//        SearchResponse searchResponse = searchClient.prepareSearch()
+//                .setIndices(spotCheckIndexes)
+//                .setTypes(observationType)
+//                .setPostFilter(queryFilters)
+//                .addSort(query.getOrderBy().getColName(), SortOrder.valueOf(query.getOrder().toString()))
+//                .setScroll(new TimeValue(60000))
+//                .setSize(query.getLimitOffset().getLimit())
+//                .execute().actionGet();
+//        Map<ContentKey, SpotCheckObservation<ContentKey>> observations = new HashMap<>();
+//        List<Integer> countList = new ArrayList<>();
+//        Integer offset = query.getLimitOffset().getOffsetStart();
+//        Integer scroll = 1;
+//        do {
+//            if (offset.equals(scroll)) {
+//                searchResponse.getHits().forEach(observation -> {
+//                    SpotCheckObservation<ContentKey> spotcheckObservation = getSpotcheckObservationFrom(observation);
+//                    countList.add(spotcheckObservation.getMismatches().values().size());
+//                    observations.put(spotcheckObservation.getKey(), spotcheckObservation);
+//                });
+//            }
+//            scroll += 10;
+//            searchResponse = searchClient.prepareSearchScroll(searchResponse.getScrollId())
+//                    .setScroll(new TimeValue(60000))
+//                    .execute()
+//                    .actionGet();
+//        }
+//        while (searchResponse.getHits().getHits().length != 0 || observations.size() != query.getLimitOffset().getLimit());
+//        Integer totalMismatches = countList.stream().mapToInt(Integer::intValue).sum();
+//        return new SpotCheckOpenMismatches<>(query.getRefTypes(), observations, totalMismatches);
     }
 
     @Override

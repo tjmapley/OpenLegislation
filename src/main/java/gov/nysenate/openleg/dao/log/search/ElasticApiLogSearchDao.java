@@ -36,7 +36,7 @@ public class ElasticApiLogSearchDao extends ElasticBaseDao implements ApiLogSear
     @Override
     public SearchResults<Integer> searchLogs(QueryBuilder query, QueryBuilder filter, List<SortBuilder> sort, LimitOffset limOff) {
         SearchRequestBuilder searchBuilder =
-            getSearchRequest(logIndexName, query, filter, null, null, sort, limOff, false);
+            getSearchRequest(logIndexName, query, filter, sort, limOff);
         SearchResponse response = searchBuilder.execute().actionGet();
         return getSearchResults(response, limOff, hit -> Integer.parseInt(hit.getId()));
     }
@@ -45,7 +45,7 @@ public class ElasticApiLogSearchDao extends ElasticBaseDao implements ApiLogSear
     @Override
     public SearchResults<ApiLogItemView> searchLogsAndFetchData(QueryBuilder query, QueryBuilder filter, List<SortBuilder> sort, LimitOffset limOff) {
         SearchRequestBuilder searchBuilder =
-                getSearchRequest(logIndexName, query, filter, null, null, sort, limOff, true);
+                getFetchingSearchRequest(logIndexName, query, filter, sort, limOff);
         SearchResponse response = searchBuilder.execute().actionGet();
         return getSearchResults(response, limOff,
             hit -> objectMapper.convertValue(hit.getSource(), ApiLogItemView.class));

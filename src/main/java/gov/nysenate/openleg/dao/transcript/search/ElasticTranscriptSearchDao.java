@@ -40,8 +40,8 @@ public class ElasticTranscriptSearchDao extends ElasticBaseDao implements Transc
     @Override
     public SearchResults<TranscriptId> searchTranscripts(QueryBuilder query, QueryBuilder postFilter,
                                                          List<SortBuilder> sort, LimitOffset limOff) {
-        SearchRequestBuilder searchBuilder = getSearchRequest(transcriptIndexName, query, postFilter,
-                highlightedFields, null, sort, limOff, false);
+        SearchRequestBuilder searchBuilder = getSearchRequest(Collections.singleton(transcriptIndexName),
+                query, postFilter, highlightedFields, null, sort, limOff, false);
         SearchResponse response = searchBuilder.execute().actionGet();
         logger.debug("Transcript search result with query {} and filter {} took {} ms", query, postFilter, response.getTookInMillis());
         return getSearchResults(response, limOff, this::getTranscriptIdFromHit);

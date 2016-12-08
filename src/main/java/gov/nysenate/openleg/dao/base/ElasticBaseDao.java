@@ -28,9 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -79,13 +77,27 @@ public abstract class ElasticBaseDao
      */
     protected SearchRequestBuilder getSearchRequest(String indexName, QueryBuilder query, QueryBuilder postFilter,
                                                     List<SortBuilder> sort, LimitOffset limitOffset) {
-        return getSearchRequest(indexName, query, postFilter, null, null, sort, limitOffset, false);
+        return getSearchRequest(Collections.singleton(indexName),
+                query, postFilter, null, null, sort, limitOffset, false);
+    }
+
+    /**
+     * Generates a typical search request that involves a query, filter, sort string, and a limit + offset
+     * @see #getSearchRequest(String, QueryBuilder, QueryBuilder, List, LimitOffset)
+     *
+     * This method causes the search request to return the source data that was searched
+     */
+    protected SearchRequestBuilder getFetchingSearchRequest(String indexName,
+                                                            QueryBuilder query, QueryBuilder postFilter,
+                                                            List<SortBuilder> sort, LimitOffset limitOffset) {
+        return getSearchRequest(Collections.singleton(indexName),
+                query, postFilter, null, null, sort, limitOffset, true);
     }
 
     /**
      * Generates a SearchRequest with support for various functions.
      *
-     * @param indexName - The name of the index to search.
+     * @param indexNames - The name of the index to search.
      * @param query - The QueryBuilder instance to perform the search with.
      * @param postFilter - Optional FilterBuilder to filter out the results.
      * @param highlightedFields - Optional list of field names to return as highlighted fields.
@@ -95,17 +107,18 @@ public abstract class ElasticBaseDao
      * @param fetchSource - Will return the indexed source fields when set to true
      * @return SearchRequestBuilder
      */
-    protected SearchRequestBuilder getSearchRequest(String indexName, QueryBuilder query, QueryBuilder postFilter,
+    protected SearchRequestBuilder getSearchRequest(Set<String> indexNames, QueryBuilder query, QueryBuilder postFilter,
                                                     List<HighlightBuilder.Field> highlightedFields, RescoreBuilder rescorer,
                                                     List<SortBuilder> sort, LimitOffset limitOffset, boolean fetchSource) {
         SearchRequestBuilder searchBuilder = searchClient.prepareSearch()
-                .setIndices(indexName)
+                .setIndices(indexNames.toArray(new String[indexNames.size()]))
                 .setSearchType(SearchType.QUERY_THEN_FETCH)
                 .setQuery(query)
                 .setFrom(limitOffset.getOffsetStart() - 1)
                 .setSize((limitOffset.hasLimit()) ? limitOffset.getLimit() : Integer.MAX_VALUE)
                 .setMinScore(0.05f)
                 .setFetchSource(fetchSource);
+
         if (highlightedFields != null) {
             HighlightBuilder highlightBuilder = new HighlightBuilder();
             highlightedFields.forEach(highlightBuilder::field);
@@ -133,7 +146,6 @@ public abstract class ElasticBaseDao
      * @param types
      * @return
      */
-
     protected SearchRequestBuilder getSearchRequest(String[] indices, QueryBuilder query, QueryBuilder postFilter,
                                                     List<SortBuilder> sorts,
                                                     boolean setScroll, int size, String... types){
@@ -147,11 +159,7 @@ public abstract class ElasticBaseDao
             searchBuilder.setScroll(new TimeValue(60000));
         if(sorts != null)
             sorts.forEach(searchBuilder::addSort);
-        switch (size){
-            case 0 : searchBuilder.setSize(100);
-                        break;
-            default: searchBuilder.setSize(size);
-        }
+        searchBuilder.setSize(size > 0 ? size : 100);
         return searchBuilder;
     }
 

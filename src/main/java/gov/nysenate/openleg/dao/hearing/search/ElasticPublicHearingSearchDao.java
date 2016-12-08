@@ -22,6 +22,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,8 @@ public class ElasticPublicHearingSearchDao extends ElasticBaseDao implements Pub
     @Override
     public SearchResults<PublicHearingId> searchPublicHearings(QueryBuilder query, QueryBuilder postFilter,
                                                                List<SortBuilder> sort, LimitOffset limOff) {
-        SearchRequestBuilder searchBuilder = getSearchRequest(publicHearingIndexName, query, postFilter, highlightedFields, null, sort, limOff, false);
+        SearchRequestBuilder searchBuilder = getSearchRequest(Collections.singleton(publicHearingIndexName),
+                query, postFilter, highlightedFields, null, sort, limOff, false);
         SearchResponse response = searchBuilder.execute().actionGet();
         logger.debug("Public Hearing search result with query {} and filter {} took {} ms", query, postFilter, response.getTookInMillis());
         return getSearchResults(response, limOff, this::getPublicHearingIdFromHit);

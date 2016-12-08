@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /** {@inheritDoc} */
@@ -41,8 +42,8 @@ public class ElasticLawSearchDao extends ElasticBaseDao implements LawSearchDao
     @Override
     public SearchResults<LawDocId> searchLawDocs(QueryBuilder query, QueryBuilder postFilter,
                                                  RescoreBuilder rescorer, List<SortBuilder> sort, LimitOffset limOff) {
-        SearchRequestBuilder searchBuilder =
-            getSearchRequest(lawIndexName, query, postFilter, highlightFields, rescorer, sort, limOff, true);
+        SearchRequestBuilder searchBuilder = getSearchRequest(Collections.singleton(lawIndexName),
+                query, postFilter, highlightFields, rescorer, sort, limOff, true);
         SearchResponse response = searchBuilder.execute().actionGet();
         return getSearchResults(response, limOff, this::getLawDocIdFromHit);
     }
