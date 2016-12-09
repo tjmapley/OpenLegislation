@@ -4,6 +4,8 @@ angular.module('open.spotcheck')
 function ReportCtrl($scope){
     $scope.billCategories = ['Status', 'Bill', 'Type', 'Date', 'Issue', 'Source'];
     $scope.exampleData = ['New', 'S23', 'Action', '8/11/2016', '#1234', 'Daybreak'];
+    $scope.calendarCategories = ['Status', 'Date', 'Error', 'Type', 'Nbr', 'Date/Time', 'Issue', 'Source'];
+    $scope.agendaCategories = ['Status', 'Date', 'Error', 'Nbr', 'Committee', 'Date/Time', 'Issue', 'Source'];
 
     $scope.hooplah = function(){
         $scope.date = moment().format('l');

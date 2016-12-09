@@ -50,10 +50,11 @@ angular.module('open.spotcheck')
                     OpenMMAPI.get(params, function(response){
                         // Do not extract data if the received request was made before the latest received
                         if(reqId > $scope.lastReceived){
-                            var summaries = response.summary.summaryMap;
-                            if($scope.reportType in summaries){
-                                $scope.summary = summaries[$scope.reportType];
-                            }
+                            // var summaries = response.summary.summaryMap;
+                            // if($scope.reportType in summaries){
+                            //     $scope.summary = summaries[$scope.reportType];
+                            // }
+                            console.log($scope);
                             $scope.mismatchRows = $scope.extractMismatchRows(response.observations, response.query.refTypes[0]);
                             console.log('Mismatch rows', $scope.mismatchRows);
                             $scope.lastReceived = reqId;
@@ -73,7 +74,6 @@ angular.module('open.spotcheck')
                             }
                         }
                     });
-
                 }
             };
         }]);
