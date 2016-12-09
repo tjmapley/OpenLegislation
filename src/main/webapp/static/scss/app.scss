@@ -1,7 +1,6 @@
 @import url(//fonts.googleapis.com/css?family=Open+Sans);
 @import url(//fonts.googleapis.com/css?family=Roboto+Slab:300,400);
 @import url(//fonts.googleapis.com/css?family=Inconsolata);
-
 @import "colors";
 @import "icons";
 
@@ -60,6 +59,7 @@ p {
   height: 70px;
   max-height: 70px;
 }
+
 md-toolbar {
   min-height: 70px;
   .md-toolbar-tools {
@@ -79,7 +79,7 @@ md-toolbar {
 }
 
 .md-whiteframe-z0 {
-  box-shadow: 0 2px 5px 0 rgba(0,0,0,.10);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .10);
 }
 
 md-card {
@@ -121,13 +121,16 @@ md-input-container {
   margin-left: 0;
   color: #333;
 }
+
 .md-default-theme.md-hue-2 .md-datepicker-input-container, .md-hue-2 .md-datepicker-input-container {
   padding: 0;
   border: 1px solid #ddd;
 }
+
 md-datepicker {
   background: transparent;
 }
+
 .md-calendar-day-header, .md-calendar-selected-date.md-focus .md-calendar-date-selection-indicator {
   background: $blue3 !important;
   color: white !important;
@@ -142,21 +145,27 @@ md-dialog {
 .fade {
   opacity: 1;
 }
+
 .fade.ng-enter, .fade.ng-leave {
   transition: all .25s ease;
 }
+
 .fade.ng-enter {
   opacity: 0;
 }
+
 .fade.ng-enter-active {
   opacity: 1;
 }
+
 .fade.fade-out.ng-leave {
   transition: all .5s ease;
 }
+
 .fade.ng-leave {
   opacity: 1;
 }
+
 .fade.ng-leave-active {
   opacity: 0;
 }
@@ -507,9 +516,9 @@ $left-nav-width: 305px;
 }
 
 #logo {
-  padding-left:10px;
+  padding-left: 10px;
   height: 70px;
-  margin:0;
+  margin: 0;
   font-size: 1.4rem;
   background: $blue3;
   a {
@@ -549,6 +558,7 @@ $left-nav-width: 305px;
   text-align: left;
   text-decoration: none;
 }
+
 .menu-item.ng-hide {
   max-height: 0;
   opacity: 0;
@@ -557,6 +567,7 @@ $left-nav-width: 305px;
 .menu-item:focus {
   font-weight: bold;
 }
+
 .menu-item.menu-title {
   color: #444;
   font-weight: bold;
@@ -565,6 +576,7 @@ $left-nav-width: 305px;
   text-align: left;
   text-transform: uppercase;
 }
+
 .menu-item.menu-title:hover,
 .menu-item.menu-title:focus,
 .menu-item.active {
@@ -572,6 +584,7 @@ $left-nav-width: 305px;
   background: $blue3;
   color: white;
 }
+
 .menu-item.menu-title.active {
   background: $blue4;
 }
@@ -648,7 +661,6 @@ ul.pagination {
   }
 }
 
-
 .listing-filter {
   padding: 16px 20px;
   background: #f1f1f1;
@@ -671,7 +683,7 @@ ul.pagination {
 
 .cal-tooltip {
   position: absolute;
-  width:140px;
+  width: 140px;
   color: #FFFFFF;
   background: $blue1;
   text-align: center;
@@ -687,16 +699,18 @@ ul.pagination {
     top: 100%;
     left: 25%;
     margin-left: -8px;
-    width: 0; height: 0;
+    width: 0;
+    height: 0;
     border-top: 8px solid $blue1;
     border-right: 8px solid transparent;
     border-left: 8px solid transparent;
     z-index: 100;
   }
 }
+
 .cal-tooltip.agenda-meeting {
   bottom: 55px;
-  width:300px;
+  width: 300px;
   text-align: left;
   padding: 10px;
   font-size: 0.9rem;
@@ -705,7 +719,7 @@ ul.pagination {
 /** --- Toggle Panel ---  */
 
 .toggle-panel {
-  .toggle-panel-bar  {
+  .toggle-panel-bar {
     &:hover {
       background: #eee;
     }
@@ -746,7 +760,7 @@ ul.pagination {
 
 .search-refine-panel {
   h3 {
-    background:white;
+    background: white;
     font-size: 1rem;
     padding: 10px 10px 10px 15px;
     margin: 0;
@@ -764,7 +778,7 @@ ul.pagination {
     }
     select, input {
       width: 100%;
-      display:block;
+      display: block;
       border: 1px solid #ddd;
       padding: 5px;
     }
@@ -794,8 +808,8 @@ ul.pagination {
 }
 
 .hero-container-public {
-  margin-bottom:0;
-  height:300px;
+  margin-bottom: 0;
+  height: 300px;
   background: #008cba;
   position: relative;
 
@@ -888,7 +902,7 @@ ul.pagination {
 }
 
 .docs-iframe {
-  height:95vh;
+  height: 95vh;
   border: 0;
   overflow: visible
 }
@@ -911,7 +925,6 @@ ul.pagination {
   }
 }
 
-
 .slogan-container {
   margin: 20px;
   padding: 20px;
@@ -919,9 +932,9 @@ ul.pagination {
 }
 
 a.slogan-link {
-  color:$blue5;
+  color: $blue5;
   text-decoration: none;
-  border-bottom:2px solid $blue5;
+  border-bottom: 2px solid $blue5;
 }
 
 .provide-data-container {
@@ -939,12 +952,12 @@ a.slogan-link {
 }
 
 .provide-data-icon {
-  text-align:center;
-  height:75px;
-  width:75px;
+  text-align: center;
+  height: 75px;
+  width: 75px;
   i {
     font-size: 2rem;
-    line-height:75px;
+    line-height: 75px;
   }
 }
 
@@ -1010,7 +1023,7 @@ a.slogan-link {
   font-weight: 400;
   display: block;
   margin: 20px 0;
-  color: rgba(0,0,0,0.54);
+  color: rgba(0, 0, 0, 0.54);
   white-space: pre-line;
 }
 
@@ -1080,7 +1093,6 @@ a.slogan-link {
   margin: 10px 0;
 }
 
-
 .law-listing-filter {
   @extend .listing-filter;
 }
@@ -1119,12 +1131,12 @@ a.slogan-link {
   &.no-margin {
     margin: 0;
   }
-  padding:40px;
+  padding: 40px;
   margin: 0;
   white-space: pre-line;
   font-size: 0.85rem;
   background: white;
-  border-width:1px;
+  border-width: 1px;
   border-style: none solid solid solid;
   border-color: #ddd;
   width: 100%;
@@ -1265,15 +1277,15 @@ $sptchk-notes-lines-shown: 1;
 }
 
 .new-error {
-  color:red;
+  color: red;
 }
 
 .closed-error {
-  color:green;
+  color: green;
 }
 
 .existing-error {
-  color:#aaa;
+  color: #aaa;
 }
 
 /** --- Styles for Spotcheck Report Page --- */
@@ -1294,6 +1306,7 @@ $spotcheckMismatchListBlur: 2px;
   min-height: 200px;
   position: relative;
 }
+
 .spotcheck-mismatch-list {
   .loading {
     filter: blur($spotcheckMismatchListBlur);
@@ -1310,7 +1323,7 @@ $spotcheckMismatchListBlur: 2px;
     border-top: none;
   }
   &.open {
-    border: 2px solid rgba(22,91,129,0.24);
+    border: 2px solid rgba(22, 91, 129, 0.24);
   }
 
   .mismatch-snippet {
@@ -1333,7 +1346,7 @@ $spotcheckMismatchListBlur: 2px;
 
 $mmDetailTransTime: 0.5s;
 .spotcheck-mismatch-details {
-  border: 2px solid rgba(22,91,129,0.24);
+  border: 2px solid rgba(22, 91, 129, 0.24);
   border-top: none;
   &.ng-enter {
     -webkit-transition: $mmDetailTransTime linear all;
@@ -1409,7 +1422,7 @@ $diff-ins-color: #59a007;
   height: 15px;
   width: 20px;
   margin: 4px;
-  border: 1px solid rgba(0,0,0,0.12);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   &.del {
     background-color: $diff-del-color;
   }
@@ -1464,7 +1477,7 @@ diff-summary, mismatch-diff {
   md-content {
     margin: 0;
     padding: 30px;
-    border-top: 1px solid rgba(0,0,0,0.12);
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
     & > div {
       overflow-y: auto;
       max-height: 40vh;
@@ -1520,6 +1533,18 @@ diff-summary, mismatch-diff {
   padding: 5px;
 }
 
+/** --- Spotcheck Report Page --- */
+
+// TODO: 11/30/16 change red to the theme's blue-ish color
+md-tabs md-tab-item:not([disabled]).md-active {
+  color: #2b6a90;
+}
+
+#spotcheck-report-page-issues-box {
+  border: 1px solid black;
+  width: 20%;
+}
+
 /** --- Admin Account Settings --- */
 
 .notsub-check-column {
@@ -1537,8 +1562,8 @@ diff-summary, mismatch-diff {
 .master-admin {
   background: #fefcea; /* Old browsers */
   background: -moz-linear-gradient(bottom, #fefcea 0%, #f1da36 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0%,#fefcea), color-stop(100%,#f1da36)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(bottom, #fefcea 0%,#f1da36 100%); /* Chrome10+,Safari5.1+ */
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0%, #fefcea), color-stop(100%, #f1da36)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(bottom, #fefcea 0%, #f1da36 100%); /* Chrome10+,Safari5.1+ */
 }
 
 .logout-circle {
@@ -1574,8 +1599,8 @@ md-list.env-list {
   height: 150px;
   border-bottom: 1px solid #ddd;
   padding-left: 16px;
-  padding-bottom : 20px;
-  padding-top:20px;
+  padding-bottom: 20px;
+  padding-top: 20px;
 }
 
 .cal-entry-sponsor-img {
@@ -1642,7 +1667,7 @@ md-list.env-list {
 @-webkit-keyframes new-request {
   0% {
     background-color: transparent;
-    opacity:1;
+    opacity: 1;
   }
   50% {
     background-color: #b1c48e;

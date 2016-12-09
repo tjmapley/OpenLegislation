@@ -1,11 +1,11 @@
 angular.module('open.spotcheck')
-    .controller('ReportCtrl', ['$scope', ReportCtrl])
-    .controller('SpotcheckOpenSummaryCtrl',
-        ['$scope', '$filter', 'SpotcheckOpenMismatchSummaryAPI', showAPIData]);
+    .controller('ReportCtrl', ['$scope', ReportCtrl]);
 
 function ReportCtrl($scope){
-    $scope.hooplah = function(){
+    $scope.billCategories = ['Status', 'Bill', 'Type', 'Date', 'Issue', 'Source'];
+    $scope.exampleData = ['New', 'S23', 'Action', '8/11/2016', '#1234', 'Daybreak'];
 
+    $scope.hooplah = function(){
         $scope.date = moment().format('l');
     };
 
@@ -19,26 +19,4 @@ function ReportCtrl($scope){
     };
 
     init();
-}
-
-function showAPIData($scope, $filter, openSummaryApi){
-    $scope.summaries = {};
-
-    $scope.init = function(){
-        $scope.setHeaderText('Summary of Open Mismatches');
-        getSummaries();
-    };
-
-    function getSummaries(){
-        $scope.loadingSummaries = true;
-        openSummaryApi.get({}, function(response){
-            $scope.summaries = response.result.summaryMap;
-            $scope.loadingSummaries = false;
-        }, function(errorResponse){
-            $scope.loadingSummaries = false;
-            $scope.summaryRequestError = true;
-        })
-    }
-
-
 }

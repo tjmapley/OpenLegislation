@@ -1,5 +1,5 @@
-<%@ page import="gov.nysenate.openleg.model.spotcheck.SpotCheckRefType" %>
 <%@ page import="gov.nysenate.openleg.model.spotcheck.SpotCheckMismatchType" %>
+<%@ page import="gov.nysenate.openleg.model.spotcheck.SpotCheckRefType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="open-component" tagdir="/WEB-INF/tags/component" %>
 
