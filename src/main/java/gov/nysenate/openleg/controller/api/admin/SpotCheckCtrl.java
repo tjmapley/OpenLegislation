@@ -209,6 +209,8 @@ public class SpotCheckCtrl extends BaseCtrl
         SpotCheckDataSource spotcheckDataSource = getSpotcheckDataSource(dataSource, "dataSource");
         SpotCheckContentType spotcheckContentType = getSpotcheckContentType(contentType, "contentType");
         Set<SpotCheckRefType> refTypes = Sets.newHashSet(SpotCheckRefType.get(spotcheckDataSource, spotcheckContentType));
+        Map<SpotCheckDataSource, Set<SpotCheckContentType>> dataSourceSetMap = new HashMap<>();
+        dataSourceSetMap.put(spotcheckDataSource, Collections.singleton(spotcheckContentType));
         LimitOffset limOff = getLimitOffset(request, 0);
         MismatchOrderBy mismatchOrderBy = getEnumParameter(orderBy, MismatchOrderBy.class, MismatchOrderBy.OBSERVED_DATE);
         SortOrder order = getSortOrder(request, SortOrder.DESC);
@@ -220,7 +222,7 @@ public class SpotCheckCtrl extends BaseCtrl
         OpenMismatchQuery query = new OpenMismatchQuery(mismatchTypes, afterDateTime, beforeDateTime,
                 mismatchOrderBy, order, limOff, resolvedShown, ignoredShown, ignoredOnly, trackedShown, untrackedShown);
         SpotCheckOpenMismatches<?> observations = reportDao.getOpenMismatches(spotcheckDataSource, spotcheckContentType, query);
-        OpenMismatchSummary summary = getAnyReportService().getOpenMismatchSummary(refTypes, afterDateTime);
+        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(dataSourceSetMap, afterDateTime);
         return new OpenMismatchesResponse<>(observations, summary, query);
     }
 
@@ -281,7 +283,7 @@ public class SpotCheckCtrl extends BaseCtrl
                                                @RequestParam(required = false) String observedAfter) {
         Set<SpotCheckRefType> refTypes = getSpotcheckRefTypes(reportTypes, "reportTypes");
         LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
-        OpenMismatchSummary summary = getAnyReportService().getOpenMismatchSummary(refTypes, earliestDateTime);
+        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(refTypes, earliestDateTime);
         return new ViewObjectResponse<>(new OpenMismatchSummaryView(summary));
     }
 

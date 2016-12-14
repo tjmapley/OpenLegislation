@@ -138,20 +138,23 @@ public abstract class ElasticBaseDao
     }
 
     /**
+     * Generates a SearchRequest with support for following parameters.
      *
-     * @param indices
-     * @param query
-     * @param setScroll
-     * @param size
-     * @param types
-     * @return
+     * @param indices - The names of the indices to search.
+     * @param types - The names of the types in indices.
+     * @param query - The QueryBuilder instance to perform the search with.
+     * @param postFilter - The QueryBuilder instance to filter the search results with.
+     * @param sorts - List of SortBuilders specifying the desired sorting
+     * @param setScroll - Boolean Parameter to set Scroll.
+     * @param size - Integer to set
+     * @return SearchRequestBuilder
      */
-    protected SearchRequestBuilder getSearchRequest(String[] indices, QueryBuilder query, QueryBuilder postFilter,
+    protected SearchRequestBuilder getSearchRequest(Set<String> indices, Set<String> types, QueryBuilder query, QueryBuilder postFilter,
                                                     List<SortBuilder> sorts,
-                                                    boolean setScroll, int size, String... types){
+                                                    boolean setScroll, int size){
         SearchRequestBuilder searchBuilder = searchClient.prepareSearch()
-                .setIndices(indices)
-                .setTypes(types)
+                .setIndices(indices.stream().toArray(String[]::new))
+                .setTypes(types.stream().toArray(String[]::new))
                 .setQuery(query);
         if(postFilter != null)
             searchBuilder.setPostFilter(postFilter);

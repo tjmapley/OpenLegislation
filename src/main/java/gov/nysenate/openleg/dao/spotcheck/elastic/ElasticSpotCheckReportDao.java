@@ -1,29 +1,22 @@
 package gov.nysenate.openleg.dao.spotcheck.elastic;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Table;
-import com.google.common.eventbus.Subscribe;
+import com.google.common.collect.*;
 import gov.nysenate.openleg.dao.base.ElasticBaseDao;
-import gov.nysenate.openleg.dao.base.SearchIndex;
 import gov.nysenate.openleg.dao.base.SpotCheckIndex;
+import gov.nysenate.openleg.dao.base.ElasticSpotCheckType;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckContentIdMapper;
 import gov.nysenate.openleg.dao.spotcheck.SpotCheckReportDao;
-import gov.nysenate.openleg.model.search.ClearIndexEvent;
-import gov.nysenate.openleg.model.search.RebuildIndexEvent;
+import gov.nysenate.openleg.model.search.SearchResult;
 import gov.nysenate.openleg.model.search.SearchResults;
 import gov.nysenate.openleg.model.spotcheck.*;
-import gov.nysenate.openleg.service.base.search.IndexedSearchService;
 import gov.nysenate.openleg.util.OutputUtils;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -46,6 +39,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static gov.nysenate.openleg.dao.base.ElasticSpotCheckType.OBSERVATION;
+import static gov.nysenate.openleg.dao.base.ElasticSpotCheckType.REPORT;
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -58,10 +53,6 @@ public class ElasticSpotCheckReportDao
         implements SpotCheckReportDao {
 
     private static final Logger logger = LoggerFactory.getLogger(ElasticSpotCheckReportDao.class);
-
-    protected static final String reportType = "reports";
-
-    protected static final String observationType = "observations";
 
     @Autowired
     private List<SpotCheckContentIdMapper> contentIdMappers;
@@ -85,16 +76,17 @@ public class ElasticSpotCheckReportDao
      */
     @Override
     public <ContentKey> SpotCheckReport<ContentKey> getReport(SpotCheckReportId Id) throws DataAccessException {
-        String[] spotcheckIndices = {getSpotcheckIndexName(Id.getReferenceType().getDataSource(),
-                Id.getReferenceType().getContentType())};
+        Set<String> spotcheckIndices = Sets.newHashSet(getSpotcheckIndexName(Id.getReferenceType().getDataSource(),
+                Id.getReferenceType().getContentType()));
+        Set<String> types = Collections.singleton(REPORT.getName());
         QueryBuilder query = matchQuery("reportId.reportDateTime", Id.getReportDateTime().toString());
-        SearchResponse reportSearchResponse = getSearchRequest(spotcheckIndices, query, null, null, false, 0, reportType)
+        SearchResponse reportSearchResponse = getSearchRequest(spotcheckIndices, types, query, null, null, false, 0)
                 .execute()
                 .actionGet();
 
         if (reportSearchResponse.getHits().getTotalHits() > 0) {
             try {
-                SpotCheckReport<ContentKey> report = getSpotcheckReportFrom(reportSearchResponse.getHits().getAt(0).getSource());
+                SpotCheckReport<ContentKey> report = getSpotcheckReport(reportSearchResponse.getHits().getAt(0));
                 String reportId = reportSearchResponse.getHits().getAt(0).getId();
                 String reportIndex = reportSearchResponse.getHits().getAt(0).getIndex();
                 Map<ContentKey, SpotCheckObservation<ContentKey>> observationMap = getObservationsForReport(reportIndex, reportId);
@@ -130,6 +122,10 @@ public class ElasticSpotCheckReportDao
         String spotcheckIndex = getSpotcheckIndexName(report.getReportId().getReferenceType().getDataSource(),
                 report.getReportId().getReferenceType().getContentType());
 
+        String reportType = REPORT.getName();
+
+        String observationType = OBSERVATION.getName();
+
         bulkRequest.add(getIndexRequest(spotcheckIndex, reportType, String.valueOf(report.hashCode()))
                 .setSource(elasticReportJson));
 
@@ -150,47 +146,61 @@ public class ElasticSpotCheckReportDao
         safeBulkRequestExecute(bulkRequest);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <ContentKey> List<SpotCheckReportSummary> getReportSummaries(Map<SpotCheckDataSource, Set<SpotCheckContentType>> dataSourceSetMap,
                                                                         LocalDateTime start,
                                                                         LocalDateTime end,
                                                                         gov.nysenate.openleg.dao.base.SortOrder dateOrder) {
-        String[] spotcheckIndices = getSpotcheckIndexNames(dataSourceSetMap);
+        Set<String> spotcheckIndices = getSpotcheckIndexNames(dataSourceSetMap);
+        Set<String> spotchecKTypes = Collections.singleton(REPORT.getName());
         QueryBuilder query = rangeQuery("reportId.reportDateTime").from(start.toString()).to(end.toString());
         SortBuilder sort = SortBuilders
                 .fieldSort("reportId.reportDateTime")
                 .order(SortOrder.valueOf(dateOrder.toString()))
                 .unmappedType("date");
-        SearchResponse reportSearchResponse = getSearchRequest(spotcheckIndices, query,
-                null, Collections.singletonList(sort), true, 0, reportType)
+        SearchResponse reportSearchResponse = getSearchRequest(spotcheckIndices, spotchecKTypes, query,
+                null, Collections.singletonList(sort), true, 0)
                 .execute().actionGet();
-        List<SpotCheckReportSummary> spotCheckReportSummaries = getSpotcheckReportSummary(reportSearchResponse);
+        List<SpotCheckReportSummary> spotCheckReportSummaries = getSearchResults(reportSearchResponse, null,
+                this::getSpotcheckReportSummary).getRawResults().stream().collect(Collectors.toList());
 
         return spotCheckReportSummaries;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <ContentKey> List<SpotCheckReportSummary> getReportSummaries(SpotCheckRefType refType, LocalDateTime start,
                                                                         LocalDateTime end, gov.nysenate.openleg.dao.base.SortOrder dateOrder) {
-        String[] spotcheckIndices;
+        Set<String> spotcheckIndices;
         if (refType == null)
-            spotcheckIndices = getIndices().stream().toArray(String[]::new);
+            spotcheckIndices = Sets.newHashSet(getIndices());
         else
-            spotcheckIndices = Stream.of(getSpotcheckIndexName(refType.getDataSource(), refType.getContentType())).toArray(String[]::new);
+            spotcheckIndices = Collections.singleton(getSpotcheckIndexName(refType.getDataSource(), refType.getContentType()));
+
+        Set<String> types = Sets.newHashSet(REPORT.getName());
         QueryBuilder query = rangeQuery("reportId.reportDateTime").from(start.toString()).to(end.toString());
 
         SortBuilder sort = SortBuilders
                 .fieldSort("reportId.reportDateTime")
                 .order(SortOrder.valueOf(dateOrder.toString()))
                 .unmappedType("date");
-        SearchResponse reportSearchResponse = getSearchRequest(spotcheckIndices, query,
-                null, Collections.singletonList(sort), true, 0, reportType)
+        SearchResponse reportSearchResponse = getSearchRequest(spotcheckIndices, types, query,
+                null, Collections.singletonList(sort), true, 0)
                 .execute()
                 .actionGet();
-        List<SpotCheckReportSummary> spotCheckReportSummaries = getSpotcheckReportSummary(reportSearchResponse);
+        List<SpotCheckReportSummary> spotCheckReportSummaries = getSearchResults(reportSearchResponse, null,
+                this::getSpotcheckReportSummary).getRawResults().stream().collect(Collectors.toList());
         return spotCheckReportSummaries;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <ContentKey> SpotCheckOpenMismatches<ContentKey> getOpenMismatches(OpenMismatchQuery query) {
 
@@ -198,7 +208,6 @@ public class ElasticSpotCheckReportDao
                 .map(SpotCheckIndex::getIndex)
                 .map(SpotCheckIndex::getIndexName)
                 .collect(Collectors.toSet());
-
         BoolQueryBuilder queryFilters = QueryBuilders.boolQuery();
         query.getMismatchTypes().forEach(spotCheckMismatchType -> {
             queryFilters.should(QueryBuilders.matchQuery("mismatchType", spotCheckMismatchType.toString()));
@@ -222,47 +231,26 @@ public class ElasticSpotCheckReportDao
         // Get search results
         SearchResults<SpotCheckObservation<ContentKey>> searchResults =
                 getSearchResults(searchResponse, query.getLimitOffset(),
-                        this::getSpotcheckObservationFrom);
+                        this::getSpotcheckObservation);
+
+        // Generate a multimap mapping observations to content key
+        // These observations with duplicate keys need to be merged
+        ImmutableListMultimap<ContentKey, SpotCheckObservation<ContentKey>> dupObsMap =
+                Multimaps.index(searchResults.getRawResults(), SpotCheckObservation::getKey);
 
         // Extract observations from results
         Map<ContentKey, SpotCheckObservation<ContentKey>> observationMap =
-                searchResults.getRawResults().stream()
+                dupObsMap.keySet().stream()
+                        .map(dupObsMap::get)
+                        .map(this::mergeObservations)
                         .collect(Collectors.toMap(SpotCheckObservation::getKey, Function.identity()));
 
         return new SpotCheckOpenMismatches<>(query.getRefTypes(), observationMap, searchResults.getTotalResults());
-//
-//        String[] spotCheckIndexes = indexes.stream().toArray(String[]::new);
-//        SearchResponse searchResponse = searchClient.prepareSearch()
-//                .setIndices(spotCheckIndexes)
-//                .setTypes(observationType)
-//                .setPostFilter(queryFilters)
-//                .addSort(query.getOrderBy().getColName(), SortOrder.valueOf(query.getOrder().toString()))
-//                .setScroll(new TimeValue(60000))
-//                .setSize(query.getLimitOffset().getLimit())
-//                .execute().actionGet();
-//        Map<ContentKey, SpotCheckObservation<ContentKey>> observations = new HashMap<>();
-//        List<Integer> countList = new ArrayList<>();
-//        Integer offset = query.getLimitOffset().getOffsetStart();
-//        Integer scroll = 1;
-//        do {
-//            if (offset.equals(scroll)) {
-//                searchResponse.getHits().forEach(observation -> {
-//                    SpotCheckObservation<ContentKey> spotcheckObservation = getSpotcheckObservationFrom(observation);
-//                    countList.add(spotcheckObservation.getMismatches().values().size());
-//                    observations.put(spotcheckObservation.getKey(), spotcheckObservation);
-//                });
-//            }
-//            scroll += 10;
-//            searchResponse = searchClient.prepareSearchScroll(searchResponse.getScrollId())
-//                    .setScroll(new TimeValue(60000))
-//                    .execute()
-//                    .actionGet();
-//        }
-//        while (searchResponse.getHits().getHits().length != 0 || observations.size() != query.getLimitOffset().getLimit());
-//        Integer totalMismatches = countList.stream().mapToInt(Integer::intValue).sum();
-//        return new SpotCheckOpenMismatches<>(query.getRefTypes(), observations, totalMismatches);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <ContentKey> SpotCheckOpenMismatches<ContentKey> getOpenMismatches(SpotCheckDataSource dataSource, SpotCheckContentType contentType, OpenMismatchQuery query) {
         List<SpotCheckRefType> spotCheckRefTypes = SpotCheckRefType.get(dataSource, contentType);
@@ -270,15 +258,21 @@ public class ElasticSpotCheckReportDao
         return getOpenMismatches(query);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <ContentKey> OpenMismatchSummary getOpenMismatchSummary(Map<SpotCheckDataSource, Set<SpotCheckContentType>> dataSourceSetMap,
                                                                    LocalDateTime observedAfter) {
-        String[] spotcheckIndexes = SpotCheckIndex.getIndices(dataSourceSetMap).stream().map(SpotCheckIndex::getIndexName).toArray(String[]::new);
+        Set<String> spotcheckIndexes = SpotCheckIndex.getIndices(dataSourceSetMap).stream()
+                .map(SpotCheckIndex::getIndexName)
+                .collect(Collectors.toSet());
         QueryBuilder query = QueryBuilders.boolQuery()
                 .must(rangeQuery("observedDateTime").from(observedAfter.toString()));
-        SearchResponse response = getSearchRequest(spotcheckIndexes, query,
-                null, null, true, 0, observationType)
-                .setTypes(observationType)
+
+        Set<String> types = Sets.newHashSet(OBSERVATION.getName());
+        SearchResponse response = getSearchRequest(spotcheckIndexes, types, query,
+                null, null, true, 0)
                 .execute()
                 .actionGet();
         Map<SpotCheckRefType, Collection<SpotCheckObservation<ContentKey>>> observationsMap = getRefTypeObservationMap(response);
@@ -287,59 +281,75 @@ public class ElasticSpotCheckReportDao
                 refTypes.addAll(SpotCheckRefType.get(spotCheckIndex.getDataSource(), spotCheckIndex.getContentType()))
         );
         OpenMismatchSummary openMismatchSummary = new OpenMismatchSummary(refTypes, observedAfter);
-        observationsMap.forEach((refType, observations) -> {
-            openMismatchSummary.getRefTypeSummary(refType).addCountsFromObservations(observations);
-        });
+        observationsMap.forEach((refType, observations) ->
+            openMismatchSummary.getRefTypeSummary(refType).addCountsFromObservations(observations)
+        );
         return openMismatchSummary;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <ContentKey> OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter) {
-        List<String> indexes = new ArrayList<>();
-        refTypes.forEach(spotCheckRefType -> {
-            indexes.add(getSpotcheckIndexName(spotCheckRefType.getDataSource(), spotCheckRefType.getContentType()));
-        });
-        String[] spotCheckIndexes = indexes.stream().toArray(String[]::new);
-        SearchResponse searchObservationsResponse = searchClient.prepareSearch()
-                .setIndices(spotCheckIndexes)
-                .setTypes(observationType)
-                .setQuery(QueryBuilders.boolQuery()
-                        .must(rangeQuery("observedDateTime").from(observedAfter.toString()))
-                )
-                .setScroll(new TimeValue(60000))
-                .setSize(100)
-                .execute().actionGet();
+        Set<String> spotCheckIndexes = refTypes.stream()
+                .map(SpotCheckIndex::getIndex)
+                .map(SpotCheckIndex::getIndexName)
+                .collect(Collectors.toSet());
+        Set<String> types = Sets.newHashSet(OBSERVATION.getName());
+
+        QueryBuilder query = boolQuery().must(
+                rangeQuery("observedDateTime")
+                        .from(observedAfter.toString())
+        );
+        SearchResponse searchObservationsResponse = getSearchRequest(spotCheckIndexes, types, query, null, null, true,0)
+                .execute()
+                .actionGet();
+
         Map<SpotCheckRefType, Collection<SpotCheckObservation<ContentKey>>> observationsMap = getRefTypeObservationMap(searchObservationsResponse);
         OpenMismatchSummary openMismatchSummary = new OpenMismatchSummary(refTypes, observedAfter);
-        observationsMap.forEach((refType, observations) -> {
-            openMismatchSummary.getRefTypeSummary(refType).addCountsFromObservations(observations);
-        });
+        observationsMap.forEach((refType, observations) ->
+            openMismatchSummary.getRefTypeSummary(refType).addCountsFromObservations(observations)
+        );
         return openMismatchSummary;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteReport(SpotCheckReportId reportId) {
-        String[] spotcheckIndices = {getSpotcheckIndexName(reportId.getReferenceType().getDataSource(),
-                reportId.getReferenceType().getContentType())};
+        Set<String> spotcheckIndices = Sets.newHashSet(getSpotcheckIndexName(reportId.getReferenceType().getDataSource(),
+                reportId.getReferenceType().getContentType()));
         QueryBuilder query = matchQuery("reportId.reportDateTime", reportId.getReportDateTime());
-        SearchResponse reportSearchResponse = getSearchRequest(spotcheckIndices, query, null, null, false, 0, reportType)
+        Set<String> types = Sets.newHashSet(REPORT.getName());
+        SearchResponse reportSearchResponse = getSearchRequest(spotcheckIndices, types, query, null, null, false, 0)
                 .execute()
                 .actionGet();
         if (reportSearchResponse.getHits().getTotalHits() > 0) {
             String Id = reportSearchResponse.getHits().getAt(0).getId();
             String reportIndex = reportSearchResponse.getHits().getAt(0).getIndex();
-            deleteEntry(reportIndex, reportType, Id);
+            QueryBuilder queryBuilder = matchQuery("spotcheckReportId", Id);
+            SearchResponse searchResponse = getSearchRequest(Collections.singleton(reportIndex),
+                    Collections.singleton(OBSERVATION.getName()),
+                    queryBuilder, null,null,false,0
+            ).execute().actionGet();
+            List<String> observationIds = new ArrayList<>();
+            searchResponse.getHits().forEach(observationHit -> observationIds.add(observationHit.getId()));
+            deleteEntry(reportIndex, REPORT.getName(), Id);
+            observationIds.forEach(observationId -> deleteEntry(reportIndex, OBSERVATION.getName(), observationId));
         }
-        //TODO: Delete observations for the report.
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setMismatchIgnoreStatus(SpotCheckDataSource dataSource, SpotCheckContentType contentType,
                                         int mismatchId, SpotCheckMismatchIgnore ignoreStatus) {
         String spotcheckIndex = getSpotcheckIndexName(dataSource, contentType);
         try {
-            UpdateResponse response = getUpdateRequest(spotcheckIndex, observationType, String.valueOf(mismatchId))
+            UpdateResponse response = getUpdateRequest(spotcheckIndex, OBSERVATION.getName(), String.valueOf(mismatchId))
                     .setDoc(jsonBuilder()
                             .startObject()
                             .field("mismatchIgnore", ignoreStatus)
@@ -351,16 +361,19 @@ public class ElasticSpotCheckReportDao
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addIssueId(SpotCheckDataSource dataSource, SpotCheckContentType contentType, int mismatchId, String issueId) {
         String spotcheckIndex = getSpotcheckIndexName(dataSource, contentType);
-        GetResponse response = getRequest(spotcheckIndex, observationType, String.valueOf(mismatchId))
+        GetResponse response = getRequest(spotcheckIndex, OBSERVATION.getName(), String.valueOf(mismatchId))
                 .execute().actionGet();
         List<String> issueIds = (List<String>) response.getSource().get("issueIds");
         issueIds.add(issueId);
         try {
 
-            UpdateResponse updateResponse = getUpdateRequest(spotcheckIndex, observationType, String.valueOf(mismatchId))
+            UpdateResponse updateResponse = getUpdateRequest(spotcheckIndex, OBSERVATION.getName(), String.valueOf(mismatchId))
                     .setDoc(jsonBuilder()
                             .startObject()
                             .array("issueIds", issueIds.toArray())
@@ -372,15 +385,18 @@ public class ElasticSpotCheckReportDao
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteIssueId(SpotCheckDataSource dataSource, SpotCheckContentType contentType, int mismatchId, String issueId) {
         String spotcheckIndex = getSpotcheckIndexName(dataSource, contentType);
-        GetResponse response = getRequest(spotcheckIndex, observationType, String.valueOf(mismatchId))
+        GetResponse response = getRequest(spotcheckIndex, OBSERVATION.getName(), String.valueOf(mismatchId))
                 .execute().actionGet();
         List<String> issueIds = (List<String>) response.getSource().get("issueIds");
         issueIds.remove(issueId);
         try {
-            UpdateResponse updateResponse = getUpdateRequest(spotcheckIndex, observationType, String.valueOf(mismatchId))
+            UpdateResponse updateResponse = getUpdateRequest(spotcheckIndex, OBSERVATION.getName(), String.valueOf(mismatchId))
                     .setDoc(jsonBuilder()
                             .startObject()
                             .array("issueIds", issueIds.toArray())
@@ -392,6 +408,9 @@ public class ElasticSpotCheckReportDao
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<String> getIndices() {
         return Arrays.stream(SpotCheckIndex.values())
@@ -404,22 +423,22 @@ public class ElasticSpotCheckReportDao
      */
 
 
-    private String[] getSpotcheckIndexNames(SpotCheckDataSource dataSource, Set<SpotCheckContentType> contentTypes) {
+    private Set<String> getSpotcheckIndexNames(SpotCheckDataSource dataSource, Set<SpotCheckContentType> contentTypes) {
         return SpotCheckIndex.getIndices(dataSource, contentTypes)
                 .stream()
                 .map(SpotCheckIndex::getIndexName)
-                .toArray(String[]::new);
+                .collect(Collectors.toSet());
     }
 
     private String getSpotcheckIndexName(SpotCheckDataSource dataSource, SpotCheckContentType contentType) {
         return SpotCheckIndex.getIndex(dataSource, contentType).getIndexName();
     }
 
-    private String[] getSpotcheckIndexNames(Map<SpotCheckDataSource, Set<SpotCheckContentType>> dataSourceSetMap) {
+    private Set<String> getSpotcheckIndexNames(Map<SpotCheckDataSource, Set<SpotCheckContentType>> dataSourceSetMap) {
         return SpotCheckIndex.getIndices(dataSourceSetMap)
                 .stream()
                 .map(SpotCheckIndex::getIndexName)
-                .toArray(String[]::new);
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -439,13 +458,9 @@ public class ElasticSpotCheckReportDao
             });
             BoolQueryBuilder filterQuery = QueryBuilders.boolQuery();
             filterQuery.must(matchQuery("mismatchType", elasticObservation.getMismatchType().toString()));
-            /*if(!elasticObservation.getObservedData().isEmpty())
-                filterQuery.must(matchQuery("observedData", elasticObservation.getObservedData()));
-            if(!elasticObservation.getReferenceData().isEmpty())
-                filterQuery.must(matchQuery("referenceData", elasticObservation.getReferenceData()));*/
             boolQuery.filter(filterQuery);
             SearchResponse searchResponse = searchClient.prepareSearch()
-                    .setIndices(spotcheckIndex).setTypes(observationType)
+                    .setIndices(spotcheckIndex).setTypes(OBSERVATION.getName())
                     .setQuery(boolQuery)
                     .execute().actionGet();
             if (searchResponse.getHits().totalHits() > 0) {
@@ -474,55 +489,37 @@ public class ElasticSpotCheckReportDao
 
     private <ContentKey> Map<ContentKey, SpotCheckObservation<ContentKey>> getObservationsForReport(String spotcheckIndex, String reportId) {
         QueryBuilder query = matchQuery("spotcheckReportId", reportId);
-        String[] spotcheckIndices = {spotcheckIndex};
-        SearchResponse observationSearchResponse = getSearchRequest(spotcheckIndices, query,
-                null, null, true, 0, observationType)
-                .execute().actionGet();
+        Set<String> spotcheckIndices = Collections.singleton(spotcheckIndex);
+        Set<String> types = Collections.singleton(OBSERVATION.getName());
+        SearchResponse searchResponse = getSearchRequest(spotcheckIndices, types, query,
+                null, null, true, 0)
+                .execute()
+                .actionGet();
+        SearchResults<SpotCheckObservation<ContentKey>> searchResults =
+                getSearchResults(searchResponse, null,
+                        this::getSpotcheckObservation);
+
+        List<SpotCheckObservation<ContentKey>> observations =
+                searchResults.getRawResults().stream()
+                        .collect(Collectors.toList());
+
         Map<ContentKey, SpotCheckObservation<ContentKey>> observationMap = new HashMap<>();
-        do {
-
-            observationSearchResponse.getHits().forEach(observation -> {
-                SpotCheckObservation<ContentKey> spotcheckObservation = getSpotcheckObservationFrom(observation);
-                if (observationMap.containsKey(spotcheckObservation.getKey())) {
-                    SpotCheckObservation spotCheckObservation = observationMap.get(spotcheckObservation.getKey());
-                    spotcheckObservation.getMismatches().putAll(spotCheckObservation.getMismatches());
-                }
-                observationMap.put(spotcheckObservation.getKey(), spotcheckObservation);
-            });
-
-            observationSearchResponse = searchClient.prepareSearchScroll(observationSearchResponse.getScrollId())
-                    .setScroll(new TimeValue(60000))
-                    .execute()
-                    .actionGet();
-        }
-        while (observationSearchResponse.getHits().getHits().length != 0);
+        observations.forEach(observation ->
+                observationMap.put(observation.getKey(), observation)
+        );
         return observationMap;
     }
 
-    private <ContentKey> List<SpotCheckReportSummary> getSpotcheckReportSummary(SearchResponse reportSearchResponse) {
-        List<SpotCheckReportSummary> spotCheckReportSummaries = new ArrayList<>();
-        do {
-            reportSearchResponse.getHits().forEach(report -> {
-                String reportId = report.getId();
-                String reportIndex = report.getIndex();
-                SpotCheckReport<ContentKey> spotcheckReport = getSpotcheckReportFrom(report.getSource());
-                Map<ContentKey, SpotCheckObservation<ContentKey>> observationMap =
-                        getObservationsForReport(reportIndex, reportId);
-                spotcheckReport.setObservations(observationMap);
-                SpotCheckReportSummary summary = spotcheckReport.getSummary();
-                summary.addCountsFromObservations(observationMap.values());
-                spotCheckReportSummaries.add(spotcheckReport.getSummary());
-            });
-
-            reportSearchResponse = searchClient.prepareSearchScroll(reportSearchResponse.getScrollId())
-                    .setScroll(new TimeValue(60000))
-                    .execute()
-                    .actionGet();
-        }
-        while (reportSearchResponse.getHits().getHits().length != 0);
-        return spotCheckReportSummaries;
+    private <ContentKey> SpotCheckReportSummary getSpotcheckReportSummary(SearchHit report) {
+        String reportId = report.getId();
+        String reportIndex = report.getIndex();
+        SpotCheckReport<ContentKey> spotcheckReport = getSpotcheckReport(report);
+        Map<ContentKey, SpotCheckObservation<ContentKey>> observationMap =
+                   getObservationsForReport(reportIndex, reportId);
+        spotcheckReport.setObservations(observationMap);
+        return spotcheckReport.getSummary();
     }
-    private <ContentKey> SpotCheckObservation<ContentKey> getSpotcheckObservationFrom(SearchHit observation){
+    private <ContentKey> SpotCheckObservation<ContentKey> getSpotcheckObservation(SearchHit observation){
         ElasticObservation elasticObservation = getElasticObservationFrom(observation);
         return elasticObservation
                 .toSpotCheckObservation(
@@ -533,6 +530,21 @@ public class ElasticSpotCheckReportDao
                         observation.getId());
     }
 
+    private <ContentKey> SpotCheckObservation<ContentKey> mergeObservations(
+            Collection<SpotCheckObservation<ContentKey>> obsList) {
+        Iterator<SpotCheckObservation<ContentKey>> obsItr = obsList.iterator();
+        SpotCheckObservation<ContentKey> baseObs = obsItr.next();
+        obsItr.forEachRemaining(obs -> {
+            if (!Objects.equals(baseObs.getKey(), obs.getKey())) {
+                throw new IllegalStateException("Attempt to merge observations with different keys: " +
+                        baseObs.getKey() + "\t" + obs.getKey());
+            }
+            obs.getMismatches().values().stream()
+                    .forEach(baseObs::addMismatch);
+        });
+        return baseObs;
+    }
+
     private <ContentKey> ElasticObservation getElasticObservationFrom(SearchHit observation){
         Map<String, Object> observationObjectMap = observation.getSource();
         TypeReference<ElasticObservation> elasticObservationTypeReference = new TypeReference<ElasticObservation>(){};
@@ -540,12 +552,12 @@ public class ElasticSpotCheckReportDao
                 .convertValue(observationObjectMap, elasticObservationTypeReference);
     }
 
-    private <ContentKey> SpotCheckReport<ContentKey> getSpotcheckReportFrom(Map<String, Object> objectMap){
+    private <ContentKey> SpotCheckReport<ContentKey> getSpotcheckReport(SearchHit searchHit){
+        Map<String, Object> objectMap = searchHit.getSource();
         TypeReference<ElasticReport> elasticReportTypeReference =
                 new TypeReference<ElasticReport>(){};
-
         ElasticReport elasticReport = OutputUtils.getJsonMapper()
-                .convertValue(objectMap,elasticReportTypeReference);
+                .convertValue(objectMap, elasticReportTypeReference);
 
         return elasticReport.toSpotCheckReport();
     }
@@ -554,7 +566,7 @@ public class ElasticSpotCheckReportDao
         Map<SpotCheckRefType, Collection<SpotCheckObservation<ContentKey>>> observationsMap = new HashMap<>();
         do {
             response.getHits().forEach(observation -> {
-                SpotCheckObservation<ContentKey> spotcheckObservation = getSpotcheckObservationFrom(observation);
+                SpotCheckObservation<ContentKey> spotcheckObservation = getSpotcheckObservation(observation);
                 Collection<SpotCheckObservation<ContentKey>> observations =
                         observationsMap.get(spotcheckObservation.getReferenceId().getReferenceType());
                 if (observations == null)

@@ -15,12 +15,12 @@ import static gov.nysenate.openleg.model.spotcheck.SpotCheckDataSource.*;
  * Created by PKS on 8/24/16.
  */
 public enum SpotCheckIndex {
-    SENATE_SITE_CALENDAR("senate-site-calendars", NYSENATE_DOT_GOV, CALENDAR),
-    SENATE_SITE_AGENDA("senate-site-agendas", NYSENATE_DOT_GOV, AGENDA),
-    SENATE_SITE_BILL("senate-site-bills", NYSENATE_DOT_GOV, BILL),
-    LDBC_BILL("ldbc-bills", OPENLEG, BILL),
-    LDBC_CALENDAR("ldbc-calendars", OPENLEG, CALENDAR),
-    LDBC_AGENDA("ldbc-agendas", OPENLEG, AGENDA)
+    SENATE_SITE_CALENDAR("spotcheck-senate-site-calendars", NYSENATE_DOT_GOV, CALENDAR),
+    SENATE_SITE_AGENDA("spotcheck-senate-site-agendas", NYSENATE_DOT_GOV, AGENDA),
+    SENATE_SITE_BILL("spotcheck-senate-site-bills", NYSENATE_DOT_GOV, BILL),
+    LBDC_BILL("spotcheck-lbdc-bills", OPENLEG, BILL),
+    LBDC_CALENDAR("spotcheck-lbdc-calendars", OPENLEG, CALENDAR),
+    LBDC_AGENDA("spotcheck-lbdc-agendas", OPENLEG, AGENDA)
     ;
 
     String indexName;
@@ -33,7 +33,7 @@ public enum SpotCheckIndex {
         this.contentType = contentType;
     }
     public String getIndexName() {
-        return indexName;
+        return  indexName;
     }
 
     public SpotCheckDataSource getDataSource(){
