@@ -120,6 +120,10 @@ public class SpotCheckObservation<ContentKey>
         }
     }
 
+    public SpotCheckReportId getReportId() {
+        return new SpotCheckReportId(referenceId, reportDateTime);
+    }
+
     /** --- Basic Getters/Setters --- */
 
     public LocalDateTime getReportDateTime() {

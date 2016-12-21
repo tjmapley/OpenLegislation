@@ -12,24 +12,20 @@ public class ObservationView<ContentKey> implements ViewObject
     protected LocalDateTime refDateTime;
     protected ContentKey key;
     protected LocalDateTime observedDateTime;
-    protected LocalDateTime reportDateTime;
     protected ListView<MismatchView> mismatches;
+    protected ReportIdView reportId;
 
     public ObservationView(SpotCheckObservation<ContentKey> observation) {
         if (observation != null) {
             this.refDateTime = observation.getReferenceId().getRefActiveDateTime();
             this.key = observation.getKey();
             this.observedDateTime = observation.getObservedDateTime();
-            this.reportDateTime = observation.getReportDateTime();
+            this.reportId = new ReportIdView(observation.getReportId());
             this.mismatches = ListView.of(
                     observation.getMismatches().values().stream()
                             .map(m -> new MismatchView(m, observation.getPriorMismatches().get(m.getMismatchType())))
                             .collect(Collectors.toList()));
         }
-    }
-
-    public LocalDateTime getReportDateTime() {
-        return reportDateTime;
     }
 
     public LocalDateTime getRefDateTime() {
@@ -46,6 +42,10 @@ public class ObservationView<ContentKey> implements ViewObject
 
     public ListView<MismatchView> getMismatches() {
         return mismatches;
+    }
+
+    public ReportIdView getReportId() {
+        return reportId;
     }
 
     @Override

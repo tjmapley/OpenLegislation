@@ -5,6 +5,7 @@ import com.google.common.collect.ComparisonChain;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 public class SpotCheckReportId implements Comparable<SpotCheckReportId>
 {
@@ -29,6 +30,18 @@ public class SpotCheckReportId implements Comparable<SpotCheckReportId>
     public SpotCheckReportId(SpotCheckRefType referenceType, LocalDateTime referenceDateTime, LocalDateTime reportDateTime) {
         this(referenceType, reportDateTime);
         this.referenceDateTime = referenceDateTime;
+    }
+
+    public SpotCheckReportId(SpotCheckReferenceId referenceId, LocalDateTime reportDateTime) {
+        this(
+                Optional.ofNullable(referenceId)
+                        .map(SpotCheckReferenceId::getReferenceType)
+                        .orElse(null),
+                Optional.ofNullable(referenceId)
+                        .map(SpotCheckReferenceId::getRefActiveDateTime)
+                        .orElse(null),
+                reportDateTime
+        );
     }
 
     /** --- Functional Getters --- */
