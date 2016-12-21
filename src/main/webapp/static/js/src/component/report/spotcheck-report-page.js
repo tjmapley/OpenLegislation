@@ -1,23 +1,74 @@
 angular.module('open.spotcheck')
-    .controller('ReportCtrl', ['$scope', ReportCtrl]);
+    .controller('SpotcheckReportCtrl',
+        ['$scope', 'SpotcheckMismatchApi', 'SpotcheckMismatchSummaryApi', ReportCtrl]);
 
-function ReportCtrl($scope){
+function ReportCtrl($scope, spotcheckMismatchApi, mismatchSummaryApi) {
+
     $scope.billCategories = ['Status', 'Bill', 'Type', 'Date', 'Issue', 'Source'];
     $scope.calendarCategories = ['Status', 'Date', 'Error', 'Type', 'Nbr', 'Date/Time', 'Issue', 'Source'];
     $scope.agendaCategories = ['Status', 'Date', 'Error', 'Nbr', 'Committee', 'Date/Time', 'Issue', 'Source'];
-
     $scope.exampleData = ['New', 'S23', 'Action', '8/11/2016', '#1234', 'Daybreak'];
 
-    /*
-     To make this controller work:
 
-     Add ?reportType=daybreak (or another report type)
-     to the end of the URL
-     and choose an option from the drop down
-     */
+    $scope.datasource = {
+        values: [
+            {
+                value: 'OPENLEG',
+                label: 'LBDC - OpenLegislation'
+            },
+            {
+                value: 'NYSENATE_DOT_GOV',
+                label: 'OpenLegislation - NYSenate.gov'
+            }
+        ],
+        selected: {}
+    };
 
-    $scope.init = function(){
+    $scope.mismatchSummary = {};
+    $scope.billMismatches = [];
+
+    $scope.mismatches = [];
+
+    $scope.init = function (rtmap, rtDispMap, mtmap) {
+        $scope.datasource.selected = $scope.datasource.values[0];
+        // don't think we need rtmap
+        // console.log(rtmap);
+        // console.log(rtDispMap);
+        // console.log(mtmap);
+
+        /** Mismatch Summary API and Testing */
+        mismatchSummaryApi.get('OPENLEG')
+            .then(function (mismatchSummary) {
+                $scope.mismatchSummary = mismatchSummary;
+                console.log(mismatchSummary);
+            });
+
+        /** Mismatch Detail API and Testing */
+
+        spotcheckMismatchApi.getBills('OPENLEG')
+            .then(function (billMismatches) {
+                $scope.billMismatches = billMismatches;
+                console.log(billMismatches);
+            });
+        // spotcheckApi.mismatches('OPENLEG', 'BILL')
+        //     .then(function (r) {
+        //         console.log(r);
+        //         var mo = new MismatchObservations(r);
+        //         $scope.mismatches = mo.getObservations();
+        //         console.log($scope.mismatches);
+        //     });
+
+
+        // spotcheckApi.reportSummaries().then(function (r) {
+        //     console.log(r);
+        // });
+
+
         $scope.date = moment().format('l');
+    };
+
+    $scope.onDatasourceChange = function () {
+        console.log($scope.datasource.selected);
     };
 
     $scope.checkBoxOptions = {
@@ -25,9 +76,9 @@ function ReportCtrl($scope){
         secondary: 'OpenLegislation - NYSenate.gov'
     };
 
-    $scope.getSummaries = function(){
+    $scope.getSummaries = function () {
         $scope.mismatches = $scope.mismatchRows;
-        $scope.mismatches.forEach(function(mismatch){
+        $scope.mismatches.forEach(function (mismatch) {
             console.log(mismatch);
         });
     }

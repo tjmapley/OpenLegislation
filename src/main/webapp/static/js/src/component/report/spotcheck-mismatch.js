@@ -50,11 +50,10 @@ angular.module('open.spotcheck')
                     OpenMMAPI.get(params, function(response){
                         // Do not extract data if the received request was made before the latest received
                         if(reqId > $scope.lastReceived){
-                            //TODO uncomment this once the API works
-                            /*var summaries = response.summary.summaryMap;
+                            var summaries = response.summary.summaryMap;
                              if($scope.reportType in summaries){
                              $scope.summary = summaries[$scope.reportType];
-                             }*/
+                             }
                             $scope.mismatchRows = $scope.extractMismatchRows(response.observations, response.query.refTypes[0]);
                             console.log('Mismatch rows', $scope.mismatchRows);
                             $scope.lastReceived = reqId;

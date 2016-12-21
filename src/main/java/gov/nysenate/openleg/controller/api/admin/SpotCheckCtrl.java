@@ -193,7 +193,7 @@ public class SpotCheckCtrl extends BaseCtrl
      *                     untrackedShown - boolean - optional, default true - will return untracked issues if set to true
      */
     @RequiresPermissions("admin:view")
-    @RequestMapping(value = "{dataSource}/open-mismatches", method = RequestMethod.GET, params = {"dataSource"})
+    @RequestMapping(value = "{dataSource}/open-mismatches", method = RequestMethod.GET)
     public BaseResponse getOpenMismatches(@PathVariable String dataSource,
                                           @RequestParam String contentType,
                                           @RequestParam(required = false) String[] mismatchType,
@@ -249,7 +249,7 @@ public class SpotCheckCtrl extends BaseCtrl
     }
 
     @RequiresPermissions("admin:view")
-    @RequestMapping(value = "{dataSource}/open-mismatches/summary", method = RequestMethod.GET, params = {"dataSource"})
+    @RequestMapping(value = "{dataSource}/open-mismatches/summary", method = RequestMethod.GET)
     public BaseResponse getOpenMismatchSummary(@PathVariable String dataSource,
                                                @RequestParam(required = false) String contentType,
                                                @RequestParam(required = false) String observedAfter) {
