@@ -64,10 +64,12 @@ public abstract class BaseSpotCheckReportService<ContentKey> implements SpotChec
 
     /** {@inheritDoc}
      * @param refTypes
-     * @param observedAfter*/
+     * @param observedAfter
+     * @param observedBefore
+     */
     @Override
-    public OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter) {
-        return spotCheckReportDao.getOpenMismatchSummary(refTypes, observedAfter);
+    public OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter, LocalDateTime observedBefore) {
+        return spotCheckReportDao.getOpenMismatchSummary(refTypes, observedAfter, observedBefore);
     }
 
     /** {@inheritDoc} */

@@ -16,10 +16,14 @@ function mismatchSummaryApi($resource) {
         this.agendaCount = agendaCount;
     }
 
-    // TODO: add date as parameter
     // TODO: Add API filter for mismatchStatus so content type counts can be updated for the selected mismatch statuses.
-    function get(datasource) {
-        return mismatchSummaryApi.get({datasource: datasource}).$promise
+    /**
+     *
+     * @param datasource
+     * @param date An ISO date time string. Returns summary data for mismatches observed before this date time.
+     */
+    function get(datasource, date) {
+        return mismatchSummaryApi.get({datasource: datasource, observedBefore: date}).$promise
             .then(createSummary)
     }
 

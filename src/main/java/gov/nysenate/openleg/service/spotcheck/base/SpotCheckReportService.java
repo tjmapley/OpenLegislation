@@ -91,9 +91,10 @@ public interface SpotCheckReportService<ContentKey>
      *
      * @param refTypes
      * @param observedAfter
+     * @param observedBefore
      * @return OpenMismatchesSummary
      */
-    OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter);
+    OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter, LocalDateTime observedBefore);
     /**
      * Wipe a report as well as all of its associated observations and mismatches from the backing store.
      *

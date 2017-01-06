@@ -168,7 +168,7 @@ public class SpotCheckCtrl extends BaseCtrl
         OpenMismatchQuery query = new OpenMismatchQuery(refTypes, mismatchTypes, afterDateTime, beforeDateTime,
                 mismatchOrderBy, order, limOff, resolvedShown, ignoredShown, ignoredOnly, trackedShown, untrackedShown);
         SpotCheckOpenMismatches<?> observations = reportDao.getOpenMismatches(query);
-        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(Sets.newHashSet(refType), afterDateTime);
+        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(Sets.newHashSet(refType), afterDateTime, beforeDateTime);
         return new OpenMismatchesResponse<>(observations, summary, query);
     }
 
@@ -216,13 +216,11 @@ public class SpotCheckCtrl extends BaseCtrl
         SortOrder order = getSortOrder(request, SortOrder.DESC);
         Set<SpotCheckMismatchType> mismatchTypes = getSpotcheckMismatchTypes(mismatchType, "mismatchType", refTypes);
         LocalDateTime afterDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
-        LocalDateTime beforeDateTime = (observedBefore != null) ?
-                parseISODateTime(observedBefore, DateUtils.THE_FUTURE.atStartOfDay()) :
-                LocalDateTime.now();
+        LocalDateTime beforeDateTime = parseISODateTime(observedBefore, DateUtils.THE_FUTURE.atStartOfDay());
         OpenMismatchQuery query = new OpenMismatchQuery(mismatchTypes, afterDateTime, beforeDateTime,
                 mismatchOrderBy, order, limOff, resolvedShown, ignoredShown, ignoredOnly, trackedShown, untrackedShown);
         SpotCheckOpenMismatches<?> observations = reportDao.getOpenMismatches(spotcheckDataSource, spotcheckContentType, query);
-        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(dataSourceSetMap, afterDateTime);
+        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(dataSourceSetMap, afterDateTime, beforeDateTime);
         return new OpenMismatchesResponse<>(observations, summary, query);
     }
 
@@ -237,14 +235,18 @@ public class SpotCheckCtrl extends BaseCtrl
      * Request Parameters: reportType - string - the reference type of the mismatches to be retrieved
      *                     observedAfter - string (ISO date) - optional - only returns observations with mismatches after
      *                          the given date if present
+     *                     observedBefore - string (ISO date) - optional - only returns observations with mismatches
+     *                          before the given date.
      */
     @RequiresPermissions("admin:view")
     @RequestMapping(value = "/open-mismatches/summary", method = RequestMethod.GET, params = {"reportType"})
     public BaseResponse getOpenMismatchSummary(@RequestParam(required = false) String reportType,
-                                          @RequestParam(required = false) String observedAfter) {
+                                               @RequestParam(required = false) String observedAfter,
+                                               @RequestParam(required = false) String observedBefore) {
         SpotCheckRefType refType = getSpotcheckRefType(reportType, "reportType");
         LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
-        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(Sets.newHashSet(refType),earliestDateTime);
+        LocalDateTime beforeDateTime = parseISODateTime(observedBefore, DateUtils.THE_FUTURE.atStartOfDay());
+        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(Sets.newHashSet(refType), earliestDateTime, beforeDateTime);
         return new ViewObjectResponse<>(new OpenMismatchSummaryView(summary));
     }
 
@@ -252,7 +254,8 @@ public class SpotCheckCtrl extends BaseCtrl
     @RequestMapping(value = "{dataSource}/open-mismatches/summary", method = RequestMethod.GET)
     public BaseResponse getOpenMismatchSummary(@PathVariable String dataSource,
                                                @RequestParam(required = false) String contentType,
-                                               @RequestParam(required = false) String observedAfter) {
+                                               @RequestParam(required = false) String observedAfter,
+                                               @RequestParam(required = false) String observedBefore) {
         SpotCheckDataSource spotCheckDataSource = getSpotcheckDataSource(dataSource,"dataSource");
         Set<SpotCheckContentType> spotCheckContentTypes = Sets.newHashSet(SpotCheckContentType.values());
         if(contentType != null) {
@@ -262,7 +265,8 @@ public class SpotCheckCtrl extends BaseCtrl
         }
         Map<SpotCheckDataSource, Set<SpotCheckContentType>> sourceSetMap = ImmutableMap.of(spotCheckDataSource, spotCheckContentTypes);
         LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
-        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(sourceSetMap,earliestDateTime);
+        LocalDateTime beforeDateTime = parseISODateTime(observedBefore, DateUtils.THE_FUTURE.atStartOfDay());
+        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(sourceSetMap, earliestDateTime, beforeDateTime);
         return new ViewObjectResponse<>(new OpenMismatchSummaryView(summary));
     }
 
@@ -276,14 +280,18 @@ public class SpotCheckCtrl extends BaseCtrl
      * Request Parameters: reportType - string - the reference type of the mismatches to be retrieved
      *                     observedAfter - string (ISO date) - optional - only returns observations with mismatches after
      *                          the given date if present
+     *                     observedBefore - string (ISO date) - optional - only returns observations with mismatches
+     *                          before the given date.
      */
     @RequiresPermissions("admin:view")
     @RequestMapping(value = "/open-mismatches/summary", method = RequestMethod.GET)
     public BaseResponse getOpenMismatchSummary(@RequestParam(required = false) String[] reportTypes,
-                                               @RequestParam(required = false) String observedAfter) {
+                                               @RequestParam(required = false) String observedAfter,
+                                               @RequestParam(required = false) String observedBefore) {
         Set<SpotCheckRefType> refTypes = getSpotcheckRefTypes(reportTypes, "reportTypes");
         LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
-        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(refTypes, earliestDateTime);
+        LocalDateTime beforeDateTime = parseISODateTime(observedBefore, DateUtils.THE_FUTURE.atStartOfDay());
+        OpenMismatchSummary summary = reportDao.getOpenMismatchSummary(refTypes, earliestDateTime, beforeDateTime);
         return new ViewObjectResponse<>(new OpenMismatchSummaryView(summary));
     }
 

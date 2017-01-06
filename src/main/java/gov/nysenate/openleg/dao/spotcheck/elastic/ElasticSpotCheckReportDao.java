@@ -263,12 +263,14 @@ public class ElasticSpotCheckReportDao
      */
     @Override
     public <ContentKey> OpenMismatchSummary getOpenMismatchSummary(Map<SpotCheckDataSource, Set<SpotCheckContentType>> dataSourceSetMap,
-                                                                   LocalDateTime observedAfter) {
+                                                                   LocalDateTime observedAfter, LocalDateTime observedBefore) {
         Set<String> spotcheckIndexes = SpotCheckIndex.getIndices(dataSourceSetMap).stream()
                 .map(SpotCheckIndex::getIndexName)
                 .collect(Collectors.toSet());
         QueryBuilder query = QueryBuilders.boolQuery()
-                .must(rangeQuery("observedDateTime").from(observedAfter.toString()));
+                .must(rangeQuery("observedDateTime")
+                        .from(observedAfter.toString())
+                        .to(observedBefore.toString()));
 
         Set<String> types = Sets.newHashSet(OBSERVATION.getName());
         SearchResponse response = getSearchRequest(spotcheckIndexes, types, query,
@@ -291,7 +293,7 @@ public class ElasticSpotCheckReportDao
      * {@inheritDoc}
      */
     @Override
-    public <ContentKey> OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter) {
+    public <ContentKey> OpenMismatchSummary getOpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter, LocalDateTime observedBefore) {
         Set<String> spotCheckIndexes = refTypes.stream()
                 .map(SpotCheckIndex::getIndex)
                 .map(SpotCheckIndex::getIndexName)
@@ -301,6 +303,7 @@ public class ElasticSpotCheckReportDao
         QueryBuilder query = boolQuery().must(
                 rangeQuery("observedDateTime")
                         .from(observedAfter.toString())
+                        .to(observedBefore.toString())
         );
         SearchResponse searchObservationsResponse = getSearchRequest(spotCheckIndexes, types, query, null, null, true,0)
                 .execute()

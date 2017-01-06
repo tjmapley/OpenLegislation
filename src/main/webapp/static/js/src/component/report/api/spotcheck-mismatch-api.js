@@ -5,15 +5,19 @@ function spotcheckMismatchApi($resource) {
     const DATE_FORMAT = 'YYYY-MM-DD h:mm:ss a';
     var mismatchApi = $resource(adminApiPath + "/spotcheck/:datasource/open-mismatches", {datasource: '@datasource'});
 
-    function getMismatches(datasource, contentType, statuses, limit, offset) {
-        // TODO: date range
-        // TODO: filter API by mismatchStatuses
+    /**
+     * @param statuses A string array of mismatch statuses to be included in results.
+     * @param date An ISO date time string. Returns mismatches observed before this date time.
+     */
+    function getMismatches(datasource, contentType, statuses, date, limit, offset) {
+        // TODO: filter API by statuses
         // TODO API filter to return only non ignored mismatches?
         var params = {
             datasource: datasource,
             contentType: contentType,
             limit: limit,
-            offset: offset
+            offset: offset,
+            observedBefore: date
         };
         return mismatchApi.get(params).$promise
             .then(parseMismatches);

@@ -5,6 +5,7 @@ angular.module('open.spotcheck')
 function ReportCtrl($scope, $location, $routeParams, paginationModel, spotcheckMismatchApi, mismatchSummaryApi) {
 
     const dateFormat = 'YYYY-MM-DD';
+    const isoFormat = 'YYYY-MM-DDTHH:mm:ss';
     /** Used to look up content types corresponding to the selected tab. */
     const contentTypes = ['BILL', 'CALENDAR', 'AGENDA'];
 
@@ -41,22 +42,31 @@ function ReportCtrl($scope, $location, $routeParams, paginationModel, spotcheckM
 
     $scope.onDatasourceChange = function () {
         resetPagination();
-        $scope.updateMismatchSummary();
-        $scope.updateMismatches();
+        updateMismatchSummary();
+        updateMismatches();
+    };
+
+    $scope.onStatusChange = function () {
+        resetPagination();
+        updateMismatches();
     };
 
     $scope.onTabChange = function () {
         resetPagination();
-        $scope.updateMismatches();
+        updateMismatches();
     };
 
     $scope.onPageChange = function (pageNum) {
-        $scope.updateMismatches();
+        updateMismatches();
     };
 
-    $scope.updateMismatchSummary = function () {
+    $scope.formatDate = function (date) {
+        return date.format(dateFormat);
+    };
+
+    function updateMismatchSummary() {
         $scope.summaryResponse.error = false;
-        mismatchSummaryApi.get($scope.datasource.selected.value)
+        mismatchSummaryApi.get($scope.datasource.selected.value, $scope.date.endOf('day').format(isoFormat))
             .then(function (mismatchSummary) {
                 $scope.summaryResponse.summary = mismatchSummary;
             })
@@ -64,14 +74,15 @@ function ReportCtrl($scope, $location, $routeParams, paginationModel, spotcheckM
                 $scope.summaryResponse.error = true;
                 $scope.summaryResponse.errorMessage = response.statusText;
             });
-    };
+    }
 
-    $scope.updateMismatches = function () {
+    function updateMismatches() {
         $scope.loading = true;
         $scope.mismatchResponse.error = false;
         $scope.mismatchResponse.mismatches = [];
         spotcheckMismatchApi.getMismatches($scope.datasource.selected.value, contentTypes[$scope.selectedTab],
-            toMismatchStatus($scope.status), $scope.pagination.getLimit(), $scope.pagination.getOffset())
+            toMismatchStatus($scope.status), $scope.date.endOf('day').format(isoFormat),
+            $scope.pagination.getLimit(), $scope.pagination.getOffset())
             .then(function (result) {
                 $scope.pagination.setTotalItems(result.pagination.total);
                 $scope.mismatchResponse.mismatches = result.mismatches;
@@ -92,11 +103,7 @@ function ReportCtrl($scope, $location, $routeParams, paginationModel, spotcheckM
             }
             return [status];
         }
-    };
-
-    $scope.formatDate = function (date) {
-        return date.format(dateFormat);
-    };
+    }
 
     function resetPagination() {
         $scope.pagination.reset();
@@ -122,8 +129,8 @@ function ReportCtrl($scope, $location, $routeParams, paginationModel, spotcheckM
         resetPagination();
         initializeDate();
         $scope.datasource.selected = $scope.datasource.values[0];
-        $scope.updateMismatchSummary();
-        $scope.updateMismatches();
+        updateMismatchSummary();
+        updateMismatches();
     };
 
     $scope.init();

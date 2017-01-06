@@ -13,7 +13,7 @@
       </div>
 
       <div>
-        <select ng-model="status" ng-change="updateMismatches()">
+        <select ng-model="status" ng-change="onStatusChange()">
           <option value="OPEN">Open Issues ({{summaryResponse.summary.openCount}})</option>
           <option value="NEW">New Issues ({{summaryResponse.summary.newCount}})</option>
           <option value="RESOLVED">Resolved Issues ({{summaryResponse.summary.resolvedCount}})</option>
