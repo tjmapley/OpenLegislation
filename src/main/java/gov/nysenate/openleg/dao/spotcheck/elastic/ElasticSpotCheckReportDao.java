@@ -282,7 +282,7 @@ public class ElasticSpotCheckReportDao
         SpotCheckIndex.getIndices(dataSourceSetMap).forEach(spotCheckIndex ->
                 refTypes.addAll(SpotCheckRefType.get(spotCheckIndex.getDataSource(), spotCheckIndex.getContentType()))
         );
-        OpenMismatchSummary openMismatchSummary = new OpenMismatchSummary(refTypes, observedAfter);
+        OpenMismatchSummary openMismatchSummary = new OpenMismatchSummary(refTypes, observedAfter, observedBefore);
         observationsMap.forEach((refType, observations) ->
             openMismatchSummary.getRefTypeSummary(refType).addCountsFromObservations(observations)
         );
@@ -310,7 +310,7 @@ public class ElasticSpotCheckReportDao
                 .actionGet();
 
         Map<SpotCheckRefType, Collection<SpotCheckObservation<ContentKey>>> observationsMap = getRefTypeObservationMap(searchObservationsResponse);
-        OpenMismatchSummary openMismatchSummary = new OpenMismatchSummary(refTypes, observedAfter);
+        OpenMismatchSummary openMismatchSummary = new OpenMismatchSummary(refTypes, observedAfter, observedBefore);
         observationsMap.forEach((refType, observations) ->
             openMismatchSummary.getRefTypeSummary(refType).addCountsFromObservations(observations)
         );

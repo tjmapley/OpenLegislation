@@ -16,12 +16,14 @@ public class OpenMismatchSummaryView implements ViewObject {
 
     protected Map<SpotCheckRefType, RefTypeMismatchSummaryView> summaryMap = new HashMap<>();
     protected LocalDateTime observedAfter;
+    protected LocalDateTime observedBefore;
 
     public OpenMismatchSummaryView(OpenMismatchSummary summary) {
         this.summaryMap = summary.getSummaryMap().values().stream()
                 .map(RefTypeMismatchSummaryView::new)
                 .collect(Collectors.toMap(RefTypeMismatchSummaryView::getRefType, Function.identity()));
         this.observedAfter = summary.getObservedAfter();
+        this.observedBefore = summary.getObservedBefore();
     }
 
     public OpenMismatchSummaryView(List<OpenMismatchSummary> summaries){
@@ -41,6 +43,10 @@ public class OpenMismatchSummaryView implements ViewObject {
 
     public LocalDateTime getObservedAfter() {
         return observedAfter;
+    }
+
+    public LocalDateTime getObservedBefore() {
+        return observedBefore;
     }
 
     @Override

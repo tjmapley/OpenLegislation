@@ -16,17 +16,20 @@ public class OpenMismatchSummary {
     protected Map<SpotCheckRefType, RefTypeMismatchSummary> summaryMap;
 
     protected LocalDateTime observedAfter;
+    protected LocalDateTime observedBefore;
 
     /** --- Constructors --- */
 
-    public OpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter) {
+    public OpenMismatchSummary(SpotCheckRefType refType, LocalDateTime observedAfter, LocalDateTime observedBefore) {
         this.observedAfter = observedAfter;
+        this.observedBefore = observedBefore;
         this.summaryMap = new HashMap<>();
         this.summaryMap.put(refType, new RefTypeMismatchSummary(refType, observedAfter));
     }
 
-    public OpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter) {
+    public OpenMismatchSummary(Set<SpotCheckRefType> refTypes, LocalDateTime observedAfter, LocalDateTime observedBefore) {
         this.observedAfter = observedAfter;
+        this.observedBefore = observedBefore;
         this.summaryMap = new HashMap<>();
         this.summaryMap = refTypes.stream()
                 .map(refType -> new RefTypeMismatchSummary(refType, observedAfter))
@@ -47,5 +50,9 @@ public class OpenMismatchSummary {
 
     public LocalDateTime getObservedAfter() {
         return observedAfter;
+    }
+
+    public LocalDateTime getObservedBefore() {
+        return observedBefore;
     }
 }
