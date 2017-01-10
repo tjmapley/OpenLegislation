@@ -27,10 +27,11 @@ spotcheckModule.factory('SpotcheckOpenMismatchSummaryAPI', ['$resource', functio
 }]);
 
 spotcheckModule.factory('SpotcheckMismatchIgnoreAPI', ['$resource', function($resource){
-    return $resource(adminApiPath + "/spotcheck/:refType/mismatch/:mismatchId/ignore", {
+    return $resource(adminApiPath + "/spotcheck/:dataSource/:contentType/mismatch/:mismatchId/ignore", {
+        dataSource: '@dataSource',
+        contentType: '@contentType',
         mismatchId: '@mismatchId',
-        ignoreLevel: '@ignoreLevel',
-        refType: "@refType"
+        ignoreLevel: '@ignoreLevel'
     });
 }]);
 

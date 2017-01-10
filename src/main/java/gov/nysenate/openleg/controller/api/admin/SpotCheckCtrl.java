@@ -300,7 +300,7 @@ public class SpotCheckCtrl extends BaseCtrl
      *
      * Set the ignore status of a particular mismatch
      *
-     * Usage: (POST) /api/3/admin/spotcheck/{refType}/mismatch/{mismatchId}/ignore
+     * Usage: (POST) /api/3/admin/spotcheck/{dataSource}/{contentType}/mismatch/{mismatchId}/ignore
      *
      * Request Parameters: ignoreLevel - string - specifies desired ignore level or unsets ignore if null or not present
      *                                  @see SpotCheckMismatchIgnore

@@ -17,7 +17,8 @@ function spotcheckMismatchApi($resource) {
             contentType: contentType,
             limit: limit,
             offset: offset,
-            observedBefore: date
+            observedBefore: date,
+            ignoredShown: false
         };
         return mismatchApi.get(params).$promise
             .then(parseMismatches);
@@ -44,6 +45,7 @@ function spotcheckMismatchApi($resource) {
 
     function createMismatch(mismatch, observation) {
         return {
+            id: parseMismatchId(mismatch),
             status: parseStatus(mismatch),
             mismatchType: parseMismatchType(mismatch),
             observedDate: parseDate(observation),
@@ -57,16 +59,32 @@ function spotcheckMismatchApi($resource) {
         }
     }
 
-    function parseBill(observation) {
-        return observation.key.printNo || "";
+    function parseMismatchId(mismatch) {
+        return mismatch.mismatchId;
+    }
+
+    function parseStatus(mismatch) {
+        return mismatch.status;
+    }
+
+    function parseMismatchType(mismatch) {
+        return mismatchMap[mismatch.mismatchType];
     }
 
     function parseDate(observation) {
         return moment(observation.observedDateTime).format(DATE_FORMAT);
     }
 
+    function parseIssues(mismatch) {
+        return mismatch.issueIds.items.join(', ')
+    }
+
     function parseRefType(observation) {
         return referenceTypeMap[observation.reportId.referenceType];
+    }
+
+    function parseBill(observation) {
+        return observation.key.printNo || "";
     }
 
     function parseCalNo(observation) {
@@ -85,18 +103,6 @@ function spotcheckMismatchApi($resource) {
             return "";
         }
         return observation.key.committeeId.name;
-    }
-
-    function parseStatus(mismatch) {
-        return mismatch.status;
-    }
-
-    function parseMismatchType(mismatch) {
-        return mismatchMap[mismatch.mismatchType];
-    }
-
-    function parseIssues(mismatch) {
-        return mismatch.issueIds.items.join(', ')
     }
 
     return {
