@@ -257,12 +257,9 @@ public class SpotCheckCtrl extends BaseCtrl
                                                @RequestParam(required = false) String observedAfter,
                                                @RequestParam(required = false) String observedBefore) {
         SpotCheckDataSource spotCheckDataSource = getSpotcheckDataSource(dataSource,"dataSource");
-        Set<SpotCheckContentType> spotCheckContentTypes = Sets.newHashSet(SpotCheckContentType.values());
-        if(contentType != null) {
-            spotCheckContentTypes.retainAll(
-                    Collections.singletonList(getSpotcheckContentType(contentType, "contentType"))
-            );
-        }
+        Set<SpotCheckContentType> spotCheckContentTypes = contentType != null
+                ? Sets.newHashSet(getEnumParameter("contentType", contentType, SpotCheckContentType.class))
+                : Sets.newHashSet(SpotCheckContentType.values());
         Map<SpotCheckDataSource, Set<SpotCheckContentType>> sourceSetMap = ImmutableMap.of(spotCheckDataSource, spotCheckContentTypes);
         LocalDateTime earliestDateTime = parseISODateTime(observedAfter, DateUtils.LONG_AGO.atStartOfDay());
         LocalDateTime beforeDateTime = parseISODateTime(observedBefore, DateUtils.THE_FUTURE.atStartOfDay());
