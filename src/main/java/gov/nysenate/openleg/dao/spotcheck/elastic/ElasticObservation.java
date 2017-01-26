@@ -19,6 +19,17 @@ class ElasticObservation {
     protected LocalDateTime observedDateTime;
     protected LocalDateTime createdDateTime;
     protected Map<String, String> observationKey;
+    protected String observationKeyString;
+
+    public String getGroupByKey() {
+        return groupByKey;
+    }
+
+    public void setGroupByKey(String groupByKey) {
+        this.groupByKey = groupByKey;
+    }
+
+    protected String groupByKey;
     protected SpotCheckMismatchStatus mismatchStatus;
     protected SpotCheckMismatchType mismatchType;
     protected Integer mismatchId;
@@ -30,6 +41,14 @@ class ElasticObservation {
 
     public ElasticObservation(){}
 
+    public String getObservationKeyString() {
+        return observationKeyString;
+    }
+
+    public void setObservationKeyString(String observationKeyString) {
+        this.observationKeyString = observationKeyString;
+    }
+
     public ElasticObservation(String spotCheckReportId, Map<String, String> keyMap, SpotCheckObservation observation,
                               SpotCheckMismatch spotCheckMismatch){
         spotcheckReportId = spotCheckReportId;
@@ -37,6 +56,8 @@ class ElasticObservation {
         observedDateTime = observation.getObservedDateTime();
         createdDateTime = LocalDateTime.now();
         observationKey = keyMap;
+        observationKeyString = observation.getKey().toString();
+        groupByKey = observation.getKey().toString() + spotCheckMismatch.getMismatchType();
         mismatchStatus = spotCheckMismatch.getStatus();
         mismatchType = spotCheckMismatch.getMismatchType();
         observedData = spotCheckMismatch.getObservedData();

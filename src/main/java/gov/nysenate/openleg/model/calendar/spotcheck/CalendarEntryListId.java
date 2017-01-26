@@ -12,7 +12,7 @@ import static gov.nysenate.openleg.model.calendar.CalendarType.SUPPLEMENTAL_CALE
  * Identifies a data type that contains a calendar entry list
  * Can be either a {@link CalendarActiveListId} or {@link CalendarSupplementalId}
  */
-public class CalendarEntryListId extends CalendarId {
+public class    CalendarEntryListId extends CalendarId {
 
     /** Indicates type of calendar entry list */
     protected CalendarType type;
