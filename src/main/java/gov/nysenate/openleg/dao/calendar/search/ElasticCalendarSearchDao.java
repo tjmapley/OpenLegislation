@@ -9,11 +9,11 @@ import gov.nysenate.openleg.model.calendar.CalendarId;
 import gov.nysenate.openleg.model.search.SearchResults;
 import gov.nysenate.openleg.util.OutputUtils;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
-import org.elasticsearch.action.deletebyquery.DeleteByQueryAction;
-import org.elasticsearch.action.deletebyquery.DeleteByQueryRequestBuilder;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.index.reindex.DeleteByQueryAction;
+import org.elasticsearch.index.reindex.DeleteByQueryRequestBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -72,7 +72,7 @@ public class ElasticCalendarSearchDao extends ElasticBaseDao implements Calendar
     public void deleteCalendarFromIndex(CalendarId calId) {
         if (calId != null) {
             DeleteByQueryRequestBuilder builder = new DeleteByQueryRequestBuilder(searchClient, DeleteByQueryAction.INSTANCE);
-            builder.setIndices(calIndexName)
+            builder.source().setIndices(calIndexName)
                     .setTypes(Integer.toString(calId.getYear()))
                     .setQuery(QueryBuilders.matchQuery("calendarNumber", Integer.toString(calId.getCalNo())))
                     .execute().actionGet();

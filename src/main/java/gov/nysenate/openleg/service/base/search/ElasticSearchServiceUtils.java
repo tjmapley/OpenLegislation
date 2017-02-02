@@ -26,9 +26,22 @@ public abstract class ElasticSearchServiceUtils {
         else {
             try {
                 Map<String, String> sortMap =
-                        Splitter.on(",").omitEmptyStrings().trimResults().withKeyValueSeparator(":").split(sort);
-                sortMap.forEach((k, v) -> sortBuilders.add(
-                        SortBuilders.fieldSort(k).order(org.elasticsearch.search.sort.SortOrder.valueOf(v.toUpperCase()))));
+                        Splitter.on(",")
+                                .omitEmptyStrings()
+                                .trimResults()
+                                .withKeyValueSeparator(":")
+                                .split(sort);
+
+                sortMap.forEach((k, v) -> {
+                    if(k.equals("_score"))
+                        sortBuilders.add(
+                                SortBuilders.scoreSort()
+                                        .order(org.elasticsearch.search.sort.SortOrder.valueOf(v.toUpperCase())));
+                    else
+                        sortBuilders.add(
+                                SortBuilders.fieldSort(k)
+                                        .order(org.elasticsearch.search.sort.SortOrder.valueOf(v.toUpperCase())));
+                });
             } catch (IllegalArgumentException ex) {
                 throw new SearchException("Invalid sort string: '" + sort + "'\n" +
                         "Must be comma separated list of searchField:(ASC|DESC) e.g. 'status.statusType:ASC,status.actionDate:DESC'");

@@ -28,6 +28,7 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.SimpleQueryParser;
+import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -103,10 +104,10 @@ public class ApplicationConfig implements CachingConfigurer
     @Bean(destroyMethod = "close")
     public Client elasticSearchNode() {
         logger.info("Connecting to elastic search cluster {}", elasticSearchCluster);
-        Settings settings = Settings.settingsBuilder()
+        Settings settings = Settings.builder()
             .put("cluster.name", elasticSearchCluster).build();
         try {
-            TransportClient tc = TransportClient.builder().settings(settings).build().addTransportAddress(
+            TransportClient tc = new  PreBuiltTransportClient(settings).addTransportAddress(
                     new InetSocketTransportAddress(new InetSocketAddress(elasticSearchHost, elasticSearchPort)));
             if (tc.connectedNodes().size() == 0) {
                 tc.close();

@@ -12,13 +12,13 @@ import gov.nysenate.openleg.model.entity.CommitteeNotFoundEx;
 import gov.nysenate.openleg.util.OutputUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
-import org.elasticsearch.action.deletebyquery.DeleteByQueryAction;
-import org.elasticsearch.action.deletebyquery.DeleteByQueryRequestBuilder;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.reindex.DeleteByQueryAction;
+import org.elasticsearch.index.reindex.DeleteByQueryRequestBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.slf4j.Logger;
@@ -97,7 +97,7 @@ public class ElasticCommitteeSearchDao extends ElasticBaseDao implements Committ
      */
     protected DeleteByQueryRequestBuilder getCommitteeDeleteRequest(CommitteeSessionId committeeSessionId) {
         DeleteByQueryRequestBuilder builder = new DeleteByQueryRequestBuilder(searchClient, DeleteByQueryAction.INSTANCE);
-        builder.setIndices(committeeSearchIndexName)
+        builder.source().setIndices(committeeSearchIndexName)
                 .setTypes(Integer.toString(committeeSessionId.getSession().getYear()))
                 .setQuery(QueryBuilders.boolQuery().must(QueryBuilders.matchAllQuery())
                         .filter(

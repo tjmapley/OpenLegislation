@@ -22,7 +22,7 @@ import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.IndexNotFoundException;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.rescore.RescoreBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
@@ -101,22 +101,25 @@ public abstract class ElasticBaseDao
      * @return SearchRequestBuilder
      */
     protected SearchRequestBuilder getSearchRequest(String indexName, QueryBuilder query, QueryBuilder postFilter,
-                                                    List<HighlightBuilder.Field> highlightedFields, RescoreBuilder.Rescorer rescorer,
+                                                    List<HighlightBuilder.Field> highlightedFields, RescoreBuilder rescorer,
                                                     List<SortBuilder> sort, LimitOffset limitOffset, boolean fetchSource) {
-        SearchRequestBuilder searchBuilder = searchClient.prepareSearch(indexName)
+        SearchRequestBuilder searchBuilder = searchClient.prepareSearch()
+                .setIndices(indexName)
                 .setSearchType(SearchType.QUERY_THEN_FETCH)
                 .setQuery(query)
-                .setRescorer(rescorer)
                 .setFrom(limitOffset.getOffsetStart() - 1)
                 .setSize((limitOffset.hasLimit()) ? limitOffset.getLimit() : Integer.MAX_VALUE)
                 .setMinScore(0.05f)
                 .setFetchSource(fetchSource);
+
         if (highlightedFields != null) {
-            highlightedFields.stream().forEach(searchBuilder::addHighlightedField);
+            HighlightBuilder highlightBuilder = new HighlightBuilder();
+            highlightedFields.forEach(highlightBuilder::field);
+            searchBuilder.highlighter(highlightBuilder);
         }
-//        if (rescorer != null) {
-//            searchBuilder.addRescorer(rescorer);
-//        }
+        if (rescorer != null) {
+            searchBuilder.setRescorer(rescorer);
+        }
         // Post filters take effect after the search is completed
         if (postFilter != null) {
             searchBuilder.setPostFilter(postFilter);
