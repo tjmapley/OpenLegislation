@@ -56,8 +56,8 @@ public class ElasticTranscriptSearchService implements TranscriptSearchService, 
     @Override
     public SearchResults<TranscriptId> searchTranscripts(int year, String sort, LimitOffset limOff) throws SearchException {
         RangeQueryBuilder rangeFilter = new RangeQueryBuilder("dateTime")
-                .from(LocalDate.of(year, 1, 1))
-                .to(LocalDate.of(year, 12, 31));
+                .from(LocalDate.of(year, 1, 1).toString())
+                .to(LocalDate.of(year, 12, 31).toString());
         return search(
                 QueryBuilders.boolQuery()
                         .must(QueryBuilders.matchAllQuery())
@@ -75,8 +75,8 @@ public class ElasticTranscriptSearchService implements TranscriptSearchService, 
     @Override
     public SearchResults<TranscriptId> searchTranscripts(String query, int year, String sort, LimitOffset limOff) throws SearchException {
         RangeQueryBuilder rangeFilter = new RangeQueryBuilder("dateTime")
-                .from(LocalDate.of(year, 1, 1))
-                .to(LocalDate.of(year, 12, 31));
+                .from(LocalDate.of(year, 1, 1).toString())
+                .to(LocalDate.of(year, 12, 31).toString());
         return search(
                 QueryBuilders.boolQuery()
                         .must(QueryBuilders.queryStringQuery(query))

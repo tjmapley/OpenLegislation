@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,8 +54,8 @@ public class ElasticPublicHearingSearchService implements PublicHearingSearchSer
     @Override
     public SearchResults<PublicHearingId> searchPublicHearings(int year, String sort, LimitOffset limOff) throws SearchException {
         RangeQueryBuilder rangeFilter = QueryBuilders.rangeQuery("date")
-                .from(LocalDate.of(year, 1, 1))
-                .to(LocalDate.of(year, 12, 31));
+                .from(LocalDate.of(year, 1, 1).toString())
+                .to(LocalDate.of(year, 12, 31).toString());
         return search(
                 QueryBuilders.boolQuery()
                         .must(QueryBuilders.matchAllQuery())
@@ -72,8 +73,8 @@ public class ElasticPublicHearingSearchService implements PublicHearingSearchSer
     @Override
     public SearchResults<PublicHearingId> searchPublicHearings(String query, int year, String sort, LimitOffset limOff) throws SearchException {
         RangeQueryBuilder rangeFilter = QueryBuilders.rangeQuery("date")
-                .from(LocalDate.of(year, 1, 1))
-                .to(LocalDate.of(year, 12, 31));
+                .from(LocalDate.of(year, 1, 1).toString())
+                .to(LocalDate.of(year, 12, 31).toString());
         return search(
                 QueryBuilders.boolQuery()
                         .must(QueryBuilders.queryStringQuery(query))

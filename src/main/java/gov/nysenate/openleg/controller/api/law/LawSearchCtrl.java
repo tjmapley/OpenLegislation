@@ -58,7 +58,7 @@ public class LawSearchCtrl extends BaseCtrl
                                    WebRequest request) throws SearchException {
         LimitOffset limOff = getLimitOffset(request, 25);
         String sort = request.getParameter("sort");
-        return getLawDocSearchResults(limOff, lawSearch.searchLawDocs(term, lawId, sort, limOff));
+        return getLawDocSearchResults(limOff, lawSearch.    searchLawDocs(term, lawId, sort, limOff));
     }
 
     /** --- Internal --- */

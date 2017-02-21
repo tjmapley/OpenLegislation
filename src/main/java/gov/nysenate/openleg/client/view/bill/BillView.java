@@ -38,14 +38,14 @@ public class BillView extends BillInfoView implements ViewObject
             TreeMap<String, BillAmendmentView> amendmentMap = new TreeMap<>();
             bill.getAmendPublishStatusMap().forEach((k,v) -> {
                 if (v.isPublished() && bill.hasAmendment(k)) {
-                    amendmentMap.put(k.getValue(), new BillAmendmentView(bill.getAmendment(k), v));
+                    amendmentMap.put(k.name(), new BillAmendmentView(bill.getAmendment(k), v));
                 }
             });
             this.amendments = MapView.of(amendmentMap);
             this.amendmentVersions = ListView.ofStringList(amendmentMap.keySet().stream().collect(Collectors.toList()));
 
             this.votes = ListView.of(bill.getAmendmentList().stream()
-                .flatMap(a -> a.getVotesList().stream())
+                    .flatMap(a -> a.getVotesList().stream())
                 .sorted()
                 .map(v -> new BillVoteView(v))
                 .collect(Collectors.toList()));
