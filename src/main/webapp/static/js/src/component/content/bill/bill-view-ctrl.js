@@ -12,7 +12,7 @@ billModule.controller('BillViewCtrl', ['$scope', '$filter', '$location', '$route
         $scope.loading = false;
         $scope.fullTextFetched = {}; // Contains a dict of versions to indicate the ones where text was fetched.
         $scope.curr = {
-            amdVersion: '',
+            amdVersion: 'DEFAULT',
             compareVersion: 'None',
             selectedView: (parseInt($routeParams.view, 10) || 1),
             updateTypeFilter: 'status',
@@ -52,6 +52,7 @@ billModule.controller('BillViewCtrl', ['$scope', '$filter', '$location', '$route
                         $scope.setHeaderText('NYS ' + $scope.bill.billType.desc + ' ' +
                             $filter('resolutionOrBill')($scope.bill.billType.resolution) + ' ' +
                             $scope.bill.basePrintNo + '-' + $scope.bill.session + (($scope.bill.session !== $scope.activeSession) ? " (Inactive) " : ""));
+                        $scope.bill.amendments.items = $scope.sortAmendments($scope.bill.amendments.items);
                         $scope.curr.amdVersion = $scope.bill.amendments.items.hasOwnProperty(requestedVersion)
                                 ? requestedVersion : $scope.bill.activeVersion;
                     }
@@ -105,6 +106,20 @@ billModule.controller('BillViewCtrl', ['$scope', '$filter', '$location', '$route
             else {
                 bill.mergedActions = [[currPrintNoStr, bill.actions.items]];
             }
+        };
+
+        $scope.sortAmendments = function(items){
+            var keys = Object.keys(items);
+            keys.sort(function (a, b) {
+                if(a === 'DEFAULT') return -1;
+                if(b === 'DEFAULT') return 1;
+                return a - b;
+            });
+            var sortedItems = {};
+            for (var i = 0; i < keys.length; i++) {
+                sortedItems[keys[i]] = items[keys[i]];
+            }
+            return sortedItems;
         };
 
         $scope.diffBills = function() {
