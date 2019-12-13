@@ -133,7 +133,7 @@ public class Bill extends BaseLegislativeContent implements Serializable, Compar
      * Creates a shallow clone for caching purposes. This is not a true clone so references will stay
      * intact except for the amendment list.
      * @return Bill
-     * @throws CloneNotSupportedException
+     * @throws CloneNotSupportedException never
      */
     public Bill shallowClone() throws CloneNotSupportedException {
         Bill cloneBill = (Bill) this.clone();
